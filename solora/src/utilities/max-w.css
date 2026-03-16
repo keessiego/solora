@@ -1,0 +1,21 @@
+.max-w-sm {
+  max-width: 8rem;
+}
+.max-w-md {
+  max-width: 16rem;
+}
+.max-w-lg {
+  max-width: 24rem;
+}
+.max-w-xl {
+  max-width: 32rem;
+}
+.max-w-2xl {
+  max-width: 48rem;
+}
+.max-w-full {
+  max-width: 100%;
+}
+.max-w-screen {
+  max-width: 100vh;
+}

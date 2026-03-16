@@ -1,0 +1,21 @@
+.mr-sm {
+  margin-right: 0.25rem;
+}
+.mr-md {
+  margin-right: 0.5rem;
+}
+.mr-lg {
+  margin-right: 1rem;
+}
+.mr-xl {
+  margin-right: 2rem;
+}
+.mr-2xl {
+  margin-right: 4rem;
+}
+.mr-auto {
+  margin-right: auto;
+}
+.mr-full {
+  margin-right: 100%;
+}

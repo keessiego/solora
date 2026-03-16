@@ -1,0 +1,21 @@
+.p-sm {
+  padding: 0.25rem;
+}
+.p-md {
+  padding: 0.5rem;
+}
+.p-lg {
+  padding: 1rem;
+}
+.p-xl {
+  padding: 2rem;
+}
+.p-2xl {
+  padding: 4rem;
+}
+.p-auto {
+  padding: auto;
+}
+.p-full {
+  padding: 100%;
+}

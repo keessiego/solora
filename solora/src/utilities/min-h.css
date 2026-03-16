@@ -1,0 +1,21 @@
+.min-h-sm {
+  min-height: 8rem;
+}
+.min-h-md {
+  min-height: 16rem;
+}
+.min-h-lg {
+  min-height: 24rem;
+}
+.min-h-xl {
+  min-height: 32rem;
+}
+.min-h-2xl {
+  min-height: 48rem;
+}
+.min-h-full {
+  min-height: 100%;
+}
+.min-h-screen {
+  min-height: 100vh;
+}

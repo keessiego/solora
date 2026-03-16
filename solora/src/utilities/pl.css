@@ -1,0 +1,21 @@
+.pl-sm {
+  padding-left: 0.25rem;
+}
+.pl-md {
+  padding-left: 0.5rem;
+}
+.pl-lg {
+  padding-left: 1rem;
+}
+.pl-xl {
+  padding-left: 2rem;
+}
+.pl-2xl {
+  padding-left: 4rem;
+}
+.pl-auto {
+  padding-left: auto;
+}
+.pl-full {
+  padding-left: 100%;
+}

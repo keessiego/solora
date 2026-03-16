@@ -1,0 +1,21 @@
+.m-sm {
+  margin: 0.25rem;
+}
+.m-md {
+  margin: 0.5rem;
+}
+.m-lg {
+  margin: 1rem;
+}
+.m-xl {
+  margin: 2rem;
+}
+.m-2xl {
+  margin: 4rem;
+}
+.m-auto {
+  margin: auto;
+}
+.m-full {
+  margin: 100%;
+}

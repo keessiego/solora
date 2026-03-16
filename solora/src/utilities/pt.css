@@ -1,0 +1,21 @@
+.pt-sm {
+  padding-top: 0.25rem;
+}
+.pt-md {
+  padding-top: 0.5rem;
+}
+.pt-lg {
+  padding-top: 1rem;
+}
+.pt-xl {
+  padding-top: 2rem;
+}
+.pt-2xl {
+  padding-top: 4rem;
+}
+.pt-auto {
+  padding-top: auto;
+}
+.pt-full {
+  padding-top: 100%;
+}

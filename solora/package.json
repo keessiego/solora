@@ -1,0 +1,20 @@
+{
+  "name": "@kerkhoff-ict/solora",
+  "version": "1.0.0",
+  "description": "Simple CSS component library",
+  "main": "dist/index.css",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "mkdir -p dist && postcss src/index.css -o dist/index.css",
+    "watch": "mkdir -p dist && postcss src/index.css -o dist/index.css --watch"
+  },
+  "author": "Kerkhoff-ICT",
+  "license": "MIT",
+  "devDependencies": {
+    "postcss": "^8.5.8",
+    "postcss-cli": "^11.0.1",
+    "postcss-import": "^16.1.1"
+  }
+}

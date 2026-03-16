@@ -1,0 +1,30 @@
+.min-w-sm {
+  min-width: 8rem;
+}
+.min-w-md {
+  min-width: 16rem;
+}
+.min-w-lg {
+  min-width: 24rem;
+}
+.min-w-xl {
+  min-width: 32rem;
+}
+.min-w-2xl {
+  min-width: 48rem;
+}
+.min-w-3xl {
+  min-width: 65rem;
+}
+.min-w-4xl {
+  min-width: 80rem;
+}
+.min-w-5xl {
+  min-width: 100rem;
+}
+.min-w-full {
+  min-width: 100%;
+}
+.min-w-screen {
+  min-width: 100vh;
+}

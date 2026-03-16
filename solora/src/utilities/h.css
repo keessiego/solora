@@ -1,0 +1,24 @@
+.h-sm {
+  height: 8rem;
+}
+.h-md {
+  height: 16rem;
+}
+.h-lg {
+  height: 24rem;
+}
+.h-xl {
+  height: 32rem;
+}
+.h-2xl {
+  height: 48rem;
+}
+.h-full {
+  height: 100%;
+}
+.h-screen {
+  height: 100dvh;
+}
+.h-max {
+  height: max-content;
+}
