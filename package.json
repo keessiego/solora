@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@kerkhoff-ict/solora": "^0.1.0",
     "@tailwindcss/cli": "^4.2.1"
   }
 }

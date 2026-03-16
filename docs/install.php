@@ -11,23 +11,10 @@
       <div class="flex h-full w-full">
 
         <!-- Sidebar -->
-        <div class="h-full w-md bg-lightgray p-lg rounded-lg min-w-md">
-          <button
-            onclick="window.location.href = 'install.html'"
-            class="btn-secondary text-left btn-sm w-full rounded-full active my-sm"
-          >
-            Get Started
-          </button>
-          <button
-            onclick="window.location.href = 'buttons.html'"
-            class="btn-secondary text-left btn-sm w-full rounded-full my-sm"
-          >
-            Buttons
-          </button>
-        </div>
+        <?php include "sidebar.php" ?>
 
         <!-- Main content -->
-        <div class="p-xl">
+        <div class="p-5">
           <h1>Welkom bij Solora!</h1>
           <p>
             Solora is een gebruikersvriendelijke manier om snel een html
@@ -37,7 +24,7 @@
       </div>
 
       <!-- Sidebar rechts -->
-      <div class="w-full max-w-xl h-full text-sm pt-2xl pl-xl text-left">
+      <div class="w-full max-w-xl h-full text-sm pt-8 pl-8 text-left">
         <b>Get Started</b>
       </div>
     </div>

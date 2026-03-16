@@ -1,0 +1,13 @@
+# Node modules
+*/node_modules/
+
+# Logs
+*.log
+
+# OS bestanden
+.DS_Store
+Thumbs.db
+
+# IDE bestanden
+.vscode/
+.idea/

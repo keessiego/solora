@@ -10,20 +10,7 @@
     <div class="flex h-full w-full">
       <div class="flex h-full w-full">
         <!-- Sidebar -->
-        <div class="h-full w-md bg-lightgray p-lg rounded-lg min-w-md">
-          <button
-            onclick="window.location.href = 'install.html'"
-            class="btn-secondary text-left btn-sm w-full rounded-full my-sm"
-          >
-            Get Started
-          </button>
-          <button
-            onclick="window.location.href = 'buttons.html'"
-            class="btn-secondary text-left btn-sm w-full rounded-full active my-sm"
-          >
-            Buttons
-          </button>
-        </div>
+        <?php include "sidebar.php" ?>
 
         <!-- Main content -->
         <div class="p-xl">
