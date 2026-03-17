@@ -9,23 +9,24 @@
   <body class="h-screen w-screen">
     <div class="flex h-full w-full">
       <div class="flex h-full w-full">
-
         <!-- Sidebar -->
         <?php include "sidebar.php" ?>
 
-        <!-- Main content -->
-        <div class="p-5">
-          <h1>Welkom bij Solora!</h1>
-          <p>
-            Solora is een gebruikersvriendelijke manier om snel een html
-            document te stylen. De stylen zijn gebaseerd op iOS en TailwindCSS.
-          </p>
-        </div>
-      </div>
+        <div class="w-full">
+          <!-- Navbar -->
+          <?php include "navbar.php" ?>
 
-      <!-- Sidebar rechts -->
-      <div class="w-full max-w-xl h-full text-sm pt-8 pl-8 text-left">
-        <b>Get Started</b>
+          <!-- Main content -->
+          <div class="p-6">
+            <h1>Solora Get Started</h1>            
+          </div>
+        </div>
+
+        <!-- Sidebar rechts -->
+        <div class="w-full max-w-xl h-full text-sm pt-2xl pl-xl text-left">
+          <b>Buttons</b>
+        </div>
+
       </div>
     </div>
   </body>

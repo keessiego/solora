@@ -13,11 +13,14 @@
         <?php include "sidebar.php" ?>
 
         <!-- Main content -->
-        <div class="p-xl">
+        <div class="p-6">
           <h1>Solora Buttons</h1>
 
-          <button class="btn-primary btn-md rounded-full">Primary medium</button>
-          <button class="btn-glass btn-md rounded-full">Glass button</button>
+          <div class="p-5 flex flex-col space-y-3 bg-blue-400 rounded-lg">
+            <button class="btn-primary btn-sm rounded-full">Primary medium</button>
+            <button class="btn-secondary btn-md rounded-full">Secondary medium</button>
+            <button class="btn-glass btn-md rounded-full">Glass button</button>
+          </div>
         </div>
       </div>
 

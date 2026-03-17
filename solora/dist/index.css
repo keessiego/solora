@@ -14,7 +14,7 @@
 }
 
 .btn-secondary {
-  background: white;
+  background: #fff !important;
   color: black;
   font-weight: 600;
   border: 2px solid white;
@@ -29,7 +29,7 @@
 }
 
 .btn-secondary:hover {
-  background-color: #ebebeb;
+  background-color: #ff0000;
 }
 
 .btn-glass {

@@ -1,2 +1,10 @@
 @import 'tailwindcss';
+
 @import './node_modules/@kerkhoff-ict/solora/dist/index.css';
+@source './node_modules/@kerkhoff-ict/solora/dist/**/*.{css}';
+
+@layer base {
+    h1 {
+        @apply font-bold text-xl;
+    }
+}
