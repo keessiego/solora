@@ -14,4 +14,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
   >
     Buttons
   </button>
+  <button
+    onclick="window.location.href = 'codeblock.php'"
+    class="btn-secondary btn-sm text-left w-full <?= $currentPage === 'codeblock.php' ? 'active' : '' ?> rounded-full my-1"
+  >
+    Codeblock
+  </button>
 </div>
