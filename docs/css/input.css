@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import '@kerkhoff-ict/solora/dist/index.css';
+
+/* Tailwind v4 Dark Mode werkt via de .dark class */
+@variant dark (&:where(.dark, .dark *));

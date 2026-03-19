@@ -1,0 +1,197 @@
+/* ======================
+   Basis dropdown container
+====================== */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ======================
+   Dropdown button
+====================== */
+.dropdown-btn {
+  padding: 0.3rem 0.4rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--color-bg, #fefefe);
+  color: var(--color-text-dark, #000);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-btn:hover {
+  background: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
+}
+
+.dropdown-btn:after {
+  content: "▾";
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.dropdown.open .dropdown-btn:after {
+  transform: rotate(180deg);
+}
+
+/* ======================
+   Dropdown content (Verbeterd)
+====================== */
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  min-width: 10rem;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  overflow-y: auto;
+  background: transparent; 
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  max-height: 15rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1000;
+}
+
+.dropdown-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}
+
+.dropdown-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Show dropdown */
+.dropdown.open .dropdown-content {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* ======================
+   Dropdown items
+====================== */
+.dropdown-item {
+  padding: 0.3rem 0.4rem;
+  color: var(--color-text-dark, #000);
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-item.active {
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Placeholder or disabled items */
+.dropdown-item[aria-disabled="true"],
+.dropdown-item.placeholder {
+  color: rgba(0, 0, 0, 0.4);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ======================
+   Hidden input styling
+====================== */
+.dropdown input[type="hidden"] {
+  display: none;
+}
+
+/* ======================
+   Dividers
+====================== */
+.dropdown-divider {
+  height: 1px;
+  margin: 0.25rem 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ======================
+   Option group labels
+====================== */
+.dropdown-label {
+  padding: 0.3rem 0.4rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: default;
+}
+
+/* ======================
+   Dark mode support
+====================== */
+:root.dark .dropdown-btn {
+  background: #1c1c1e;
+  color: #f0f0f0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+:root.dark .dropdown-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:root.dark .dropdown-content {
+  background: transparent;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+:root.dark .dropdown-item {
+  color: #f0f0f0;
+}
+
+:root.dark .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root.dark .dropdown-item.active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+:root.dark .dropdown-divider {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+:root.dark .dropdown-item[aria-disabled="true"],
+:root.dark .dropdown-item.placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+:root.dark .dropdown-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+:root.dark .dropdown-content::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+}

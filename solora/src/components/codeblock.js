@@ -16,7 +16,9 @@ export function initCodeblocks() {
     if (!pre || !preContent) return;
 
     // Verplaats de copy button naar het begin van preContent
-    if (copyBtn) preContent.insertBefore(copyBtn, preContent.firstChild);
+    if (copyBtn && copyBtn.classList.contains("btn-in-pre")) {
+      preContent.insertBefore(copyBtn, preContent.firstChild);
+    }
 
     // --- Copy button ---
     if (copyBtn && !copyBtn.dataset.bound) {
@@ -43,9 +45,6 @@ export function initCodeblocks() {
     } else {
       pre.innerHTML = Prism.highlight(code, Prism.languages[lang], lang);
     }
-
-    // --- Draggable ---
-    if (block.classList.contains('draggable')) makeDraggable(block);
 
     // --- Close button ---
     if (closeBtn) closeBtn.addEventListener('click', () => {
@@ -130,46 +129,4 @@ function initMaximizeButton(block, maximizeBtn) {
       }, { once: true });
     }
   });
-}
-
-// --- Draggable helper ---
-function makeDraggable(element) {
-  const header = element.querySelector('.pre-top');
-  if (!header) return;
-
-  let offsetX = 0, offsetY = 0, isDragging = false;
-  header.style.cursor = 'move';
-
-  header.addEventListener('mousedown', onMouseDown);
-
-  header.querySelectorAll('span, button').forEach(btn => {
-    btn.addEventListener('mousedown', e => e.stopPropagation());
-  });
-
-  function onMouseDown(e) {
-    isDragging = true;
-    const rect = element.getBoundingClientRect();
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
-
-    Object.assign(element.style, { width: `${rect.width}px`, position: 'absolute', zIndex: 9999 });
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  }
-
-  function onMouseMove(e) {
-    if (element.dataset.isFullscreen === "true" || !isDragging) return;
-
-    const left = e.clientX - offsetX;
-    const top = e.clientY - offsetY;
-
-    Object.assign(element.style, { left: `${left}px`, top: `${top}px` });
-    element.dataset.currentRect = JSON.stringify({ top, left, width: element.offsetWidth, height: element.offsetHeight });
-  }
-
-  function onMouseUp() {
-    isDragging = false;
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
-  }
 }

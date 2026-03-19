@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codeblock | Solora UI</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+        body { font-family: 'Inter', -apple-system, sans-serif; background: #000; color: #fff; }
+        
+        /* De Glass Logo Stijl */
+        .glass-logo {
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            backdrop-filter: blur(10px);
+            padding: 2px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .sidebar { width: 220px; border-right: 1px solid rgba(255,255,255,0.1); }
+        .content-area { flex: 1; }
+        code { font-family: 'SF Mono', monospace; font-size: 0.85em; background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="h-12 glass-panel fixed top-0 w-full z-50 flex items-center justify-between px-6">
+        <div class="glass-logo">Solora</div>
+        <div class="text-xs font-medium text-gray-400">v1.0.0-alpha</div>
+    </header>
+
+    <div class="flex flex-1 pt-12">
+        <aside class="sidebar fixed h-full p-4 overflow-y-auto hidden md:block">
+            <p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-4">Documentatie</p>
+            <ul class="space-y-1">
+                <li><a href="../install.html" class="block px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-gray-400 hover:text-white">Installatie</a></li>
+<li><a href="button.html" class="block px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-gray-400 hover:text-white">Button</a></li>
+<li><a href="codeblock.html" class="block px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-white/10 text-white">Codeblock</a></li>
+<li><a href="dropdown.html" class="block px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-gray-400 hover:text-white">Dropdown</a></li>
+
+            </ul>
+        </aside>
+
+        <main class="content-area md:ml-[220px] p-8 max-w-4xl">
+            
+    <h1 class="text-3xl font-black mb-2">Codeblock</h1>
+    <p class="text-gray-400 mb-8 font-medium">Een macOS-stijl window voor code snippets, inclusief copy-functionaliteit.</p>
+
+    <div class="mb-8">
+        <div class="codeblock draggable">
+            <div class="pre-top">
+                <div class="pre-top-btns">
+                    <span class="pre-btn-red close-btn"></span>
+                    <span class="pre-btn-orange minimize-btn"></span>
+                    <span class="pre-btn-green maximize-btn"></span>
+                </div>
+            </div>
+            <button class="pre-copy-btn btn-in-pre btn btn-glass btn-sm">Copy</button>
+            <div class="pre-content p-6">
+                <pre data-language="javascript"><code>function welcome() {
+  console.log("Welkom bij Solora UI!");
+}</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-xl font-bold mb-4">Interactie</h2>
+    <ul class="list-disc list-inside text-gray-400 space-y-2">
+        <li><strong>Rood:</strong> Sluit het blok.</li>
+        <li><strong>Oranje:</strong> Collapse de content.</li>
+        <li><strong>Groen:</strong> Fullscreen modus.</li>
+        <li><strong>Sleepbaar:</strong> Voeg de class <code>draggable</code> toe.</li>
+    </ul>
+    
+        </main>
+    </div>
+
+    <script type="module">
+        // Simuleer de import uit node_modules voor demo
+        import { initDropdowns, initCodeblocks } from '../node_modules/@kerkhoff-ict/solora/dist/index.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initDropdowns === 'function') initDropdowns();
+            if (typeof initCodeblocks === 'function') initCodeblocks();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+/* ======================
+   Solora Input Wrapper
+====================== */
+.sol-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  width: 100%;
+}
+
+/* ======================
+   Solora Label
+====================== */
+.sol-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  /* Gebruikt dark text met opacity voor die Apple-subtibiliteit */
+  color: var(--color-text-dark, #000);
+  opacity: 0.6;
+  margin-left: 0.2rem;
+}
+
+/* ======================
+   Basis Input Styling
+====================== */
+.sol-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 0.3rem 0.4rem;
+  font-size: 0.95rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--color-bg, #fefefe);
+  color: var(--color-text-dark, #000);
+  /* Subtiele diepte: inset voor 'holte', normale shadow voor 'lift' */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  outline: none;
+}
+
+/* Placeholder styling */
+.sol-input::placeholder {
+  color: var(--color-text-dark, #000);
+  opacity: 0.3;
+}
+
+/* ======================
+   Interactie (Focus & Hover)
+====================== */
+.sol-input:hover {
+  border-color: rgba(0, 0, 0, 0.2);
+  background: var(--color-bg-hover, #ffffff);
+}
+
+.sol-input:focus {
+  /* Gebruikt de primary kleur van de gebruiker voor de focus ring */
+  border-color: var(--color-primary, #0071e3);
+  box-shadow: 0 0 0 4px var(--color-focus-glow, rgba(0, 113, 227, 0.15)), 
+              0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--color-bg-hover, #ffffff);
+}
+
+/* ======================
+   States (Disabled / Error)
+====================== */
+.sol-input:disabled {
+  background: var(--color-secondary, #f5f5f5);
+  color: var(--color-text-dark, #000);
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.sol-input-error {
+  /* Gebruikt de danger kleur van de gebruiker */
+  border-color: var(--color-danger, #dc3545) !important;
+}
+
+.sol-input-error:focus {
+  box-shadow: 0 0 0 4px var(--color-error-glow, rgba(220, 53, 69, 0.15)) !important;
+}
+
+/* Verberg de spin-buttons voor Chrome, Safari, Edge en Opera */
+.sol-input::-webkit-outer-spin-button,
+.sol-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Verberg de spin-buttons voor Firefox */
+.sol-input {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+/* Container moet relatief zijn voor positionering van de error */
+.sol-input-group {
+  position: relative;
+}
+
+/* De custom error melding */
+.sol-error-message {
+  color: var(--color-danger, #ff453a);
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 0.2rem;
+  margin-left: 0.2rem;
+  display: none; /* Standaard verborgen */
+  animation: solFadeIn 0.2s ease-out;
+}
+
+@keyframes solFadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Visuele state voor de input zelf */
+.sol-input.is-invalid {
+  border-color: var(--color-danger, #ff453a) !important;
+  box-shadow: 0 0 0 4px var(--color-error-glow, rgba(255, 69, 58, 0.15)) !important;
+}
+
+/* ======================
+   Dark mode support
+====================== */
+:root.dark .sol-label {
+  color: var(--color-text-light, #fff);
+  opacity: 0.6;
+}
+
+:root.dark .sol-input {
+  background: rgba(28, 28, 30, 0.8); /* Glassmorphism basis */
+  color: var(--color-text-light, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+:root.dark .sol-input::placeholder {
+  color: var(--color-text-light, #fff);
+  opacity: 0.3;
+}
+
+:root.dark .sol-input:hover {
+  background: rgba(44, 44, 46, 0.9);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+:root.dark .sol-input:focus {
+  background: rgba(44, 44, 46, 1);
+  /* In dark mode is de primary kleur vaak iets feller (Apple Blue Dark: #0a84ff) */
+  border-color: var(--color-primary-dark, #0a84ff);
+  box-shadow: 0 0 0 4px var(--color-focus-glow-dark, rgba(10, 132, 255, 0.2)), 
+              0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+:root.dark .sol-input-error {
+  border-color: var(--color-danger, #ff453a) !important;
+}

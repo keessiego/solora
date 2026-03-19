@@ -1,0 +1,1637 @@
+================================================================================
+File: ./components/button.css
+================================================================================
+
+/* ======================
+   Basis button styles
+====================== */
+.btn {
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    filter 0.2s;
+}
+
+.btn-rounded {
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.btn-sm {
+  padding: 0.1875rem 1rem;
+  font-size: 0.9375rem;
+}
+.btn-md {
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+}
+.btn-lg {
+  padding: 0.8125rem 1.5625rem;
+  font-size: 1.0625rem;
+}
+.btn-xl {
+  padding: 0.9375rem 1.875rem;
+  font-size: 1.3125rem;
+}
+
+.btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ======================
+   Predefined color buttons met fallback
+====================== */
+.btn-primary {
+  background: var(--color-primary, #0071e3);
+  color: var(--color-text-light, #fff);
+}
+.btn-primary:hover {
+  filter: brightness(0.85);
+}
+
+.btn-secondary {
+  background: var(--color-secondary, #f5f5f5);
+  color: var(--color-text-dark, #000);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+.btn-secondary.active,
+.btn-secondary:hover {
+  filter: brightness(0.9);
+}
+
+.btn-success {
+  background: var(--color-success, #28a745);
+  color: var(--color-text-light, #fff);
+}
+.btn-success:hover {
+  filter: brightness(0.85);
+}
+
+.btn-warning {
+  background: var(--color-warning, #ffc107);
+  color: var(--color-text-dark, #000);
+}
+.btn-warning:hover {
+  filter: brightness(0.85);
+}
+
+.btn-danger {
+  background: var(--color-danger, #dc3545);
+  color: var(--color-text-light, #fff);
+}
+.btn-danger:hover {
+  filter: brightness(0.85);
+}
+
+/* ======================
+   Glass button (special)
+====================== */
+.btn-glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-text-dark, #000);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-glass::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.084);
+  filter: blur(16px);
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+.btn-glass:active {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  transform: translateY(1px);
+}
+
+/* ======================
+   Custom color button helper
+   Usage: .btn-[#ff6600] of .btn-[rgba(255,0,0,0.5)]
+====================== */
+[class*="btn-["] {
+  color: var(--color-text-light, #fff);
+  transition: all 0.2s ease;
+}
+[class*="btn-["]:hover {
+  filter: brightness(0.85);
+}
+
+/* ======================
+   Dark mode support
+====================== */
+:root.dark {
+  .btn-primary {
+    background: #0558be;
+    color: var(--color-text-light, #fff);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+  .btn-primary:hover {
+    background: #2b76d2;
+  }
+
+  .btn-secondary {
+    background: #1c1c1e;
+    color: #f0f0f0;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+  .btn-secondary.active,
+  .btn-secondary:hover {
+    background-color: #2a2a2c;
+  }
+
+  .btn-success {
+    background: #1c3e23;
+  }
+  .btn-success:hover {
+    filter: brightness(1.2);
+  }
+
+  .btn-warning {
+    background: #664d03;
+  }
+  .btn-warning:hover {
+    filter: brightness(1.2);
+  }
+
+  .btn-danger {
+    background: #7a1f1f;
+  }
+  .btn-danger:hover {
+    filter: brightness(1.2);
+  }
+
+  .btn-glass {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.6),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  .btn-glass::before {
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 12px 28px rgba(0, 0, 0, 0.7),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .btn-glass:active {
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow:
+      0 4px 10px rgba(0, 0, 0, 0.4),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+}
+
+
+================================================================================
+File: ./components/codeblock.css
+================================================================================
+
+.codeblock {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: "SF Mono", "Menlo", monospace;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: #fefefe55;
+  backdrop-filter: blur(8px);
+}
+
+.pre-content {
+  margin: 0;
+  backdrop-filter: blur(12px);
+  color: #000000;
+  padding-left: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  /* white-space: pre-wrap; */
+  word-break: break-word;
+  display: block;
+  background: transparent;
+  color: inherit;
+  position: relative;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
+  opacity: 1;
+}
+
+.pre-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* .codeblock.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  z-index: 9999;
+} */
+
+.pre-copy-btn {
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.pre-copy-btn.btn-in-pre {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  /* padding: 4px 10px; */
+  /* font-size: 0.8rem; */
+  /* border-radius: 6px; */
+  /* background: rgba(255, 255, 255, 0.15); */
+  /* color: #000; */
+  /* border: 1px solid rgba(255, 255, 255, 0.3); */
+  /* backdrop-filter: blur(8px); */
+  /* transition: background 0.2s, transform 0.1s; */
+  z-index: 5;
+}
+
+/* .pre-copy-btn.btn-in-pre:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+} */
+
+.pre-top {
+  background: rgb(74, 74, 74);
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px;
+  padding-left: 20px;
+}
+
+.pre-top-btns {
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  cursor: pointer !important;
+}
+
+.pre-top-btns span {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.pre-btn-red {
+  background: #ff5f57;
+  position: relative;
+}
+.pre-btn-orange {
+  background: #ffbd2e;
+  position: relative;
+}
+.pre-btn-green {
+  background: #28c940;
+  position: relative;
+}
+
+/* Iconen toevoegen */
+.pre-btn-red::before {
+  content: '×';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  color: black;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pre-btn-orange::before {
+  content: '–';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  color: black;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pre-btn-green::before {
+  content: "⛶";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: black;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pre-top-btns span:hover::before { opacity: 1; }
+
+
+.pre-btn-red:hover {
+  filter: brightness(1.2);
+}
+.pre-btn-orange:hover {
+  filter: brightness(1.2);
+}
+.pre-btn-green:hover {
+  filter: brightness(1.2);
+}
+
+.codeblock .token.comment,
+.codeblock .token.prolog,
+.codeblock .token.doctype,
+.codeblock .token.cdata {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.codeblock .token.punctuation {
+  color: #2c3e50;
+}
+
+.codeblock .token.operator,
+.codeblock .token.boolean,
+.codeblock .token.symbol,
+.codeblock .token.entity {
+  color: #2c3e50;
+}
+
+.codeblock .token.number {
+  color: #d35400;
+}
+
+.codeblock .token.property,
+.codeblock .token.tag,
+.codeblock .token.constant,
+.codeblock .token.class-name,
+.codeblock .token.function {
+  color: #2980b9;
+  font-weight: 500;
+}
+
+.codeblock .token.selector,
+.codeblock .token.attr-name,
+.codeblock .token.string,
+.codeblock .token.char,
+.codeblock .token.builtin,
+.codeblock .token.inserted {
+  color: #27ae60;
+}
+
+.codeblock .token.keyword,
+.codeblock .token.atrule,
+.codeblock .token.attr-value,
+.codeblock .token.deleted,
+.codeblock .token.regex,
+.codeblock .token.important {
+  color: #e67e22;
+  font-weight: 500;
+}
+
+.codeblock .token.entity {
+  cursor: help;
+}
+
+.codeblock .token.important,
+.codeblock .token.bold {
+  font-weight: bold;
+}
+
+.codeblock .token.italic {
+  font-style: italic;
+}
+
+/* Optional: highlight background for selected text */
+.codeblock ::selection {
+  background: rgba(46, 204, 113, 0.2);
+}
+
+.codeblock pre::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.codeblock pre::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.codeblock pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* --- Dark mode --- */
+:root.dark {
+
+  .codeblock {
+    background: #1e1e2f88; /* donkere blur achtergrond */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+
+  .pre-content {
+    color: #f0f0f0;
+  }
+
+  .pre-top {
+    background: #2c2c3e;
+  }
+
+  /* Prism tokens dark */
+  .codeblock .token.comment,
+  .codeblock .token.prolog,
+  .codeblock .token.doctype,
+  .codeblock .token.cdata {
+    color: #95a5a6;
+    font-style: italic;
+  }
+
+  .codeblock .token.punctuation {
+    color: #ecf0f1;
+  }
+
+  .codeblock .token.operator,
+  .codeblock .token.boolean,
+  .codeblock .token.symbol,
+  .codeblock .token.entity {
+    color: #ecf0f1;
+  }
+
+  .codeblock .token.number {
+    color: #e67e22;
+  }
+
+  .codeblock .token.property,
+  .codeblock .token.tag,
+  .codeblock .token.constant,
+  .codeblock .token.class-name,
+  .codeblock .token.function {
+    color: #3498db;
+    font-weight: 500;
+  }
+
+  .codeblock .token.selector,
+  .codeblock .token.attr-name,
+  .codeblock .token.string,
+  .codeblock .token.char,
+  .codeblock .token.builtin,
+  .codeblock .token.inserted {
+    color: #2ecc71;
+  }
+
+  .codeblock .token.keyword,
+  .codeblock .token.atrule,
+  .codeblock .token.attr-value,
+  .codeblock .token.deleted,
+  .codeblock .token.regex,
+  .codeblock .token.important {
+    color: #f39c12;
+    font-weight: 500;
+  }
+
+}
+
+================================================================================
+File: ./components/codeblock.js
+================================================================================
+
+import Prism from 'prismjs';
+
+// --- Optioneel: alle talen importeren (vergeet dit niet in je bundler te ondersteunen) ---
+import 'prismjs/components/index.js'; // Dit laadt alle standaard talen
+
+export function initCodeblocks() {
+  const blocks = document.querySelectorAll('.codeblock');
+
+  blocks.forEach(block => {
+    const pre = block.querySelector('pre');
+    const copyBtn = block.querySelector('.pre-copy-btn');
+    const closeBtn = block.querySelector('.close-btn');
+    const minimizeBtn = block.querySelector('.minimize-btn');
+    const preContent = block.querySelector('.pre-content');
+
+    if (!pre || !preContent) return;
+
+    // Verplaats de copy button naar het begin van preContent
+    if (copyBtn && copyBtn.classList.contains("btn-in-pre")) {
+      preContent.insertBefore(copyBtn, preContent.firstChild);
+    }
+
+    // --- Copy button ---
+    if (copyBtn && !copyBtn.dataset.bound) {
+      copyBtn.dataset.bound = 'true';
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(pre.innerText);
+          const oldText = copyBtn.innerText;
+          copyBtn.innerText = 'Copied!';
+          setTimeout(() => copyBtn.innerText = oldText, 1200);
+        } catch (err) {
+          console.error('Copy failed:', err);
+        }
+      });
+    }
+
+    // --- Prism syntax highlighting ---
+    const code = pre.textContent;
+    const lang = (pre.dataset.language || 'javascript').toLowerCase();
+
+    if (!Prism.languages[lang]) {
+      console.warn(`Language '${lang}' not loaded in Prism, using plaintext fallback.`);
+      pre.textContent = code; // fallback
+    } else {
+      pre.innerHTML = Prism.highlight(code, Prism.languages[lang], lang);
+    }
+
+    // --- Close button ---
+    if (closeBtn) closeBtn.addEventListener('click', () => {
+      block.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      block.style.opacity = 0;
+      block.style.transform = 'scale(0.95)';
+      setTimeout(() => block.remove(), 300);
+    });
+
+    // --- Minimize button ---
+    if (minimizeBtn) minimizeBtn.addEventListener('click', () => {
+      preContent.classList.toggle('collapsed');
+    });
+
+    // --- Maximize button ---
+    const maximizeBtn = block.querySelector('.maximize-btn');
+    if (maximizeBtn) initMaximizeButton(block, maximizeBtn);
+  });
+}
+
+// --- Maximize logic los van initCodeblocks ---
+function initMaximizeButton(block, maximizeBtn) {
+  maximizeBtn.addEventListener('click', e => {
+    e.stopPropagation();
+
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+
+    if (!block.dataset.origRect) {
+      const rect = block.getBoundingClientRect();
+      block.dataset.origRect = JSON.stringify({
+        top: rect.top + scrollY,
+        left: rect.left + scrollX,
+        width: rect.width,
+        height: rect.height
+      });
+    }
+
+    void block.offsetWidth; // force reflow
+
+    if (block.dataset.isFullscreen !== "true") {
+      const rect = block.getBoundingClientRect();
+      const startRect = { top: rect.top + scrollY, left: rect.left + scrollX, width: rect.width, height: rect.height };
+
+      Object.assign(block.style, {
+        position: 'fixed',
+        top: `${startRect.top}px`,
+        left: `${startRect.left}px`,
+        width: `${startRect.width}px`,
+        height: `${startRect.height}px`,
+        margin: '0',
+        zIndex: 9999,
+        transition: 'all 0.3s ease'
+      });
+
+      void block.offsetWidth; // trigger animation
+      Object.assign(block.style, { top: '0', left: '0', width: '100%', height: '100%', borderRadius: '0' });
+      block.dataset.isFullscreen = "true";
+
+    } else {
+      const origRect = JSON.parse(block.dataset.origRect);
+      Object.assign(block.style, {
+        transition: 'all 0.3s ease',
+        top: `${origRect.top}px`,
+        left: `${origRect.left}px`,
+        width: `${origRect.width}px`,
+        height: 'auto',
+        borderRadius: '12px'
+      });
+
+      block.addEventListener('transitionend', () => {
+        Object.assign(block.style, {
+          transition: '',
+          position: '',
+          top: '',
+          left: '',
+          width: '',
+          height: '',
+          zIndex: ''
+        });
+        block.dataset.isFullscreen = "false";
+      }, { once: true });
+    }
+  });
+}
+
+================================================================================
+File: ./components/contextMenu.css
+================================================================================
+
+/* ======================
+   Solora Context Menu Container
+====================== */
+.sol-context-menu {
+  position: fixed;
+  display: none;
+  z-index: 9999;
+  min-width: 180px;
+  background: transparent;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 5px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  user-select: none;
+  
+  /* Animatie settings */
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+  transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.sol-context-menu.visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ======================
+   Menu Items
+====================== */
+.sol-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.2rem 0.3rem;
+  font-size: 0.85rem;
+  color: var(--color-text-dark, #000);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+
+.sol-menu-item:hover {
+  background: var(--color-primary, #007aff);
+  color: #fff;
+}
+
+/* Shortcuts aan de rechterkant */
+.sol-menu-shortcut {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  margin-left: 20px;
+}
+
+.sol-menu-item:hover .sol-menu-shortcut {
+  color: #fff;
+  opacity: 0.8;
+}
+
+/* ======================
+   Dividers & Sections
+====================== */
+.sol-menu-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 4px 0;
+}
+
+/* ======================
+   Dark Mode Support
+====================== */
+:root.dark .sol-context-menu {
+  background: rgba(28, 28, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+:root.dark .sol-menu-item {
+  color: var(--color-text-light, #f0f0f0);
+}
+
+:root.dark .sol-menu-divider {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+================================================================================
+File: ./components/contextMenu.js
+================================================================================
+
+export function initContextMenu() {
+    let menu = document.querySelector('.sol-context-menu');
+    if (!menu) {
+        menu = document.createElement('div');
+        menu.className = 'sol-context-menu';
+        document.body.appendChild(menu);
+    }
+
+    // Houd bij welk element het doelwit was bij rechtsklik
+    let contextTarget = null;
+
+    const showMenu = (e) => {
+        e.preventDefault();
+        contextTarget = e.target;
+
+        const selection   = window.getSelection().toString().trim();
+        const link        = e.target.closest('a');
+        const img         = e.target.closest('img');
+        const input       = e.target.closest('input, textarea, [contenteditable]');
+        const isEditable  = input || e.target.isContentEditable;
+        const isTextInput = input && (input.type === 'text' || input.type === 'search'
+                            || input.type === 'email' || input.type === 'password'
+                            || input.tagName === 'TEXTAREA' || input.isContentEditable);
+
+        let menuHtml = '';
+
+        // ── CONTEXT: Tekst geselecteerd ────────────────────────────
+        if (selection.length > 0) {
+            menuHtml += `
+                <div class="sol-menu-label">Selectie</div>
+                <div class="sol-menu-item" data-action="copy">
+                    Kopieer <span class="sol-menu-shortcut">⌘C</span>
+                </div>
+                ${isEditable ? `
+                <div class="sol-menu-item" data-action="cut">
+                    Knippen <span class="sol-menu-shortcut">⌘X</span>
+                </div>` : ''}
+                <div class="sol-menu-item" data-action="search-google">
+                    Zoek op Google: <em>"${selection.slice(0, 20)}${selection.length > 20 ? '…' : ''}"</em>
+                </div>
+                <div class="sol-menu-item" data-action="search-wiki">
+                    Zoek op Wikipedia…
+                </div>
+                <div class="sol-menu-item" data-action="translate">
+                    Vertaal selectie…
+                </div>
+                <div class="sol-menu-divider"></div>
+            `;
+        }
+
+        // ── CONTEXT: Invoerveld ────────────────────────────────────
+        if (isTextInput) {
+            menuHtml += `
+                <div class="sol-menu-label">Tekstveld</div>
+                ${selection.length > 0 ? `
+                <div class="sol-menu-item" data-action="cut">
+                    Knippen <span class="sol-menu-shortcut">⌘X</span>
+                </div>
+                <div class="sol-menu-item" data-action="copy">
+                    Kopieer <span class="sol-menu-shortcut">⌘C</span>
+                </div>` : ''}
+                <div class="sol-menu-item" data-action="paste">
+                    Plakken <span class="sol-menu-shortcut">⌘V</span>
+                </div>
+                <div class="sol-menu-item" data-action="select-all">
+                    Alles selecteren <span class="sol-menu-shortcut">⌘A</span>
+                </div>
+                <div class="sol-menu-item" data-action="clear-field">
+                    Veld wissen
+                </div>
+                <div class="sol-menu-divider"></div>
+            `;
+        }
+
+        // ── CONTEXT: Afbeelding ───────────────────────────────────
+        if (img) {
+            menuHtml += `
+                <div class="sol-menu-label">Afbeelding</div>
+                <div class="sol-menu-item" data-action="open-img" data-url="${img.src}">
+                    Afbeelding openen in nieuw tabblad
+                </div>
+                <div class="sol-menu-item" data-action="copy-img-url" data-url="${img.src}">
+                    Kopieer afbeeldings-URL
+                </div>
+                <div class="sol-menu-item" data-action="download-img" data-url="${img.src}" data-filename="${img.alt || 'afbeelding'}">
+                    Afbeelding opslaan…
+                </div>
+                ${img.alt ? `
+                <div class="sol-menu-item" data-action="copy-alt" data-text="${img.alt}">
+                    Kopieer alt-tekst
+                </div>` : ''}
+                <div class="sol-menu-divider"></div>
+            `;
+        }
+
+        // ── CONTEXT: Link ─────────────────────────────────────────
+        if (link) {
+            menuHtml += `
+                <div class="sol-menu-label">Link</div>
+                <div class="sol-menu-item" data-action="open-tab" data-url="${link.href}">
+                    Open in nieuw tabblad
+                </div>
+                <div class="sol-menu-item" data-action="open-window" data-url="${link.href}">
+                    Open in nieuw venster
+                </div>
+                <div class="sol-menu-item" data-action="copy-link" data-url="${link.href}">
+                    Kopieer link-adres
+                </div>
+                <div class="sol-menu-divider"></div>
+            `;
+        }
+
+        // ── NAVIGATIE ─────────────────────────────────────────────
+        menuHtml += `
+            <div class="sol-menu-label">Navigatie</div>
+            <div class="sol-menu-item${!history.length || history.state === null ? ' disabled' : ''}" data-action="go-back">
+                ← Vorige pagina
+            </div>
+            <div class="sol-menu-item" data-action="go-forward">
+                → Volgende pagina
+            </div>
+            <div class="sol-menu-item" data-action="reload">
+                Vernieuwen <span class="sol-menu-shortcut">⌘R</span>
+            </div>
+            <div class="sol-menu-item" data-action="hard-reload">
+                Geforceerd vernieuwen <span class="sol-menu-shortcut">⇧⌘R</span>
+            </div>
+            <div class="sol-menu-divider"></div>
+        `;
+
+        // ── PAGINA ────────────────────────────────────────────────
+        menuHtml += `
+            <div class="sol-menu-label">Pagina</div>
+            <div class="sol-menu-item" data-action="copy-page-url">
+                Kopieer pagina-URL
+            </div>
+            <div class="sol-menu-item" data-action="view-source">
+                Bekijk paginabron <span class="sol-menu-shortcut">⌘U</span>
+            </div>
+            <div class="sol-menu-item" data-action="print">
+                Printen <span class="sol-menu-shortcut">⌘P</span>
+            </div>
+            <div class="sol-menu-item" data-action="save-page">
+                Pagina opslaan <span class="sol-menu-shortcut">⌘S</span>
+            </div>
+            <div class="sol-menu-item" data-action="scroll-top">
+                Naar boven scrollen
+            </div>
+            <div class="sol-menu-divider"></div>
+        `;
+
+        // ── ONTWIKKELAAR ──────────────────────────────────────────
+        menuHtml += `
+            <div class="sol-menu-label">Ontwikkelaar</div>
+            <div class="sol-menu-item" data-action="inspect">
+                Inspecteer element <span class="sol-menu-shortcut">⌥⌘I</span>
+            </div>
+            <div class="sol-menu-item" data-action="copy-selector">
+                Kopieer CSS-selector
+            </div>
+            <div class="sol-menu-item" data-action="log-element">
+                Log element in console
+            </div>
+        `;
+
+        menu.innerHTML = menuHtml;
+
+        // ── Positionering & edge detection ────────────────────────
+        menu.style.display = 'block';
+        let posX = e.clientX;
+        let posY = e.clientY;
+        const menuWidth  = menu.offsetWidth;
+        const menuHeight = menu.offsetHeight;
+        if (posX + menuWidth  > window.innerWidth)  posX -= menuWidth;
+        if (posY + menuHeight > window.innerHeight)  posY -= menuHeight;
+        menu.style.left = `${posX}px`;
+        menu.style.top  = `${posY}px`;
+
+        requestAnimationFrame(() => menu.classList.add('visible'));
+    };
+
+    const hideMenu = () => {
+        menu.classList.remove('visible');
+        setTimeout(() => {
+            if (!menu.classList.contains('visible')) menu.style.display = 'none';
+        }, 150);
+    };
+
+    // ── Hulpfunctie: CSS-selector genereren ───────────────────────
+    const getCssSelector = (el) => {
+        if (!el) return '';
+        const parts = [];
+        while (el && el.nodeType === Node.ELEMENT_NODE) {
+            let selector = el.nodeName.toLowerCase();
+            if (el.id) {
+                selector += `#${el.id}`;
+                parts.unshift(selector);
+                break;
+            }
+            if (el.className) {
+                selector += '.' + [...el.classList].join('.');
+            }
+            const siblings = el.parentNode ? [...el.parentNode.children].filter(s => s.nodeName === el.nodeName) : [];
+            if (siblings.length > 1) {
+                selector += `:nth-of-type(${siblings.indexOf(el) + 1})`;
+            }
+            parts.unshift(selector);
+            el = el.parentNode;
+        }
+        return parts.join(' > ');
+    };
+
+    // ── Event listeners ───────────────────────────────────────────
+    document.addEventListener('contextmenu', showMenu);
+    document.addEventListener('click', hideMenu);
+    window.addEventListener('scroll', hideMenu);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') hideMenu();
+    });
+
+    // ── Action handler ────────────────────────────────────────────
+    menu.addEventListener('click', (e) => {
+        const item = e.target.closest('.sol-menu-item');
+        if (!item || item.classList.contains('disabled')) return;
+
+        const action   = item.dataset.action;
+        const url      = item.dataset.url;
+        const text     = item.dataset.text;
+        const filename = item.dataset.filename;
+        const sel      = window.getSelection().toString().trim();
+
+        switch (action) {
+            // Tekst
+            case 'copy':
+                document.execCommand('copy');
+                break;
+            case 'cut':
+                document.execCommand('cut');
+                break;
+            case 'paste':
+                navigator.clipboard.readText().then(t => document.execCommand('insertText', false, t));
+                break;
+            case 'select-all':
+                document.execCommand('selectAll');
+                break;
+            case 'clear-field':
+                if (contextTarget?.closest('input, textarea')) contextTarget.closest('input, textarea').value = '';
+                break;
+
+            // Zoeken & vertalen
+            case 'search-google':
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(sel)}`, '_blank');
+                break;
+            case 'search-wiki':
+                window.open(`https://nl.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(sel)}`, '_blank');
+                break;
+            case 'translate':
+                window.open(`https://translate.google.com/?sl=auto&tl=nl&text=${encodeURIComponent(sel)}`, '_blank');
+                break;
+
+            // Afbeelding
+            case 'open-img':
+                window.open(url, '_blank');
+                break;
+            case 'copy-img-url':
+                navigator.clipboard.writeText(url);
+                break;
+            case 'copy-alt':
+                navigator.clipboard.writeText(text);
+                break;
+            case 'download-img': {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename || 'afbeelding';
+                a.click();
+                break;
+            }
+
+            // Link
+            case 'open-tab':
+                window.open(url, '_blank');
+                break;
+            case 'open-window':
+                window.open(url, '_blank', 'noopener,noreferrer');
+                break;
+            case 'copy-link':
+                navigator.clipboard.writeText(url);
+                break;
+
+            // Navigatie
+            case 'go-back':    history.back();    break;
+            case 'go-forward': history.forward(); break;
+            case 'reload':     location.reload(); break;
+            case 'hard-reload':
+                location.href = location.href;
+                break;
+
+            // Pagina
+            case 'copy-page-url':
+                navigator.clipboard.writeText(location.href);
+                break;
+            case 'view-source':
+                window.open(`view-source:${location.href}`, '_blank');
+                break;
+            case 'print':    window.print(); break;
+            case 'save-page':
+                document.execCommand('SaveAs');
+                break;
+            case 'scroll-top':
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                break;
+
+            // Ontwikkelaar
+            case 'inspect':
+                console.log('%c[Inspecteer element]', 'color:#6c63ff;font-weight:bold', contextTarget);
+                break;
+            case 'copy-selector':
+                navigator.clipboard.writeText(getCssSelector(contextTarget));
+                break;
+            case 'log-element':
+                console.log('%c[Sol Context Menu] Geselecteerd element:', 'color:#6c63ff', contextTarget);
+                console.table({
+                    tag:       contextTarget?.tagName,
+                    id:        contextTarget?.id,
+                    classes:   contextTarget?.className,
+                    selector:  getCssSelector(contextTarget),
+                    innerText: contextTarget?.innerText?.slice(0, 80),
+                });
+                break;
+        }
+
+        hideMenu();
+    });
+}
+
+================================================================================
+File: ./components/darkToggle.css
+================================================================================
+
+/* ======================
+   Solora Theme Toggle
+====================== */
+/* .sol-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+} */
+
+
+/* Icon animatie */
+/* .sol-theme-toggle span {
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+} */
+
+/* ======================
+   Dark Mode Styles
+====================== */
+
+/* :root.dark .sol-theme-toggle span {
+  transform: rotate(360deg);
+} */
+
+================================================================================
+File: ./components/darkToggle.js
+================================================================================
+
+/**
+ * Initialiseert de Solora Theme Toggle
+ * @param {string} elementSelector - De CSS selector voor de toggle knop(pen)
+ */
+export function initThemeToggle(elementSelector = '.sol-theme-toggle') {
+  const html = document.documentElement;
+  const toggles = document.querySelectorAll(elementSelector);
+  const STORAGE_KEY = 'solora-theme';
+
+  // 1. Helper: Pas thema toe
+  const applyTheme = (theme) => {
+    if (theme === 'dark') {
+      html.classList.add('dark');
+      html.classList.remove('light');
+    } else {
+      html.classList.add('light');
+      html.classList.remove('dark');
+    }
+
+    // Update alle icoontjes op de pagina
+    toggles.forEach(btn => {
+      btn.innerHTML = `<span>${theme === 'dark' ? '☀️' : '🌙'}</span>`;
+      btn.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+    });
+
+    localStorage.setItem(STORAGE_KEY, theme);
+  };
+
+  // 2. Bepaal start-thema
+  const getInitialTheme = () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return saved;
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return prefersDark ? 'dark' : 'light';
+  };
+
+  // 3. Initialiseer
+  applyTheme(getInitialTheme());
+
+  // 4. Event Listeners
+  toggles.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isDark = html.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    });
+  });
+
+  // 5. Luister naar systeemveranderingen (optioneel, voor de echte pro feel)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      applyTheme(e.matches ? 'dark' : 'light');
+    }
+  });
+}
+
+================================================================================
+File: ./components/dropdown.css
+================================================================================
+
+/* ======================
+   Basis dropdown container
+====================== */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ======================
+   Dropdown button
+====================== */
+.dropdown-btn {
+  padding: 0.3rem 0.4rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--color-bg, #fefefe);
+  color: var(--color-text-dark, #000);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-btn:hover {
+  background: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
+}
+
+.dropdown-btn:after {
+  content: "▾";
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.dropdown.open .dropdown-btn:after {
+  transform: rotate(180deg);
+}
+
+/* ======================
+   Dropdown content (Verbeterd)
+====================== */
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  min-width: 10rem;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  overflow-y: auto;
+  background: transparent; 
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  max-height: 15rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1000;
+}
+
+.dropdown-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}
+
+.dropdown-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Show dropdown */
+.dropdown.open .dropdown-content {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* ======================
+   Dropdown items
+====================== */
+.dropdown-item {
+  padding: 0.3rem 0.4rem;
+  color: var(--color-text-dark, #000);
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-item.active {
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Placeholder or disabled items */
+.dropdown-item[aria-disabled="true"],
+.dropdown-item.placeholder {
+  color: rgba(0, 0, 0, 0.4);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ======================
+   Hidden input styling
+====================== */
+.dropdown input[type="hidden"] {
+  display: none;
+}
+
+/* ======================
+   Dividers
+====================== */
+.dropdown-divider {
+  height: 1px;
+  margin: 0.25rem 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ======================
+   Option group labels
+====================== */
+.dropdown-label {
+  padding: 0.3rem 0.4rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: default;
+}
+
+/* ======================
+   Dark mode support
+====================== */
+:root.dark .dropdown-btn {
+  background: #1c1c1e;
+  color: #f0f0f0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+:root.dark .dropdown-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:root.dark .dropdown-content {
+  background: transparent;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+:root.dark .dropdown-item {
+  color: #f0f0f0;
+}
+
+:root.dark .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root.dark .dropdown-item.active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+:root.dark .dropdown-divider {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+:root.dark .dropdown-item[aria-disabled="true"],
+:root.dark .dropdown-item.placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+:root.dark .dropdown-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+:root.dark .dropdown-content::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+}
+
+================================================================================
+File: ./components/dropdown.js
+================================================================================
+
+export function initDropdowns() {
+  if (typeof window === 'undefined') return;
+
+  document.querySelectorAll('.dropdown').forEach(drop => {
+    const btn = drop.querySelector('.dropdown-btn');
+    const content = drop.querySelector('.dropdown-content');
+    if (!btn || !content) return;
+
+    // Voeg hidden input toe voor form
+    let hiddenInput = drop.querySelector('input[type="hidden"]');
+    if (!hiddenInput) {
+      hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = drop.dataset.name || 'dropdown';
+      drop.appendChild(hiddenInput);
+    }
+
+    // ======================
+    // Helper: set value
+    // ======================
+    const setValue = (item) => {
+      if (item.getAttribute('aria-disabled') === 'true') return;
+      btn.textContent = item.textContent;
+      content.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      hiddenInput.value = item.dataset.value ?? item.textContent;
+    };
+
+    // Initial active
+    const initialItem = content.querySelector('.dropdown-item.active') ||
+                        content.querySelector('.dropdown-item:not([aria-disabled="true"])');
+    if (initialItem) setValue(initialItem);
+
+    // ======================
+    // Toggle dropdown
+    // ======================
+    const openDropdown = () => drop.classList.add('open');
+    const closeDropdown = () => drop.classList.remove('open');
+
+    btn.addEventListener('click', e => {
+      if (drop.getAttribute('aria-disabled') === 'true') return;
+      e.stopPropagation();
+      drop.classList.toggle('open');
+    });
+
+    // Klik buiten sluit dropdown
+    document.addEventListener('click', e => {
+      if (!drop.contains(e.target)) closeDropdown();
+    });
+
+    // Klik op item
+    content.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', () => {
+        setValue(item);
+        closeDropdown();
+      });
+    });
+
+    // ======================
+    // Keyboard navigatie
+    // ======================
+    let items = Array.from(content.querySelectorAll('.dropdown-item:not([aria-disabled="true"])'));
+    let index = items.findIndex(i => i.classList.contains('active'));
+
+    btn.addEventListener('keydown', e => {
+      if (drop.getAttribute('aria-disabled') === 'true') return;
+      if (!['ArrowDown','ArrowUp','Enter','Escape'].includes(e.key)) return;
+
+      e.preventDefault();
+      openDropdown();
+
+      if (e.key === 'ArrowDown') {
+        index = (index + 1) % items.length;
+        items.forEach(i => i.classList.remove('active'));
+        items[index].classList.add('active');
+        items[index].scrollIntoView({ block: "nearest" });
+      }
+
+      if (e.key === 'ArrowUp') {
+        index = (index - 1 + items.length) % items.length;
+        items.forEach(i => i.classList.remove('active'));
+        items[index].classList.add('active');
+        items[index].scrollIntoView({ block: "nearest" });
+      }
+
+      if (e.key === 'Enter') {
+        setValue(items[index]);
+        closeDropdown();
+      }
+
+      if (e.key === 'Escape') {
+        closeDropdown();
+      }
+    });
+
+    // Zorg dat button focusable is
+    btn.setAttribute('tabindex', '0');
+  });
+}
+
+================================================================================
+File: ./components/input.css
+================================================================================
+
+/* ======================
+   Solora Input Wrapper
+====================== */
+.sol-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  width: 100%;
+}
+
+/* ======================
+   Solora Label
+====================== */
+.sol-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  /* Gebruikt dark text met opacity voor die Apple-subtibiliteit */
+  color: var(--color-text-dark, #000);
+  opacity: 0.6;
+  margin-left: 0.2rem;
+}
+
+/* ======================
+   Basis Input Styling
+====================== */
+.sol-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 0.3rem 0.4rem;
+  font-size: 0.95rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--color-bg, #fefefe);
+  color: var(--color-text-dark, #000);
+  /* Subtiele diepte: inset voor 'holte', normale shadow voor 'lift' */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  outline: none;
+}
+
+/* Placeholder styling */
+.sol-input::placeholder {
+  color: var(--color-text-dark, #000);
+  opacity: 0.3;
+}
+
+/* ======================
+   Interactie (Focus & Hover)
+====================== */
+.sol-input:hover {
+  border-color: rgba(0, 0, 0, 0.2);
+  background: var(--color-bg-hover, #ffffff);
+}
+
+.sol-input:focus {
+  /* Gebruikt de primary kleur van de gebruiker voor de focus ring */
+  border-color: var(--color-primary, #0071e3);
+  box-shadow: 0 0 0 4px var(--color-focus-glow, rgba(0, 113, 227, 0.15)), 
+              0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--color-bg-hover, #ffffff);
+}
+
+/* ======================
+   States (Disabled / Error)
+====================== */
+.sol-input:disabled {
+  background: var(--color-secondary, #f5f5f5);
+  color: var(--color-text-dark, #000);
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.sol-input-error {
+  /* Gebruikt de danger kleur van de gebruiker */
+  border-color: var(--color-danger, #dc3545) !important;
+}
+
+.sol-input-error:focus {
+  box-shadow: 0 0 0 4px var(--color-error-glow, rgba(220, 53, 69, 0.15)) !important;
+}
+
+/* ======================
+   Dark mode support
+====================== */
+:root.dark .sol-label {
+  color: var(--color-text-light, #fff);
+  opacity: 0.6;
+}
+
+:root.dark .sol-input {
+  background: rgba(28, 28, 30, 0.8); /* Glassmorphism basis */
+  color: var(--color-text-light, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+:root.dark .sol-input::placeholder {
+  color: var(--color-text-light, #fff);
+  opacity: 0.3;
+}
+
+:root.dark .sol-input:hover {
+  background: rgba(44, 44, 46, 0.9);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+:root.dark .sol-input:focus {
+  background: rgba(44, 44, 46, 1);
+  /* In dark mode is de primary kleur vaak iets feller (Apple Blue Dark: #0a84ff) */
+  border-color: var(--color-primary-dark, #0a84ff);
+  box-shadow: 0 0 0 4px var(--color-focus-glow-dark, rgba(10, 132, 255, 0.2)), 
+              0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+:root.dark .sol-input-error {
+  border-color: var(--color-danger, #ff453a) !important;
+}
+

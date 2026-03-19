@@ -4,7 +4,13 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __commonJS = (cb, mod) => function __require() {
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined") return require.apply(this, arguments);
+  throw Error('Dynamic require of "' + x + '" is not supported');
+});
+var __commonJS = (cb, mod) => function __require2() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __copyProps = (to, from, except, desc) => {
@@ -1473,152 +1479,271 @@ var require_prism = __commonJS({
   }
 });
 
+// node_modules/prismjs/components.js
+var require_components = __commonJS({
+  "node_modules/prismjs/components.js"(exports, module) {
+    var components = { "core": { "meta": { "path": "components/prism-core.js", "option": "mandatory" }, "core": "Core" }, "themes": { "meta": { "path": "themes/{id}.css", "link": "index.html?theme={id}", "exclusive": true }, "prism": { "title": "Default", "option": "default" }, "prism-dark": "Dark", "prism-funky": "Funky", "prism-okaidia": { "title": "Okaidia", "owner": "ocodia" }, "prism-twilight": { "title": "Twilight", "owner": "remybach" }, "prism-coy": { "title": "Coy", "owner": "tshedor" }, "prism-solarizedlight": { "title": "Solarized Light", "owner": "hectormatos2011 " }, "prism-tomorrow": { "title": "Tomorrow Night", "owner": "Rosey" } }, "languages": { "meta": { "path": "components/prism-{id}", "noCSS": true, "examplesPath": "examples/prism-{id}", "addCheckAll": true }, "markup": { "title": "Markup", "alias": ["html", "xml", "svg", "mathml", "ssml", "atom", "rss"], "aliasTitles": { "html": "HTML", "xml": "XML", "svg": "SVG", "mathml": "MathML", "ssml": "SSML", "atom": "Atom", "rss": "RSS" }, "option": "default" }, "css": { "title": "CSS", "option": "default", "modify": "markup" }, "clike": { "title": "C-like", "option": "default" }, "javascript": { "title": "JavaScript", "require": "clike", "modify": "markup", "optional": "regex", "alias": "js", "option": "default" }, "abap": { "title": "ABAP", "owner": "dellagustin" }, "abnf": { "title": "ABNF", "owner": "RunDevelopment" }, "actionscript": { "title": "ActionScript", "require": "javascript", "modify": "markup", "owner": "Golmote" }, "ada": { "title": "Ada", "owner": "Lucretia" }, "agda": { "title": "Agda", "owner": "xy-ren" }, "al": { "title": "AL", "owner": "RunDevelopment" }, "antlr4": { "title": "ANTLR4", "alias": "g4", "owner": "RunDevelopment" }, "apacheconf": { "title": "Apache Configuration", "owner": "GuiTeK" }, "apex": { "title": "Apex", "require": ["clike", "sql"], "owner": "RunDevelopment" }, "apl": { "title": "APL", "owner": "ngn" }, "applescript": { "title": "AppleScript", "owner": "Golmote" }, "aql": { "title": "AQL", "owner": "RunDevelopment" }, "arduino": { "title": "Arduino", "require": "cpp", "alias": "ino", "owner": "dkern" }, "arff": { "title": "ARFF", "owner": "Golmote" }, "armasm": { "title": "ARM Assembly", "alias": "arm-asm", "owner": "RunDevelopment" }, "arturo": { "title": "Arturo", "alias": "art", "optional": ["bash", "css", "javascript", "markup", "markdown", "sql"], "owner": "drkameleon" }, "asciidoc": { "alias": "adoc", "title": "AsciiDoc", "owner": "Golmote" }, "aspnet": { "title": "ASP.NET (C#)", "require": ["markup", "csharp"], "owner": "nauzilus" }, "asm6502": { "title": "6502 Assembly", "owner": "kzurawel" }, "asmatmel": { "title": "Atmel AVR Assembly", "owner": "cerkit" }, "autohotkey": { "title": "AutoHotkey", "owner": "aviaryan" }, "autoit": { "title": "AutoIt", "owner": "Golmote" }, "avisynth": { "title": "AviSynth", "alias": "avs", "owner": "Zinfidel" }, "avro-idl": { "title": "Avro IDL", "alias": "avdl", "owner": "RunDevelopment" }, "awk": { "title": "AWK", "alias": "gawk", "aliasTitles": { "gawk": "GAWK" }, "owner": "RunDevelopment" }, "bash": { "title": "Bash", "alias": ["sh", "shell"], "aliasTitles": { "sh": "Shell", "shell": "Shell" }, "owner": "zeitgeist87" }, "basic": { "title": "BASIC", "owner": "Golmote" }, "batch": { "title": "Batch", "owner": "Golmote" }, "bbcode": { "title": "BBcode", "alias": "shortcode", "aliasTitles": { "shortcode": "Shortcode" }, "owner": "RunDevelopment" }, "bbj": { "title": "BBj", "owner": "hyyan" }, "bicep": { "title": "Bicep", "owner": "johnnyreilly" }, "birb": { "title": "Birb", "require": "clike", "owner": "Calamity210" }, "bison": { "title": "Bison", "require": "c", "owner": "Golmote" }, "bnf": { "title": "BNF", "alias": "rbnf", "aliasTitles": { "rbnf": "RBNF" }, "owner": "RunDevelopment" }, "bqn": { "title": "BQN", "owner": "yewscion" }, "brainfuck": { "title": "Brainfuck", "owner": "Golmote" }, "brightscript": { "title": "BrightScript", "owner": "RunDevelopment" }, "bro": { "title": "Bro", "owner": "wayward710" }, "bsl": { "title": "BSL (1C:Enterprise)", "alias": "oscript", "aliasTitles": { "oscript": "OneScript" }, "owner": "Diversus23" }, "c": { "title": "C", "require": "clike", "owner": "zeitgeist87" }, "csharp": { "title": "C#", "require": "clike", "alias": ["cs", "dotnet"], "owner": "mvalipour" }, "cpp": { "title": "C++", "require": "c", "owner": "zeitgeist87" }, "cfscript": { "title": "CFScript", "require": "clike", "alias": "cfc", "owner": "mjclemente" }, "chaiscript": { "title": "ChaiScript", "require": ["clike", "cpp"], "owner": "RunDevelopment" }, "cil": { "title": "CIL", "owner": "sbrl" }, "cilkc": { "title": "Cilk/C", "require": "c", "alias": "cilk-c", "owner": "OpenCilk" }, "cilkcpp": { "title": "Cilk/C++", "require": "cpp", "alias": ["cilk-cpp", "cilk"], "owner": "OpenCilk" }, "clojure": { "title": "Clojure", "owner": "troglotit" }, "cmake": { "title": "CMake", "owner": "mjrogozinski" }, "cobol": { "title": "COBOL", "owner": "RunDevelopment" }, "coffeescript": { "title": "CoffeeScript", "require": "javascript", "alias": "coffee", "owner": "R-osey" }, "concurnas": { "title": "Concurnas", "alias": "conc", "owner": "jasontatton" }, "csp": { "title": "Content-Security-Policy", "owner": "ScottHelme" }, "cooklang": { "title": "Cooklang", "owner": "ahue" }, "coq": { "title": "Coq", "owner": "RunDevelopment" }, "crystal": { "title": "Crystal", "require": "ruby", "owner": "MakeNowJust" }, "css-extras": { "title": "CSS Extras", "require": "css", "modify": "css", "owner": "milesj" }, "csv": { "title": "CSV", "owner": "RunDevelopment" }, "cue": { "title": "CUE", "owner": "RunDevelopment" }, "cypher": { "title": "Cypher", "owner": "RunDevelopment" }, "d": { "title": "D", "require": "clike", "owner": "Golmote" }, "dart": { "title": "Dart", "require": "clike", "owner": "Golmote" }, "dataweave": { "title": "DataWeave", "owner": "machaval" }, "dax": { "title": "DAX", "owner": "peterbud" }, "dhall": { "title": "Dhall", "owner": "RunDevelopment" }, "diff": { "title": "Diff", "owner": "uranusjr" }, "django": { "title": "Django/Jinja2", "require": "markup-templating", "alias": "jinja2", "owner": "romanvm" }, "dns-zone-file": { "title": "DNS zone file", "owner": "RunDevelopment", "alias": "dns-zone" }, "docker": { "title": "Docker", "alias": "dockerfile", "owner": "JustinBeckwith" }, "dot": { "title": "DOT (Graphviz)", "alias": "gv", "optional": "markup", "owner": "RunDevelopment" }, "ebnf": { "title": "EBNF", "owner": "RunDevelopment" }, "editorconfig": { "title": "EditorConfig", "owner": "osipxd" }, "eiffel": { "title": "Eiffel", "owner": "Conaclos" }, "ejs": { "title": "EJS", "require": ["javascript", "markup-templating"], "owner": "RunDevelopment", "alias": "eta", "aliasTitles": { "eta": "Eta" } }, "elixir": { "title": "Elixir", "owner": "Golmote" }, "elm": { "title": "Elm", "owner": "zwilias" }, "etlua": { "title": "Embedded Lua templating", "require": ["lua", "markup-templating"], "owner": "RunDevelopment" }, "erb": { "title": "ERB", "require": ["ruby", "markup-templating"], "owner": "Golmote" }, "erlang": { "title": "Erlang", "owner": "Golmote" }, "excel-formula": { "title": "Excel Formula", "alias": ["xlsx", "xls"], "owner": "RunDevelopment" }, "fsharp": { "title": "F#", "require": "clike", "owner": "simonreynolds7" }, "factor": { "title": "Factor", "owner": "catb0t" }, "false": { "title": "False", "owner": "edukisto" }, "firestore-security-rules": { "title": "Firestore security rules", "require": "clike", "owner": "RunDevelopment" }, "flow": { "title": "Flow", "require": "javascript", "owner": "Golmote" }, "fortran": { "title": "Fortran", "owner": "Golmote" }, "ftl": { "title": "FreeMarker Template Language", "require": "markup-templating", "owner": "RunDevelopment" }, "gml": { "title": "GameMaker Language", "alias": "gamemakerlanguage", "require": "clike", "owner": "LiarOnce" }, "gap": { "title": "GAP (CAS)", "owner": "RunDevelopment" }, "gcode": { "title": "G-code", "owner": "RunDevelopment" }, "gdscript": { "title": "GDScript", "owner": "RunDevelopment" }, "gedcom": { "title": "GEDCOM", "owner": "Golmote" }, "gettext": { "title": "gettext", "alias": "po", "owner": "RunDevelopment" }, "gherkin": { "title": "Gherkin", "owner": "hason" }, "git": { "title": "Git", "owner": "lgiraudel" }, "glsl": { "title": "GLSL", "require": "c", "owner": "Golmote" }, "gn": { "title": "GN", "alias": "gni", "owner": "RunDevelopment" }, "linker-script": { "title": "GNU Linker Script", "alias": "ld", "owner": "RunDevelopment" }, "go": { "title": "Go", "require": "clike", "owner": "arnehormann" }, "go-module": { "title": "Go module", "alias": "go-mod", "owner": "RunDevelopment" }, "gradle": { "title": "Gradle", "require": "clike", "owner": "zeabdelkhalek-badido18" }, "graphql": { "title": "GraphQL", "optional": "markdown", "owner": "Golmote" }, "groovy": { "title": "Groovy", "require": "clike", "owner": "robfletcher" }, "haml": { "title": "Haml", "require": "ruby", "optional": ["css", "css-extras", "coffeescript", "erb", "javascript", "less", "markdown", "scss", "textile"], "owner": "Golmote" }, "handlebars": { "title": "Handlebars", "require": "markup-templating", "alias": ["hbs", "mustache"], "aliasTitles": { "mustache": "Mustache" }, "owner": "Golmote" }, "haskell": { "title": "Haskell", "alias": "hs", "owner": "bholst" }, "haxe": { "title": "Haxe", "require": "clike", "optional": "regex", "owner": "Golmote" }, "hcl": { "title": "HCL", "owner": "outsideris" }, "hlsl": { "title": "HLSL", "require": "c", "owner": "RunDevelopment" }, "hoon": { "title": "Hoon", "owner": "matildepark" }, "http": { "title": "HTTP", "optional": ["csp", "css", "hpkp", "hsts", "javascript", "json", "markup", "uri"], "owner": "danielgtaylor" }, "hpkp": { "title": "HTTP Public-Key-Pins", "owner": "ScottHelme" }, "hsts": { "title": "HTTP Strict-Transport-Security", "owner": "ScottHelme" }, "ichigojam": { "title": "IchigoJam", "owner": "BlueCocoa" }, "icon": { "title": "Icon", "owner": "Golmote" }, "icu-message-format": { "title": "ICU Message Format", "owner": "RunDevelopment" }, "idris": { "title": "Idris", "alias": "idr", "owner": "KeenS", "require": "haskell" }, "ignore": { "title": ".ignore", "owner": "osipxd", "alias": ["gitignore", "hgignore", "npmignore"], "aliasTitles": { "gitignore": ".gitignore", "hgignore": ".hgignore", "npmignore": ".npmignore" } }, "inform7": { "title": "Inform 7", "owner": "Golmote" }, "ini": { "title": "Ini", "owner": "aviaryan" }, "io": { "title": "Io", "owner": "AlesTsurko" }, "j": { "title": "J", "owner": "Golmote" }, "java": { "title": "Java", "require": "clike", "owner": "sherblot" }, "javadoc": { "title": "JavaDoc", "require": ["markup", "java", "javadoclike"], "modify": "java", "optional": "scala", "owner": "RunDevelopment" }, "javadoclike": { "title": "JavaDoc-like", "modify": ["java", "javascript", "php"], "owner": "RunDevelopment" }, "javastacktrace": { "title": "Java stack trace", "owner": "RunDevelopment" }, "jexl": { "title": "Jexl", "owner": "czosel" }, "jolie": { "title": "Jolie", "require": "clike", "owner": "thesave" }, "jq": { "title": "JQ", "owner": "RunDevelopment" }, "jsdoc": { "title": "JSDoc", "require": ["javascript", "javadoclike", "typescript"], "modify": "javascript", "optional": ["actionscript", "coffeescript"], "owner": "RunDevelopment" }, "js-extras": { "title": "JS Extras", "require": "javascript", "modify": "javascript", "optional": ["actionscript", "coffeescript", "flow", "n4js", "typescript"], "owner": "RunDevelopment" }, "json": { "title": "JSON", "alias": "webmanifest", "aliasTitles": { "webmanifest": "Web App Manifest" }, "owner": "CupOfTea696" }, "json5": { "title": "JSON5", "require": "json", "owner": "RunDevelopment" }, "jsonp": { "title": "JSONP", "require": "json", "owner": "RunDevelopment" }, "jsstacktrace": { "title": "JS stack trace", "owner": "sbrl" }, "js-templates": { "title": "JS Templates", "require": "javascript", "modify": "javascript", "optional": ["css", "css-extras", "graphql", "markdown", "markup", "sql"], "owner": "RunDevelopment" }, "julia": { "title": "Julia", "owner": "cdagnino" }, "keepalived": { "title": "Keepalived Configure", "owner": "dev-itsheng" }, "keyman": { "title": "Keyman", "owner": "mcdurdin" }, "kotlin": { "title": "Kotlin", "alias": ["kt", "kts"], "aliasTitles": { "kts": "Kotlin Script" }, "require": "clike", "owner": "Golmote" }, "kumir": { "title": "KuMir (\u041A\u0443\u041C\u0438\u0440)", "alias": "kum", "owner": "edukisto" }, "kusto": { "title": "Kusto", "owner": "RunDevelopment" }, "latex": { "title": "LaTeX", "alias": ["tex", "context"], "aliasTitles": { "tex": "TeX", "context": "ConTeXt" }, "owner": "japborst" }, "latte": { "title": "Latte", "require": ["clike", "markup-templating", "php"], "owner": "nette" }, "less": { "title": "Less", "require": "css", "optional": "css-extras", "owner": "Golmote" }, "lilypond": { "title": "LilyPond", "require": "scheme", "alias": "ly", "owner": "RunDevelopment" }, "liquid": { "title": "Liquid", "require": "markup-templating", "owner": "cinhtau" }, "lisp": { "title": "Lisp", "alias": ["emacs", "elisp", "emacs-lisp"], "owner": "JuanCaicedo" }, "livescript": { "title": "LiveScript", "owner": "Golmote" }, "llvm": { "title": "LLVM IR", "owner": "porglezomp" }, "log": { "title": "Log file", "optional": "javastacktrace", "owner": "RunDevelopment" }, "lolcode": { "title": "LOLCODE", "owner": "Golmote" }, "lua": { "title": "Lua", "owner": "Golmote" }, "magma": { "title": "Magma (CAS)", "owner": "RunDevelopment" }, "makefile": { "title": "Makefile", "owner": "Golmote" }, "markdown": { "title": "Markdown", "require": "markup", "optional": "yaml", "alias": "md", "owner": "Golmote" }, "markup-templating": { "title": "Markup templating", "require": "markup", "owner": "Golmote" }, "mata": { "title": "Mata", "owner": "RunDevelopment" }, "matlab": { "title": "MATLAB", "owner": "Golmote" }, "maxscript": { "title": "MAXScript", "owner": "RunDevelopment" }, "mel": { "title": "MEL", "owner": "Golmote" }, "mermaid": { "title": "Mermaid", "owner": "RunDevelopment" }, "metafont": { "title": "METAFONT", "owner": "LaeriExNihilo" }, "mizar": { "title": "Mizar", "owner": "Golmote" }, "mongodb": { "title": "MongoDB", "owner": "airs0urce", "require": "javascript" }, "monkey": { "title": "Monkey", "owner": "Golmote" }, "moonscript": { "title": "MoonScript", "alias": "moon", "owner": "RunDevelopment" }, "n1ql": { "title": "N1QL", "owner": "TMWilds" }, "n4js": { "title": "N4JS", "require": "javascript", "optional": "jsdoc", "alias": "n4jsd", "owner": "bsmith-n4" }, "nand2tetris-hdl": { "title": "Nand To Tetris HDL", "owner": "stephanmax" }, "naniscript": { "title": "Naninovel Script", "owner": "Elringus", "alias": "nani" }, "nasm": { "title": "NASM", "owner": "rbmj" }, "neon": { "title": "NEON", "owner": "nette" }, "nevod": { "title": "Nevod", "owner": "nezaboodka" }, "nginx": { "title": "nginx", "owner": "volado" }, "nim": { "title": "Nim", "owner": "Golmote" }, "nix": { "title": "Nix", "owner": "Golmote" }, "nsis": { "title": "NSIS", "owner": "idleberg" }, "objectivec": { "title": "Objective-C", "require": "c", "alias": "objc", "owner": "uranusjr" }, "ocaml": { "title": "OCaml", "owner": "Golmote" }, "odin": { "title": "Odin", "owner": "edukisto" }, "opencl": { "title": "OpenCL", "require": "c", "modify": ["c", "cpp"], "owner": "Milania1" }, "openqasm": { "title": "OpenQasm", "alias": "qasm", "owner": "RunDevelopment" }, "oz": { "title": "Oz", "owner": "Golmote" }, "parigp": { "title": "PARI/GP", "owner": "Golmote" }, "parser": { "title": "Parser", "require": "markup", "owner": "Golmote" }, "pascal": { "title": "Pascal", "alias": "objectpascal", "aliasTitles": { "objectpascal": "Object Pascal" }, "owner": "Golmote" }, "pascaligo": { "title": "Pascaligo", "owner": "DefinitelyNotAGoat" }, "psl": { "title": "PATROL Scripting Language", "owner": "bertysentry" }, "pcaxis": { "title": "PC-Axis", "alias": "px", "owner": "RunDevelopment" }, "peoplecode": { "title": "PeopleCode", "alias": "pcode", "owner": "RunDevelopment" }, "perl": { "title": "Perl", "owner": "Golmote" }, "php": { "title": "PHP", "require": "markup-templating", "owner": "milesj" }, "phpdoc": { "title": "PHPDoc", "require": ["php", "javadoclike"], "modify": "php", "owner": "RunDevelopment" }, "php-extras": { "title": "PHP Extras", "require": "php", "modify": "php", "owner": "milesj" }, "plant-uml": { "title": "PlantUML", "alias": "plantuml", "owner": "RunDevelopment" }, "plsql": { "title": "PL/SQL", "require": "sql", "owner": "Golmote" }, "powerquery": { "title": "PowerQuery", "alias": ["pq", "mscript"], "owner": "peterbud" }, "powershell": { "title": "PowerShell", "owner": "nauzilus" }, "processing": { "title": "Processing", "require": "clike", "owner": "Golmote" }, "prolog": { "title": "Prolog", "owner": "Golmote" }, "promql": { "title": "PromQL", "owner": "arendjr" }, "properties": { "title": ".properties", "owner": "Golmote" }, "protobuf": { "title": "Protocol Buffers", "require": "clike", "owner": "just-boris" }, "pug": { "title": "Pug", "require": ["markup", "javascript"], "optional": ["coffeescript", "ejs", "handlebars", "less", "livescript", "markdown", "scss", "stylus", "twig"], "owner": "Golmote" }, "puppet": { "title": "Puppet", "owner": "Golmote" }, "pure": { "title": "Pure", "optional": ["c", "cpp", "fortran"], "owner": "Golmote" }, "purebasic": { "title": "PureBasic", "require": "clike", "alias": "pbfasm", "owner": "HeX0R101" }, "purescript": { "title": "PureScript", "require": "haskell", "alias": "purs", "owner": "sriharshachilakapati" }, "python": { "title": "Python", "alias": "py", "owner": "multipetros" }, "qsharp": { "title": "Q#", "require": "clike", "alias": "qs", "owner": "fedonman" }, "q": { "title": "Q (kdb+ database)", "owner": "Golmote" }, "qml": { "title": "QML", "require": "javascript", "owner": "RunDevelopment" }, "qore": { "title": "Qore", "require": "clike", "owner": "temnroegg" }, "r": { "title": "R", "owner": "Golmote" }, "racket": { "title": "Racket", "require": "scheme", "alias": "rkt", "owner": "RunDevelopment" }, "cshtml": { "title": "Razor C#", "alias": "razor", "require": ["markup", "csharp"], "optional": ["css", "css-extras", "javascript", "js-extras"], "owner": "RunDevelopment" }, "jsx": { "title": "React JSX", "require": ["markup", "javascript"], "optional": ["jsdoc", "js-extras", "js-templates"], "owner": "vkbansal" }, "tsx": { "title": "React TSX", "require": ["jsx", "typescript"] }, "reason": { "title": "Reason", "require": "clike", "owner": "Golmote" }, "regex": { "title": "Regex", "owner": "RunDevelopment" }, "rego": { "title": "Rego", "owner": "JordanSh" }, "renpy": { "title": "Ren'py", "alias": "rpy", "owner": "HyuchiaDiego" }, "rescript": { "title": "ReScript", "alias": "res", "owner": "vmarcosp" }, "rest": { "title": "reST (reStructuredText)", "owner": "Golmote" }, "rip": { "title": "Rip", "owner": "ravinggenius" }, "roboconf": { "title": "Roboconf", "owner": "Golmote" }, "robotframework": { "title": "Robot Framework", "alias": "robot", "owner": "RunDevelopment" }, "ruby": { "title": "Ruby", "require": "clike", "alias": "rb", "owner": "samflores" }, "rust": { "title": "Rust", "owner": "Golmote" }, "sas": { "title": "SAS", "optional": ["groovy", "lua", "sql"], "owner": "Golmote" }, "sass": { "title": "Sass (Sass)", "require": "css", "optional": "css-extras", "owner": "Golmote" }, "scss": { "title": "Sass (SCSS)", "require": "css", "optional": "css-extras", "owner": "MoOx" }, "scala": { "title": "Scala", "require": "java", "owner": "jozic" }, "scheme": { "title": "Scheme", "owner": "bacchus123" }, "shell-session": { "title": "Shell session", "require": "bash", "alias": ["sh-session", "shellsession"], "owner": "RunDevelopment" }, "smali": { "title": "Smali", "owner": "RunDevelopment" }, "smalltalk": { "title": "Smalltalk", "owner": "Golmote" }, "smarty": { "title": "Smarty", "require": "markup-templating", "optional": "php", "owner": "Golmote" }, "sml": { "title": "SML", "alias": "smlnj", "aliasTitles": { "smlnj": "SML/NJ" }, "owner": "RunDevelopment" }, "solidity": { "title": "Solidity (Ethereum)", "alias": "sol", "require": "clike", "owner": "glachaud" }, "solution-file": { "title": "Solution file", "alias": "sln", "owner": "RunDevelopment" }, "soy": { "title": "Soy (Closure Template)", "require": "markup-templating", "owner": "Golmote" }, "sparql": { "title": "SPARQL", "require": "turtle", "owner": "Triply-Dev", "alias": "rq" }, "splunk-spl": { "title": "Splunk SPL", "owner": "RunDevelopment" }, "sqf": { "title": "SQF: Status Quo Function (Arma 3)", "require": "clike", "owner": "RunDevelopment" }, "sql": { "title": "SQL", "owner": "multipetros" }, "squirrel": { "title": "Squirrel", "require": "clike", "owner": "RunDevelopment" }, "stan": { "title": "Stan", "owner": "RunDevelopment" }, "stata": { "title": "Stata Ado", "require": ["mata", "java", "python"], "owner": "RunDevelopment" }, "iecst": { "title": "Structured Text (IEC 61131-3)", "owner": "serhioromano" }, "stylus": { "title": "Stylus", "owner": "vkbansal" }, "supercollider": { "title": "SuperCollider", "alias": "sclang", "owner": "RunDevelopment" }, "swift": { "title": "Swift", "owner": "chrischares" }, "systemd": { "title": "Systemd configuration file", "owner": "RunDevelopment" }, "t4-templating": { "title": "T4 templating", "owner": "RunDevelopment" }, "t4-cs": { "title": "T4 Text Templates (C#)", "require": ["t4-templating", "csharp"], "alias": "t4", "owner": "RunDevelopment" }, "t4-vb": { "title": "T4 Text Templates (VB)", "require": ["t4-templating", "vbnet"], "owner": "RunDevelopment" }, "tap": { "title": "TAP", "owner": "isaacs", "require": "yaml" }, "tcl": { "title": "Tcl", "owner": "PeterChaplin" }, "tt2": { "title": "Template Toolkit 2", "require": ["clike", "markup-templating"], "owner": "gflohr" }, "textile": { "title": "Textile", "require": "markup", "optional": "css", "owner": "Golmote" }, "toml": { "title": "TOML", "owner": "RunDevelopment" }, "tremor": { "title": "Tremor", "alias": ["trickle", "troy"], "owner": "darach", "aliasTitles": { "trickle": "trickle", "troy": "troy" } }, "turtle": { "title": "Turtle", "alias": "trig", "aliasTitles": { "trig": "TriG" }, "owner": "jakubklimek" }, "twig": { "title": "Twig", "require": "markup-templating", "owner": "brandonkelly" }, "typescript": { "title": "TypeScript", "require": "javascript", "optional": "js-templates", "alias": "ts", "owner": "vkbansal" }, "typoscript": { "title": "TypoScript", "alias": "tsconfig", "aliasTitles": { "tsconfig": "TSConfig" }, "owner": "dkern" }, "unrealscript": { "title": "UnrealScript", "alias": ["uscript", "uc"], "owner": "RunDevelopment" }, "uorazor": { "title": "UO Razor Script", "owner": "jaseowns" }, "uri": { "title": "URI", "alias": "url", "aliasTitles": { "url": "URL" }, "owner": "RunDevelopment" }, "v": { "title": "V", "require": "clike", "owner": "taggon" }, "vala": { "title": "Vala", "require": "clike", "optional": "regex", "owner": "TemplarVolk" }, "vbnet": { "title": "VB.Net", "require": "basic", "owner": "Bigsby" }, "velocity": { "title": "Velocity", "require": "markup", "owner": "Golmote" }, "verilog": { "title": "Verilog", "owner": "a-rey" }, "vhdl": { "title": "VHDL", "owner": "a-rey" }, "vim": { "title": "vim", "owner": "westonganger" }, "visual-basic": { "title": "Visual Basic", "alias": ["vb", "vba"], "aliasTitles": { "vba": "VBA" }, "owner": "Golmote" }, "warpscript": { "title": "WarpScript", "owner": "RunDevelopment" }, "wasm": { "title": "WebAssembly", "owner": "Golmote" }, "web-idl": { "title": "Web IDL", "alias": "webidl", "owner": "RunDevelopment" }, "wgsl": { "title": "WGSL", "owner": "Dr4gonthree" }, "wiki": { "title": "Wiki markup", "require": "markup", "owner": "Golmote" }, "wolfram": { "title": "Wolfram language", "alias": ["mathematica", "nb", "wl"], "aliasTitles": { "mathematica": "Mathematica", "nb": "Mathematica Notebook" }, "owner": "msollami" }, "wren": { "title": "Wren", "owner": "clsource" }, "xeora": { "title": "Xeora", "require": "markup", "alias": "xeoracube", "aliasTitles": { "xeoracube": "XeoraCube" }, "owner": "freakmaxi" }, "xml-doc": { "title": "XML doc (.net)", "require": "markup", "modify": ["csharp", "fsharp", "vbnet"], "owner": "RunDevelopment" }, "xojo": { "title": "Xojo (REALbasic)", "owner": "Golmote" }, "xquery": { "title": "XQuery", "require": "markup", "owner": "Golmote" }, "yaml": { "title": "YAML", "alias": "yml", "owner": "hason" }, "yang": { "title": "YANG", "owner": "RunDevelopment" }, "zig": { "title": "Zig", "owner": "RunDevelopment" } }, "plugins": { "meta": { "path": "plugins/{id}/prism-{id}", "link": "plugins/{id}/" }, "line-highlight": { "title": "Line Highlight", "description": "Highlights specific lines and/or line ranges." }, "line-numbers": { "title": "Line Numbers", "description": "Line number at the beginning of code lines.", "owner": "kuba-kubula" }, "show-invisibles": { "title": "Show Invisibles", "description": "Show hidden characters such as tabs and line breaks.", "optional": ["autolinker", "data-uri-highlight"] }, "autolinker": { "title": "Autolinker", "description": "Converts URLs and emails in code to clickable links. Parses Markdown links in comments." }, "wpd": { "title": "WebPlatform Docs", "description": 'Makes tokens link to <a href="https://webplatform.github.io/docs/">WebPlatform.org documentation</a>. The links open in a new tab.' }, "custom-class": { "title": "Custom Class", "description": "This plugin allows you to prefix Prism's default classes (<code>.comment</code> can become <code>.namespace--comment</code>) or replace them with your defined ones (like <code>.editor__comment</code>). You can even add new classes.", "owner": "dvkndn", "noCSS": true }, "file-highlight": { "title": "File Highlight", "description": "Fetch external files and highlight them with Prism. Used on the Prism website itself.", "noCSS": true }, "show-language": { "title": "Show Language", "description": "Display the highlighted language in code blocks (inline code does not show the label).", "owner": "nauzilus", "noCSS": true, "require": "toolbar" }, "jsonp-highlight": { "title": "JSONP Highlight", "description": "Fetch content with JSONP and highlight some interesting content (e.g. GitHub/Gists or Bitbucket API).", "noCSS": true, "owner": "nauzilus" }, "highlight-keywords": { "title": "Highlight Keywords", "description": "Adds special CSS classes for each keyword for fine-grained highlighting.", "owner": "vkbansal", "noCSS": true }, "remove-initial-line-feed": { "title": "Remove initial line feed", "description": "Removes the initial line feed in code blocks.", "owner": "Golmote", "noCSS": true }, "inline-color": { "title": "Inline color", "description": "Adds a small inline preview for colors in style sheets.", "require": "css-extras", "owner": "RunDevelopment" }, "previewers": { "title": "Previewers", "description": "Previewers for angles, colors, gradients, easing and time.", "require": "css-extras", "owner": "Golmote" }, "autoloader": { "title": "Autoloader", "description": "Automatically loads the needed languages to highlight the code blocks.", "owner": "Golmote", "noCSS": true }, "keep-markup": { "title": "Keep Markup", "description": "Prevents custom markup from being dropped out during highlighting.", "owner": "Golmote", "optional": "normalize-whitespace", "noCSS": true }, "command-line": { "title": "Command Line", "description": "Display a command line with a prompt and, optionally, the output/response from the commands.", "owner": "chriswells0" }, "unescaped-markup": { "title": "Unescaped Markup", "description": "Write markup without having to escape anything." }, "normalize-whitespace": { "title": "Normalize Whitespace", "description": "Supports multiple operations to normalize whitespace in code blocks.", "owner": "zeitgeist87", "optional": "unescaped-markup", "noCSS": true }, "data-uri-highlight": { "title": "Data-URI Highlight", "description": "Highlights data-URI contents.", "owner": "Golmote", "noCSS": true }, "toolbar": { "title": "Toolbar", "description": "Attach a toolbar for plugins to easily register buttons on the top of a code block.", "owner": "mAAdhaTTah" }, "copy-to-clipboard": { "title": "Copy to Clipboard Button", "description": "Add a button that copies the code block to the clipboard when clicked.", "owner": "mAAdhaTTah", "require": "toolbar", "noCSS": true }, "download-button": { "title": "Download Button", "description": "A button in the toolbar of a code block adding a convenient way to download a code file.", "owner": "Golmote", "require": "toolbar", "noCSS": true }, "match-braces": { "title": "Match braces", "description": "Highlights matching braces.", "owner": "RunDevelopment" }, "diff-highlight": { "title": "Diff Highlight", "description": "Highlights the code inside diff blocks.", "owner": "RunDevelopment", "require": "diff" }, "filter-highlight-all": { "title": "Filter highlightAll", "description": "Filters the elements the <code>highlightAll</code> and <code>highlightAllUnder</code> methods actually highlight.", "owner": "RunDevelopment", "noCSS": true }, "treeview": { "title": "Treeview", "description": "A language with special styles to highlight file system tree structures.", "owner": "Golmote" } } };
+    if (typeof module !== "undefined" && module.exports) {
+      module.exports = components;
+    }
+  }
+});
+
+// node_modules/prismjs/dependencies.js
+var require_dependencies = __commonJS({
+  "node_modules/prismjs/dependencies.js"(exports, module) {
+    "use strict";
+    var getLoader = /* @__PURE__ */ (function() {
+      var noop = function() {
+      };
+      function forEach(value, callbackFn) {
+        if (Array.isArray(value)) {
+          value.forEach(callbackFn);
+        } else if (value != null) {
+          callbackFn(value, 0);
+        }
+      }
+      function toSet(array) {
+        var set = {};
+        for (var i = 0, l = array.length; i < l; i++) {
+          set[array[i]] = true;
+        }
+        return set;
+      }
+      function createEntryMap(components) {
+        var map = {};
+        for (var categoryName in components) {
+          var category = components[categoryName];
+          for (var id in category) {
+            if (id != "meta") {
+              var entry = category[id];
+              map[id] = typeof entry == "string" ? { title: entry } : entry;
+            }
+          }
+        }
+        return map;
+      }
+      function createDependencyResolver(entryMap) {
+        var map = {};
+        var _stackArray = [];
+        function addToMap(id, stack) {
+          if (id in map) {
+            return;
+          }
+          stack.push(id);
+          var firstIndex = stack.indexOf(id);
+          if (firstIndex < stack.length - 1) {
+            throw new Error("Circular dependency: " + stack.slice(firstIndex).join(" -> "));
+          }
+          var dependencies = {};
+          var entry = entryMap[id];
+          if (entry) {
+            let handleDirectDependency = function(depId) {
+              if (!(depId in entryMap)) {
+                throw new Error(id + " depends on an unknown component " + depId);
+              }
+              if (depId in dependencies) {
+                return;
+              }
+              addToMap(depId, stack);
+              dependencies[depId] = true;
+              for (var transitiveDepId in map[depId]) {
+                dependencies[transitiveDepId] = true;
+              }
+            };
+            forEach(entry.require, handleDirectDependency);
+            forEach(entry.optional, handleDirectDependency);
+            forEach(entry.modify, handleDirectDependency);
+          }
+          map[id] = dependencies;
+          stack.pop();
+        }
+        return function(id) {
+          var deps = map[id];
+          if (!deps) {
+            addToMap(id, _stackArray);
+            deps = map[id];
+          }
+          return deps;
+        };
+      }
+      function createAliasResolver(entryMap) {
+        var map;
+        return function(idOrAlias) {
+          if (idOrAlias in entryMap) {
+            return idOrAlias;
+          } else {
+            if (!map) {
+              map = {};
+              for (var id in entryMap) {
+                var entry = entryMap[id];
+                forEach(entry && entry.alias, function(alias) {
+                  if (alias in map) {
+                    throw new Error(alias + " cannot be alias for both " + id + " and " + map[alias]);
+                  }
+                  if (alias in entryMap) {
+                    throw new Error(alias + " cannot be alias of " + id + " because it is a component.");
+                  }
+                  map[alias] = id;
+                });
+              }
+            }
+            return map[idOrAlias] || idOrAlias;
+          }
+        };
+      }
+      function loadComponentsInOrder(dependencyResolver, ids, loadComponent, chainer) {
+        var series = chainer ? chainer.series : void 0;
+        var parallel = chainer ? chainer.parallel : noop;
+        var cache = {};
+        var ends = {};
+        function handleId(id2) {
+          if (id2 in cache) {
+            return cache[id2];
+          }
+          ends[id2] = true;
+          var dependsOn = [];
+          for (var depId in dependencyResolver(id2)) {
+            if (depId in ids) {
+              dependsOn.push(depId);
+            }
+          }
+          var value;
+          if (dependsOn.length === 0) {
+            value = loadComponent(id2);
+          } else {
+            var depsValue = parallel(dependsOn.map(function(depId2) {
+              var value2 = handleId(depId2);
+              delete ends[depId2];
+              return value2;
+            }));
+            if (series) {
+              value = series(depsValue, function() {
+                return loadComponent(id2);
+              });
+            } else {
+              loadComponent(id2);
+            }
+          }
+          return cache[id2] = value;
+        }
+        for (var id in ids) {
+          handleId(id);
+        }
+        var endValues = [];
+        for (var endId in ends) {
+          endValues.push(cache[endId]);
+        }
+        return parallel(endValues);
+      }
+      function hasKeys(obj) {
+        for (var key in obj) {
+          return true;
+        }
+        return false;
+      }
+      function getLoader2(components, load, loaded) {
+        var entryMap = createEntryMap(components);
+        var resolveAlias = createAliasResolver(entryMap);
+        load = load.map(resolveAlias);
+        loaded = (loaded || []).map(resolveAlias);
+        var loadSet = toSet(load);
+        var loadedSet = toSet(loaded);
+        load.forEach(addRequirements);
+        function addRequirements(id) {
+          var entry2 = entryMap[id];
+          forEach(entry2 && entry2.require, function(reqId) {
+            if (!(reqId in loadedSet)) {
+              loadSet[reqId] = true;
+              addRequirements(reqId);
+            }
+          });
+        }
+        var dependencyResolver = createDependencyResolver(entryMap);
+        var loadAdditions = loadSet;
+        var newIds;
+        while (hasKeys(loadAdditions)) {
+          newIds = {};
+          for (var loadId in loadAdditions) {
+            var entry = entryMap[loadId];
+            forEach(entry && entry.modify, function(modId) {
+              if (modId in loadedSet) {
+                newIds[modId] = true;
+              }
+            });
+          }
+          for (var loadedId in loadedSet) {
+            if (!(loadedId in loadSet)) {
+              for (var depId in dependencyResolver(loadedId)) {
+                if (depId in loadSet) {
+                  newIds[loadedId] = true;
+                  break;
+                }
+              }
+            }
+          }
+          loadAdditions = newIds;
+          for (var newId in loadAdditions) {
+            loadSet[newId] = true;
+          }
+        }
+        var loader = {
+          getIds: function() {
+            var ids = [];
+            loader.load(function(id) {
+              ids.push(id);
+            });
+            return ids;
+          },
+          load: function(loadComponent, chainer) {
+            return loadComponentsInOrder(dependencyResolver, loadSet, loadComponent, chainer);
+          }
+        };
+        return loader;
+      }
+      return getLoader2;
+    })();
+    if (typeof module !== "undefined") {
+      module.exports = getLoader;
+    }
+  }
+});
+
+// node_modules/prismjs/components/index.js
+var require_components2 = __commonJS({
+  "node_modules/prismjs/components/index.js"(exports, module) {
+    var components = require_components();
+    var getLoader = require_dependencies();
+    var loadedLanguages = /* @__PURE__ */ new Set();
+    function loadLanguages(languages) {
+      if (languages === void 0) {
+        languages = Object.keys(components.languages).filter((l) => l != "meta");
+      } else if (!Array.isArray(languages)) {
+        languages = [languages];
+      }
+      const loaded = [...loadedLanguages, ...Object.keys(Prism.languages)];
+      getLoader(components, languages, loaded).load((lang) => {
+        if (!(lang in components.languages)) {
+          if (!loadLanguages.silent) {
+            console.warn("Language does not exist: " + lang);
+          }
+          return;
+        }
+        const pathToLanguage = "./prism-" + lang;
+        delete __require.cache[__require.resolve(pathToLanguage)];
+        delete Prism.languages[lang];
+        __require(pathToLanguage);
+        loadedLanguages.add(lang);
+      });
+    }
+    loadLanguages.silent = false;
+    module.exports = loadLanguages;
+  }
+});
+
 // src/components/codeblock.js
 var import_prismjs = __toESM(require_prism());
-
-// node_modules/prismjs/components/prism-javascript.js
-Prism.languages.javascript = Prism.languages.extend("clike", {
-  "class-name": [
-    Prism.languages.clike["class-name"],
-    {
-      pattern: /(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,
-      lookbehind: true
-    }
-  ],
-  "keyword": [
-    {
-      pattern: /((?:^|\})\s*)catch\b/,
-      lookbehind: true
-    },
-    {
-      pattern: /(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,
-      lookbehind: true
-    }
-  ],
-  // Allow for all non-ASCII characters (See http://stackoverflow.com/a/2008444)
-  "function": /#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,
-  "number": {
-    pattern: RegExp(
-      /(^|[^\w$])/.source + "(?:" + // constant
-      (/NaN|Infinity/.source + "|" + // binary integer
-      /0[bB][01]+(?:_[01]+)*n?/.source + "|" + // octal integer
-      /0[oO][0-7]+(?:_[0-7]+)*n?/.source + "|" + // hexadecimal integer
-      /0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source + "|" + // decimal bigint
-      /\d+(?:_\d+)*n/.source + "|" + // decimal number (integer or float) but no bigint
-      /(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source) + ")" + /(?![\w$])/.source
-    ),
-    lookbehind: true
-  },
-  "operator": /--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/
-});
-Prism.languages.javascript["class-name"][0].pattern = /(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/;
-Prism.languages.insertBefore("javascript", "keyword", {
-  "regex": {
-    pattern: RegExp(
-      // lookbehind
-      // eslint-disable-next-line regexp/no-dupe-characters-character-class
-      /((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source + // Regex pattern:
-      // There are 2 regex patterns here. The RegExp set notation proposal added support for nested character
-      // classes if the `v` flag is present. Unfortunately, nested CCs are both context-free and incompatible
-      // with the only syntax, so we have to define 2 different regex patterns.
-      /\//.source + "(?:" + /(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source + "|" + // `v` flag syntax. This supports 3 levels of nested character classes.
-      /(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source + ")" + // lookahead
-      /(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source
-    ),
-    lookbehind: true,
-    greedy: true,
-    inside: {
-      "regex-source": {
-        pattern: /^(\/)[\s\S]+(?=\/[a-z]*$)/,
-        lookbehind: true,
-        alias: "language-regex",
-        inside: Prism.languages.regex
-      },
-      "regex-delimiter": /^\/|\/$/,
-      "regex-flags": /^[a-z]+$/
-    }
-  },
-  // This must be declared before keyword because we use "function" inside the look-forward
-  "function-variable": {
-    pattern: /#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,
-    alias: "function"
-  },
-  "parameter": [
-    {
-      pattern: /(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,
-      lookbehind: true,
-      inside: Prism.languages.javascript
-    },
-    {
-      pattern: /(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,
-      lookbehind: true,
-      inside: Prism.languages.javascript
-    },
-    {
-      pattern: /(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,
-      lookbehind: true,
-      inside: Prism.languages.javascript
-    },
-    {
-      pattern: /((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,
-      lookbehind: true,
-      inside: Prism.languages.javascript
-    }
-  ],
-  "constant": /\b[A-Z](?:[A-Z_]|\dx?)*\b/
-});
-Prism.languages.insertBefore("javascript", "string", {
-  "hashbang": {
-    pattern: /^#!.*/,
-    greedy: true,
-    alias: "comment"
-  },
-  "template-string": {
-    pattern: /`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,
-    greedy: true,
-    inside: {
-      "template-punctuation": {
-        pattern: /^`|`$/,
-        alias: "string"
-      },
-      "interpolation": {
-        pattern: /((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,
-        lookbehind: true,
-        inside: {
-          "interpolation-punctuation": {
-            pattern: /^\$\{|\}$/,
-            alias: "punctuation"
-          },
-          rest: Prism.languages.javascript
-        }
-      },
-      "string": /[\s\S]+/
-    }
-  },
-  "string-property": {
-    pattern: /((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,
-    lookbehind: true,
-    greedy: true,
-    alias: "property"
-  }
-});
-Prism.languages.insertBefore("javascript", "operator", {
-  "literal-property": {
-    pattern: /((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,
-    lookbehind: true,
-    alias: "property"
-  }
-});
-if (Prism.languages.markup) {
-  Prism.languages.markup.tag.addInlined("script", "javascript");
-  Prism.languages.markup.tag.addAttribute(
-    /on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,
-    "javascript"
-  );
-}
-Prism.languages.js = Prism.languages.javascript;
-
-// src/components/codeblock.js
+var import_components = __toESM(require_components2());
 function initCodeblocks() {
   const blocks = document.querySelectorAll(".codeblock");
   blocks.forEach((block) => {
@@ -1626,8 +1751,11 @@ function initCodeblocks() {
     const copyBtn = block.querySelector(".pre-copy-btn");
     const closeBtn = block.querySelector(".close-btn");
     const minimizeBtn = block.querySelector(".minimize-btn");
-    const content = block.querySelector(".pre-content");
-    if (!pre || !content) return;
+    const preContent = block.querySelector(".pre-content");
+    if (!pre || !preContent) return;
+    if (copyBtn && copyBtn.classList.contains("btn-in-pre")) {
+      preContent.insertBefore(copyBtn, preContent.firstChild);
+    }
     if (copyBtn && !copyBtn.dataset.bound) {
       copyBtn.dataset.bound = "true";
       copyBtn.addEventListener("click", async () => {
@@ -1642,159 +1770,518 @@ function initCodeblocks() {
       });
     }
     const code = pre.textContent;
-    const lang = pre.dataset.language || "javascript";
+    const lang = (pre.dataset.language || "javascript").toLowerCase();
     if (!import_prismjs.default.languages[lang]) {
-      console.warn(`Language '${lang}' not loaded in Prism`);
-      return;
+      console.warn(`Language '${lang}' not loaded in Prism, using plaintext fallback.`);
+      pre.textContent = code;
+    } else {
+      pre.innerHTML = import_prismjs.default.highlight(code, import_prismjs.default.languages[lang], lang);
     }
-    pre.innerHTML = import_prismjs.default.highlight(code, import_prismjs.default.languages[lang], lang);
-    if (block.classList.contains("draggable")) {
-      makeDraggable(block);
-    }
-    if (closeBtn) {
-      closeBtn.addEventListener("click", () => {
-        block.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-        block.style.opacity = 0;
-        block.style.transform = "scale(0.95)";
-        setTimeout(() => block.remove(), 300);
-      });
-    }
-    if (minimizeBtn) {
-      minimizeBtn.addEventListener("click", () => {
-        content.classList.toggle("collapsed");
-      });
-    }
+    if (closeBtn) closeBtn.addEventListener("click", () => {
+      block.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+      block.style.opacity = 0;
+      block.style.transform = "scale(0.95)";
+      setTimeout(() => block.remove(), 300);
+    });
+    if (minimizeBtn) minimizeBtn.addEventListener("click", () => {
+      preContent.classList.toggle("collapsed");
+    });
     const maximizeBtn = block.querySelector(".maximize-btn");
-    if (maximizeBtn) {
-      maximizeBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const scrollX = window.scrollX || window.pageXOffset;
-        const scrollY = window.scrollY || window.pageYOffset;
-        if (!block.dataset.origRect) {
-          const rect = block.getBoundingClientRect();
-          block.dataset.origRect = JSON.stringify({
-            top: rect.top + scrollY,
-            left: rect.left + scrollX,
-            width: rect.width,
-            height: rect.height
-          });
-        }
-        void block.offsetWidth;
-        if (block.dataset.isFullscreen !== "true") {
-          const rect = block.getBoundingClientRect();
-          const startRect = {
-            top: rect.top + scrollY,
-            left: rect.left + scrollX,
-            width: rect.width,
-            height: rect.height
-          };
-          block.style.position = "fixed";
-          block.style.top = `${startRect.top}px`;
-          block.style.left = `${startRect.left}px`;
-          block.style.width = `${startRect.width}px`;
-          block.style.height = `${startRect.height}px`;
-          block.style.margin = "0";
-          block.style.zIndex = 9999;
-          block.style.transition = "all 0.3s ease";
-          void block.offsetWidth;
-          block.style.top = "0";
-          block.style.left = "0";
-          block.style.width = "100%";
-          block.style.height = "100%";
-          block.style.borderRadius = "0";
-          block.dataset.isFullscreen = "true";
-        } else {
-          let rectToUse;
-          if (block.dataset.currentRect) {
-            rectToUse = JSON.parse(block.dataset.currentRect);
-            block.style.transition = "all 0.3s ease";
-            block.style.top = `${rectToUse.top}px`;
-            block.style.left = `${rectToUse.left}px`;
-            block.style.width = `${rectToUse.width}px`;
-            block.style.height = `auto`;
-            block.style.borderRadius = "12px";
-            block.addEventListener("transitionend", () => {
-              block.style.transition = "";
-              block.style.position = "absolute";
-              block.style.zIndex = "";
-              block.dataset.isFullscreen = "false";
-            }, { once: true });
-          } else {
-            const origRect = JSON.parse(block.dataset.origRect);
-            block.style.transition = "all 0.3s ease";
-            block.style.top = `${origRect.top}px`;
-            block.style.left = `${origRect.left}px`;
-            block.style.width = `${origRect.width}px`;
-            block.style.height = `auto`;
-            block.style.borderRadius = "12px";
-            block.addEventListener("transitionend", () => {
-              block.style.transition = "";
-              block.style.position = "";
-              block.style.top = "";
-              block.style.left = "";
-              block.style.width = "";
-              block.style.height = "";
-              block.style.zIndex = "";
-              block.dataset.isFullscreen = "false";
-            }, { once: true });
-          }
-        }
+    if (maximizeBtn) initMaximizeButton(block, maximizeBtn);
+  });
+}
+function initMaximizeButton(block, maximizeBtn) {
+  maximizeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+    if (!block.dataset.origRect) {
+      const rect = block.getBoundingClientRect();
+      block.dataset.origRect = JSON.stringify({
+        top: rect.top + scrollY,
+        left: rect.left + scrollX,
+        width: rect.width,
+        height: rect.height
       });
+    }
+    void block.offsetWidth;
+    if (block.dataset.isFullscreen !== "true") {
+      const rect = block.getBoundingClientRect();
+      const startRect = { top: rect.top + scrollY, left: rect.left + scrollX, width: rect.width, height: rect.height };
+      Object.assign(block.style, {
+        position: "fixed",
+        top: `${startRect.top}px`,
+        left: `${startRect.left}px`,
+        width: `${startRect.width}px`,
+        height: `${startRect.height}px`,
+        margin: "0",
+        zIndex: 9999,
+        transition: "all 0.3s ease"
+      });
+      void block.offsetWidth;
+      Object.assign(block.style, { top: "0", left: "0", width: "100%", height: "100%", borderRadius: "0" });
+      block.dataset.isFullscreen = "true";
+    } else {
+      const origRect = JSON.parse(block.dataset.origRect);
+      Object.assign(block.style, {
+        transition: "all 0.3s ease",
+        top: `${origRect.top}px`,
+        left: `${origRect.left}px`,
+        width: `${origRect.width}px`,
+        height: "auto",
+        borderRadius: "12px"
+      });
+      block.addEventListener("transitionend", () => {
+        Object.assign(block.style, {
+          transition: "",
+          position: "",
+          top: "",
+          left: "",
+          width: "",
+          height: "",
+          zIndex: ""
+        });
+        block.dataset.isFullscreen = "false";
+      }, { once: true });
     }
   });
 }
-function makeDraggable(element) {
-  const header = element.querySelector(".pre-top");
-  if (!header) return;
-  let offsetX = 0;
-  let offsetY = 0;
-  let isDragging = false;
-  header.style.cursor = "move";
-  header.addEventListener("mousedown", onMouseDown);
-  const buttons = header.querySelectorAll("span, button");
-  buttons.forEach((btn) => {
-    btn.addEventListener("mousedown", (e) => e.stopPropagation());
-  });
-  function onMouseDown(e) {
-    isDragging = true;
-    const rect = element.getBoundingClientRect();
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
-    element.style.width = `${rect.width}px`;
-    element.style.position = "absolute";
-    element.style.zIndex = 9999;
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-  }
-  function onMouseMove(e) {
-    if (element.dataset.isFullscreen === "true") return;
-    if (!isDragging) return;
-    const left = e.clientX - offsetX;
-    const top = e.clientY - offsetY;
-    element.style.left = `${left}px`;
-    element.style.top = `${top}px`;
-    element.dataset.currentRect = JSON.stringify({
-      top,
-      left,
-      width: element.offsetWidth,
-      height: element.offsetHeight
+
+// src/components/dropdown.js
+function initDropdowns() {
+  if (typeof window === "undefined") return;
+  document.querySelectorAll(".dropdown").forEach((drop) => {
+    if (drop.dataset.initialized) return;
+    drop.dataset.initialized = "true";
+    const btn = drop.querySelector(".dropdown-btn");
+    const content = drop.querySelector(".dropdown-content");
+    if (!btn || !content) return;
+    let hiddenInput = drop.querySelector('input[type="hidden"]');
+    if (!hiddenInput) {
+      hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.name = drop.dataset.name || "dropdown";
+      drop.appendChild(hiddenInput);
+    }
+    const getItems = () => Array.from(content.querySelectorAll('.dropdown-item:not([aria-disabled="true"])'));
+    const setValue = (item) => {
+      if (item.getAttribute("aria-disabled") === "true") return;
+      btn.innerHTML = item.innerHTML;
+      content.querySelectorAll(".dropdown-item").forEach((i) => i.classList.remove("active"));
+      item.classList.add("active");
+      hiddenInput.value = item.dataset.value ?? item.textContent.trim();
+      drop.dispatchEvent(new CustomEvent("change", { detail: hiddenInput.value }));
+    };
+    const initialItem = content.querySelector(".dropdown-item.active") || content.querySelector('.dropdown-item:not([aria-disabled="true"])');
+    if (initialItem) setValue(initialItem);
+    const toggle = () => drop.classList.toggle("open");
+    const close = () => drop.classList.remove("open");
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggle();
     });
+    document.addEventListener("click", (e) => {
+      if (!drop.contains(e.target)) close();
+    });
+    btn.addEventListener("keydown", (e) => {
+      if (!["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key)) return;
+      const items = getItems();
+      let currentIndex = items.findIndex((i) => i.classList.contains("active"));
+      e.preventDefault();
+      drop.classList.add("open");
+      if (e.key === "ArrowDown") {
+        currentIndex = (currentIndex + 1) % items.length;
+      } else if (e.key === "ArrowUp") {
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+      } else if (e.key === "Enter") {
+        if (currentIndex >= 0) setValue(items[currentIndex]);
+        close();
+        return;
+      } else if (e.key === "Escape") {
+        close();
+        return;
+      }
+      items.forEach((i) => i.classList.remove("active"));
+      items[currentIndex].classList.add("active");
+      items[currentIndex].scrollIntoView({ block: "nearest" });
+    });
+    content.addEventListener("click", (e) => {
+      const item = e.target.closest(".dropdown-item");
+      if (item) {
+        setValue(item);
+        close();
+      }
+    });
+    btn.setAttribute("tabindex", "0");
+    btn.setAttribute("role", "combobox");
+    btn.setAttribute("aria-haspopup", "listbox");
+  });
+}
+
+// src/components/contextMenu.js
+function initContextMenu() {
+  let menu = document.querySelector(".sol-context-menu");
+  if (!menu) {
+    menu = document.createElement("div");
+    menu.className = "sol-context-menu";
+    document.body.appendChild(menu);
   }
-  function onMouseUp() {
-    isDragging = false;
-    document.removeEventListener("mousemove", onMouseMove);
-    document.removeEventListener("mouseup", onMouseUp);
-  }
+  let contextTarget = null;
+  const showMenu = (e) => {
+    e.preventDefault();
+    contextTarget = e.target;
+    const selection = window.getSelection().toString().trim();
+    const link = e.target.closest("a");
+    const img = e.target.closest("img");
+    const input = e.target.closest("input, textarea, [contenteditable]");
+    const isEditable = input || e.target.isContentEditable;
+    const isTextInput = input && (input.type === "text" || input.type === "search" || input.type === "email" || input.type === "password" || input.tagName === "TEXTAREA" || input.isContentEditable);
+    let menuHtml = "";
+    if (selection.length > 0) {
+      menuHtml += `
+                <div class="sol-menu-label">Selectie</div>
+                <div class="sol-menu-item" data-action="copy">
+                    Kopieer <span class="sol-menu-shortcut">\u2318C</span>
+                </div>
+                ${isEditable ? `
+                <div class="sol-menu-item" data-action="cut">
+                    Knippen <span class="sol-menu-shortcut">\u2318X</span>
+                </div>` : ""}
+                <div class="sol-menu-item" data-action="search-google">
+                    Zoek op Google: <em>"${selection.slice(0, 20)}${selection.length > 20 ? "\u2026" : ""}"</em>
+                </div>
+                <div class="sol-menu-item" data-action="search-wiki">
+                    Zoek op Wikipedia\u2026
+                </div>
+                <div class="sol-menu-item" data-action="translate">
+                    Vertaal selectie\u2026
+                </div>
+                <div class="sol-menu-divider"></div>
+            `;
+    }
+    if (isTextInput) {
+      menuHtml += `
+                <div class="sol-menu-label">Tekstveld</div>
+                ${selection.length > 0 ? `
+                <div class="sol-menu-item" data-action="cut">
+                    Knippen <span class="sol-menu-shortcut">\u2318X</span>
+                </div>
+                <div class="sol-menu-item" data-action="copy">
+                    Kopieer <span class="sol-menu-shortcut">\u2318C</span>
+                </div>` : ""}
+                <div class="sol-menu-item" data-action="paste">
+                    Plakken <span class="sol-menu-shortcut">\u2318V</span>
+                </div>
+                <div class="sol-menu-item" data-action="select-all">
+                    Alles selecteren <span class="sol-menu-shortcut">\u2318A</span>
+                </div>
+                <div class="sol-menu-item" data-action="clear-field">
+                    Veld wissen
+                </div>
+                <div class="sol-menu-divider"></div>
+            `;
+    }
+    if (img) {
+      menuHtml += `
+                <div class="sol-menu-label">Afbeelding</div>
+                <div class="sol-menu-item" data-action="open-img" data-url="${img.src}">
+                    Afbeelding openen in nieuw tabblad
+                </div>
+                <div class="sol-menu-item" data-action="copy-img-url" data-url="${img.src}">
+                    Kopieer afbeeldings-URL
+                </div>
+                <div class="sol-menu-item" data-action="download-img" data-url="${img.src}" data-filename="${img.alt || "afbeelding"}">
+                    Afbeelding opslaan\u2026
+                </div>
+                ${img.alt ? `
+                <div class="sol-menu-item" data-action="copy-alt" data-text="${img.alt}">
+                    Kopieer alt-tekst
+                </div>` : ""}
+                <div class="sol-menu-divider"></div>
+            `;
+    }
+    if (link) {
+      menuHtml += `
+                <div class="sol-menu-label">Link</div>
+                <div class="sol-menu-item" data-action="open-tab" data-url="${link.href}">
+                    Open in nieuw tabblad
+                </div>
+                <div class="sol-menu-item" data-action="open-window" data-url="${link.href}">
+                    Open in nieuw venster
+                </div>
+                <div class="sol-menu-item" data-action="copy-link" data-url="${link.href}">
+                    Kopieer link-adres
+                </div>
+                <div class="sol-menu-divider"></div>
+            `;
+    }
+    menuHtml += `
+            <div class="sol-menu-label">Navigatie</div>
+            <div class="sol-menu-item${!history.length || history.state === null ? " disabled" : ""}" data-action="go-back">
+                \u2190 Vorige pagina
+            </div>
+            <div class="sol-menu-item" data-action="go-forward">
+                \u2192 Volgende pagina
+            </div>
+            <div class="sol-menu-item" data-action="reload">
+                Vernieuwen <span class="sol-menu-shortcut">\u2318R</span>
+            </div>
+            <div class="sol-menu-item" data-action="hard-reload">
+                Geforceerd vernieuwen <span class="sol-menu-shortcut">\u21E7\u2318R</span>
+            </div>
+            <div class="sol-menu-divider"></div>
+        `;
+    menuHtml += `
+            <div class="sol-menu-label">Pagina</div>
+            <div class="sol-menu-item" data-action="copy-page-url">
+                Kopieer pagina-URL
+            </div>
+            <div class="sol-menu-item" data-action="view-source">
+                Bekijk paginabron <span class="sol-menu-shortcut">\u2318U</span>
+            </div>
+            <div class="sol-menu-item" data-action="print">
+                Printen <span class="sol-menu-shortcut">\u2318P</span>
+            </div>
+            <div class="sol-menu-item" data-action="save-page">
+                Pagina opslaan <span class="sol-menu-shortcut">\u2318S</span>
+            </div>
+            <div class="sol-menu-item" data-action="scroll-top">
+                Naar boven scrollen
+            </div>
+            <div class="sol-menu-divider"></div>
+        `;
+    menuHtml += `
+            <div class="sol-menu-label">Ontwikkelaar</div>
+            <div class="sol-menu-item" data-action="inspect">
+                Inspecteer element <span class="sol-menu-shortcut">\u2325\u2318I</span>
+            </div>
+            <div class="sol-menu-item" data-action="copy-selector">
+                Kopieer CSS-selector
+            </div>
+            <div class="sol-menu-item" data-action="log-element">
+                Log element in console
+            </div>
+        `;
+    menu.innerHTML = menuHtml;
+    menu.style.display = "block";
+    let posX = e.clientX;
+    let posY = e.clientY;
+    const menuWidth = menu.offsetWidth;
+    const menuHeight = menu.offsetHeight;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    if (posX + menuWidth > windowWidth) {
+      posX = posX - menuWidth;
+    }
+    if (posY + menuHeight > windowHeight) {
+      posY = posY - menuHeight;
+    }
+    posX = Math.max(5, posX);
+    posY = Math.max(5, posY);
+    menu.style.left = `${posX}px`;
+    menu.style.top = `${posY}px`;
+    requestAnimationFrame(() => menu.classList.add("visible"));
+  };
+  const hideMenu = () => {
+    menu.classList.remove("visible");
+    setTimeout(() => {
+      if (!menu.classList.contains("visible")) menu.style.display = "none";
+    }, 150);
+  };
+  const getCssSelector = (el) => {
+    if (!el) return "";
+    const parts = [];
+    while (el && el.nodeType === Node.ELEMENT_NODE) {
+      let selector = el.nodeName.toLowerCase();
+      if (el.id) {
+        selector += `#${el.id}`;
+        parts.unshift(selector);
+        break;
+      }
+      if (el.className) {
+        selector += "." + [...el.classList].join(".");
+      }
+      const siblings = el.parentNode ? [...el.parentNode.children].filter((s) => s.nodeName === el.nodeName) : [];
+      if (siblings.length > 1) {
+        selector += `:nth-of-type(${siblings.indexOf(el) + 1})`;
+      }
+      parts.unshift(selector);
+      el = el.parentNode;
+    }
+    return parts.join(" > ");
+  };
+  document.addEventListener("contextmenu", showMenu);
+  document.addEventListener("click", hideMenu);
+  window.addEventListener("scroll", hideMenu);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") hideMenu();
+  });
+  menu.addEventListener("click", (e) => {
+    const item = e.target.closest(".sol-menu-item");
+    if (!item || item.classList.contains("disabled")) return;
+    const action = item.dataset.action;
+    const url = item.dataset.url;
+    const text = item.dataset.text;
+    const filename = item.dataset.filename;
+    const sel = window.getSelection().toString().trim();
+    switch (action) {
+      // Tekst
+      case "copy":
+        document.execCommand("copy");
+        break;
+      case "cut":
+        document.execCommand("cut");
+        break;
+      case "paste":
+        navigator.clipboard.readText().then((t) => document.execCommand("insertText", false, t));
+        break;
+      case "select-all":
+        document.execCommand("selectAll");
+        break;
+      case "clear-field":
+        if (contextTarget?.closest("input, textarea")) contextTarget.closest("input, textarea").value = "";
+        break;
+      // Zoeken & vertalen
+      case "search-google":
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(sel)}`, "_blank");
+        break;
+      case "search-wiki":
+        window.open(`https://nl.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(sel)}`, "_blank");
+        break;
+      case "translate":
+        window.open(`https://translate.google.com/?sl=auto&tl=nl&text=${encodeURIComponent(sel)}`, "_blank");
+        break;
+      // Afbeelding
+      case "open-img":
+        window.open(url, "_blank");
+        break;
+      case "copy-img-url":
+        navigator.clipboard.writeText(url);
+        break;
+      case "copy-alt":
+        navigator.clipboard.writeText(text);
+        break;
+      case "download-img": {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename || "afbeelding";
+        a.click();
+        break;
+      }
+      // Link
+      case "open-tab":
+        window.open(url, "_blank");
+        break;
+      case "open-window":
+        window.open(url, "_blank", "noopener,noreferrer");
+        break;
+      case "copy-link":
+        navigator.clipboard.writeText(url);
+        break;
+      // Navigatie
+      case "go-back":
+        history.back();
+        break;
+      case "go-forward":
+        history.forward();
+        break;
+      case "reload":
+        location.reload();
+        break;
+      case "hard-reload":
+        location.href = location.href;
+        break;
+      // Pagina
+      case "copy-page-url":
+        navigator.clipboard.writeText(location.href);
+        break;
+      case "view-source":
+        window.open(`view-source:${location.href}`, "_blank");
+        break;
+      case "print":
+        window.print();
+        break;
+      case "save-page":
+        document.execCommand("SaveAs");
+        break;
+      case "scroll-top":
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        break;
+      // Ontwikkelaar
+      case "inspect":
+        console.log("%c[Inspecteer element]", "color:#6c63ff;font-weight:bold", contextTarget);
+        break;
+      case "copy-selector":
+        navigator.clipboard.writeText(getCssSelector(contextTarget));
+        break;
+      case "log-element":
+        console.log("%c[Sol Context Menu] Geselecteerd element:", "color:#6c63ff", contextTarget);
+        console.table({
+          tag: contextTarget?.tagName,
+          id: contextTarget?.id,
+          classes: contextTarget?.className,
+          selector: getCssSelector(contextTarget),
+          innerText: contextTarget?.innerText?.slice(0, 80)
+        });
+        break;
+    }
+    hideMenu();
+  });
+}
+
+// src/components/darkToggle.js
+function initThemeToggle(elementSelector = ".sol-theme-toggle") {
+  const html = document.documentElement;
+  const toggles = document.querySelectorAll(elementSelector);
+  const STORAGE_KEY = "solora-theme";
+  const applyTheme = (theme) => {
+    if (theme === "dark") {
+      html.classList.add("dark");
+      html.classList.remove("light");
+    } else {
+      html.classList.add("light");
+      html.classList.remove("dark");
+    }
+    toggles.forEach((btn) => {
+      btn.innerHTML = `<span>${theme === "dark" ? "\u2600\uFE0F" : "\u{1F319}"}</span>`;
+      btn.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} mode`);
+    });
+    localStorage.setItem(STORAGE_KEY, theme);
+  };
+  const getInitialTheme = () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return saved;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return prefersDark ? "dark" : "light";
+  };
+  applyTheme(getInitialTheme());
+  toggles.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const isDark = html.classList.contains("dark");
+      applyTheme(isDark ? "light" : "dark");
+    });
+  });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      applyTheme(e.matches ? "dark" : "light");
+    }
+  });
 }
 
 // src/index.js
 if (typeof window !== "undefined") {
   document.addEventListener("DOMContentLoaded", () => {
     initCodeblocks();
+    initDropdowns();
+    initContextMenu();
+    initThemeToggle();
   });
 }
 export {
-  initCodeblocks
+  initCodeblocks,
+  initContextMenu,
+  initDropdowns,
+  initThemeToggle
 };
 /*! Bundled license information:
 
