@@ -4,6 +4,7 @@
 @import './components/input.css';
 @import './components/contextMenu.css';
 @import './components/darkToggle.css';
+@import './components/switch.css';
 
 :root {
     --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;

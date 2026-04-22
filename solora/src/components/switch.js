@@ -1,39 +1,52 @@
-class SolSwitch extends HTMLElement {
-    constructor() {
-        super();
-        this.classList.add('sol-switch');
-        const input = document.createElement('input');
-        input.type = 'checkbox';
-        const slider = document.createElement('div');
-        slider.className = 'slider';
-        this.appendChild(input);
-        this.appendChild(slider);
-        slider.addEventListener('click', () => {
-            input.checked = !input.checked;
-            this.dispatchEvent(new Event('change', { bubbles: true }));
-        });
-        // Handle attributes for colors
-        this.updateColors();
+export function initSwitch(target) {
+    // Als er geen target is → pak alle switches
+    if (!target) {
+        document.querySelectorAll('sol-switch').forEach(el => initSwitch(el));
+        return;
     }
 
-    static get observedAttributes() {
-        return ['color-primary', 'color-secondary', 'color-bg', 'color-text'];
+    const switchElement = target;
+
+    // Voorkom dubbele initialisatie
+    if (switchElement.dataset.initialized) return;
+    switchElement.dataset.initialized = "true";
+
+    switchElement.classList.add('sol-switch');
+
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+
+    const slider = document.createElement('div');
+    slider.className = 'slider';
+
+    switchElement.appendChild(input);
+    switchElement.appendChild(slider);
+
+    slider.addEventListener('click', () => {
+        input.checked = !input.checked;
+        switchElement.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    // ---- COLORS ----
+    function updateColors() {
+        const primary = switchElement.getAttribute('color-primary') || '#34c759';
+        const secondary = switchElement.getAttribute('color-secondary') || '#d1d1d6';
+        const bg = switchElement.getAttribute('color-bg') || '#e9e9ea';
+        const text = switchElement.getAttribute('color-text') || 'white';
+
+        switchElement.style.setProperty('--color-primary', primary);
+        switchElement.style.setProperty('--color-secondary', secondary);
+        switchElement.style.setProperty('--color-bg', bg);
+        switchElement.style.setProperty('--color-text', text);
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        this.updateColors();
-    }
+    updateColors();
 
-    updateColors() {
-        const primary = this.getAttribute('color-primary') || '#34c759';
-        const secondary = this.getAttribute('color-secondary') || '#d1d1d6';
-        const bg = this.getAttribute('color-bg') || '#e9e9ea';
-        const text = this.getAttribute('color-text') || 'white';
-        this.style.setProperty('--color-primary', primary);
-        this.style.setProperty('--color-secondary', secondary);
-        this.style.setProperty('--color-bg', bg);
-        this.style.setProperty('--color-text', text);
-    }
+    // ---- OBSERVER ----
+    const observer = new MutationObserver(updateColors);
+
+    observer.observe(switchElement, {
+        attributes: true,
+        attributeFilter: ['color-primary', 'color-secondary', 'color-bg', 'color-text']
+    });
 }
-
-customElements.define('sol-switch', SolSwitch);

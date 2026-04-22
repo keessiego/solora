@@ -1,6 +1,6 @@
 {
   "name": "@kerkhoff-ict/solora",
-  "version": "2.1.9",
+  "version": "2.2.0-beta.4",
   "description": "Simple CSS component library",
   "main": "dist/index.js",
   "style": "dist/index.css",
@@ -16,7 +16,7 @@
   "author": "Kerkhoff-ICT",
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.27.4",
+    "esbuild": "^0.27.7",
     "postcss": "^8.5.8",
     "postcss-cli": "^11.0.1",
     "postcss-import": "^16.1.1"
