@@ -1,86 +1,123 @@
 /* src/components/button.css */
-.btn {
+sol-button {
+  display: inline-block;
+}
+.btn,
+sol-button button {
+  font-family: inherit;
   font-weight: 600;
   border: none;
   border-radius: 9999px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: background 0.2s, filter 0.2s;
-}
-.btn-rounded-sm {
+  transition:
+    background 0.2s,
+    filter 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  padding: 0;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  background: var(--color-primary, #0071e3);
-  color: var(--color-text-light, #fff);
-  transition: background 0.2s, transform 0.2s;
 }
-.btn-sm {
+.btn-rounded-sm,
+sol-button[rounded] button {
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  overflow: hidden;
+}
+sol-button[rounded][size=sm] button {
+  width: 2rem;
+}
+.btn-rounded-sm,
+sol-button[rounded][size=md] button,
+sol-button[rounded]:not([size]) button {
+  width: 2.5rem;
+}
+sol-button[rounded][size=lg] button {
+  width: 3rem;
+}
+sol-button[rounded][size=xl] button {
+  width: 3.5rem;
+}
+.btn-sm,
+sol-button[size=sm] button {
   padding: 0.1875rem 1rem;
   font-size: 0.9375rem;
 }
-.btn-md {
+.btn-md,
+sol-button[size=md] button,
+sol-button:not([size]) button {
   padding: 0.5rem 1.2rem;
   font-size: 1rem;
 }
-.btn-lg {
+.btn-lg,
+sol-button[size=lg] button {
   padding: 0.8125rem 1.5625rem;
   font-size: 1.0625rem;
 }
-.btn-xl {
+.btn-xl,
+sol-button[size=xl] button {
   padding: 0.9375rem 1.875rem;
   font-size: 1.3125rem;
 }
-.btn.disabled {
+.btn.disabled,
+sol-button[disabled] button {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
-.btn-primary {
+.btn-primary,
+sol-button[color=primary] button,
+sol-button:not([color]) button {
   background: var(--color-primary, #0071e3);
   color: var(--color-text-light, #fff);
 }
-.btn-primary:hover {
+.btn-primary:hover,
+sol-button[color=primary] button:hover,
+sol-button:not([color]) button:hover {
   filter: brightness(0.85);
 }
-.btn-secondary {
+.btn-secondary,
+sol-button[color=secondary] button {
   background: var(--color-secondary, #f5f5f5);
   color: var(--color-text-dark, #000);
   border: 2px solid rgba(0, 0, 0, 0.1);
 }
 .btn-secondary.active,
-.btn-secondary:hover {
+.btn-secondary:hover,
+sol-button[color=secondary] button:hover {
   filter: brightness(0.9);
 }
-.btn-success {
+.btn-success,
+sol-button[color=success] button {
   background: var(--color-success, #28a745);
   color: var(--color-text-light, #fff);
 }
-.btn-success:hover {
+.btn-success:hover,
+sol-button[color=success] button:hover {
   filter: brightness(0.85);
 }
-.btn-warning {
+.btn-warning,
+sol-button[color=warning] button {
   background: var(--color-warning, #ffc107);
   color: var(--color-text-dark, #000);
 }
-.btn-warning:hover {
+.btn-warning:hover,
+sol-button[color=warning] button:hover {
   filter: brightness(0.85);
 }
-.btn-danger {
+.btn-danger,
+sol-button[color=danger] button {
   background: var(--color-danger, #dc3545);
   color: var(--color-text-light, #fff);
 }
-.btn-danger:hover {
+.btn-danger:hover,
+sol-button[color=danger] button:hover {
   filter: brightness(0.85);
 }
-.btn-glass {
+.btn-glass,
+sol-button[color=glass] button {
   position: relative;
   background: rgba(255, 255, 255, 0.2);
   color: var(--color-text-dark, #000);
@@ -91,7 +128,8 @@
   overflow: hidden;
   transition: all 0.3s ease;
 }
-.btn-glass::before {
+.btn-glass::before,
+sol-button[color=glass] button::before {
   content: "";
   position: absolute;
   top: 4px;
@@ -104,78 +142,89 @@
   border-radius: inherit;
   pointer-events: none;
 }
-.btn-glass:hover {
+.btn-glass:hover,
+sol-button[color=glass] button:hover {
   background: rgba(255, 255, 255, 0.35);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
-.btn-glass:active {
+.btn-glass:active,
+sol-button[color=glass] button:active {
   background: rgba(255, 255, 255, 0.25);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   transform: translateY(1px);
 }
-[class*="btn-["] {
-  color: var(--color-text-light, #fff);
-  transition: all 0.2s ease;
-}
-[class*="btn-["]:hover {
-  filter: brightness(0.85);
-}
 :root.dark {
-  .btn-primary {
+  .btn-primary,
+  sol-button[color=primary] button,
+  sol-button:not([color]) button {
     background: #0558be;
     color: var(--color-text-light, #fff);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
-  .btn-primary:hover {
+  .btn-primary:hover,
+  sol-button[color=primary] button:hover,
+  sol-button:not([color]) button:hover {
     background: #2b76d2;
   }
-  .btn-secondary {
+  .btn-secondary,
+  sol-button[color=secondary] button {
     background: #1c1c1e;
     color: #f0f0f0;
     border: 2px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
   .btn-secondary.active,
-  .btn-secondary:hover {
+  .btn-secondary:hover,
+  sol-button[color=secondary] button:hover {
     background-color: #2a2a2c;
   }
-  .btn-success {
+  .btn-success,
+  sol-button[color=success] button {
     background: #1c3e23;
   }
-  .btn-success:hover {
+  .btn-success:hover,
+  sol-button[color=success] button:hover {
     filter: brightness(1.2);
   }
-  .btn-warning {
+  .btn-warning,
+  sol-button[color=warning] button {
     background: #664d03;
   }
-  .btn-warning:hover {
+  .btn-warning:hover,
+  sol-button[color=warning] button:hover {
     filter: brightness(1.2);
   }
-  .btn-danger {
+  .btn-danger,
+  sol-button[color=danger] button {
     background: #7a1f1f;
   }
-  .btn-danger:hover {
+  .btn-danger:hover,
+  sol-button[color=danger] button:hover {
     filter: brightness(1.2);
   }
-  .btn-glass {
+  .btn-glass,
+  sol-button[color=glass] button {
     background: rgba(255, 255, 255, 0.05);
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   }
-  .btn-glass::before {
+  .btn-glass::before,
+  sol-button[color=glass] button::before {
     background: rgba(255, 255, 255, 0.04);
   }
-  .btn-glass:hover {
+  .btn-glass:hover,
+  sol-button[color=glass] button:hover {
     background: rgba(255, 255, 255, 0.1);
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   }
-  .btn-glass:active {
+  .btn-glass:active,
+  sol-button[color=glass] button:active {
     background: rgba(255, 255, 255, 0.07);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 }
-flux\\:button {
+flux\:button {
   all: unset;
   display: inline-flex;
   align-items: center;
@@ -188,15 +237,15 @@ flux\\:button {
   background: var(--color-primary, #0071e3);
   color: var(--color-text-light, #fff);
 }
-flux\\:button:hover {
+flux\:button:hover {
   filter: brightness(0.85);
 }
-flux\\:button.btn-secondary {
+flux\:button.btn-secondary {
   background: var(--color-secondary, #f5f5f5);
   color: var(--color-text-dark, #000);
   border: 2px solid rgba(0, 0, 0, 0.1);
 }
-flux\\:input {
+flux\:input {
   all: unset;
   width: 100%;
   padding: 0.3rem 0.4rem;
@@ -207,13 +256,14 @@ flux\\:input {
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-flux\\:input:focus {
+flux\:input:focus {
   border-color: var(--color-primary, #0071e3);
   box-shadow: 0 0 0 4px var(--color-focus-glow, rgba(0, 113, 227, 0.15));
 }
 
 /* src/components/codeblock.css */
-.codeblock {
+sol-code {
+  display: block;
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -224,14 +274,15 @@ flux\\:input:focus {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   background: #fefefe55;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
-.pre-content {
+sol-code .pre-content {
   margin: 0;
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #000000;
-  padding-left: 16px;
+  padding: 16px;
   padding-top: 10px;
-  padding-bottom: 10px;
   width: 100%;
   height: 100%;
   overflow-x: auto;
@@ -242,23 +293,43 @@ flux\\:input:focus {
   background: transparent;
   color: inherit;
   position: relative;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease,
+    padding 0.3s ease;
   opacity: 1;
 }
-.pre-content.collapsed {
+sol-code .pre-content.collapsed {
   max-height: 0;
   opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
-.pre-copy-btn {
-  transition: background 0.2s ease, color 0.2s ease;
-}
-.pre-copy-btn.btn-in-pre {
+sol-code .pre-copy-btn {
   position: absolute;
   top: 8px;
   right: 8px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  color: #000;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
   z-index: 5;
+  transition: all 0.2s ease;
 }
-.pre-top {
+sol-code .pre-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+sol-code .pre-copy-btn:active {
+  transform: translateY(0);
+}
+sol-code .pre-top {
   background: rgb(74, 74, 74);
   display: flex;
   width: 100%;
@@ -268,218 +339,204 @@ flux\\:input:focus {
   padding: 9px;
   padding-left: 20px;
 }
-.pre-top-btns {
+sol-code .pre-top-btns {
   display: flex;
   gap: 8px;
   z-index: 10;
-  cursor: pointer !important;
 }
-.pre-top-btns span {
+sol-code .pre-top-btns span {
   width: 15px;
   height: 15px;
   border-radius: 50%;
   display: inline-block;
+  cursor: pointer;
+  transition: filter 0.2s;
 }
-.pre-btn-red {
+sol-code .pre-btn-red {
   background: #ff5f57;
   position: relative;
 }
-.pre-btn-orange {
+sol-code .pre-btn-orange {
   background: #ffbd2e;
   position: relative;
 }
-.pre-btn-green {
+sol-code .pre-btn-green {
   background: #28c940;
   position: relative;
 }
-.pre-btn-red::before {
+sol-code .pre-top-btns span::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+sol-code .pre-btn-red::before {
   content: "\d7";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-size: 13px;
-  color: black;
-  font-weight: bold;
-  opacity: 0;
-  pointer-events: none;
 }
-.pre-btn-orange::before {
+sol-code .pre-btn-orange::before {
   content: "\2013";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-size: 13px;
-  color: black;
-  font-weight: bold;
-  opacity: 0;
-  pointer-events: none;
 }
-.pre-btn-green::before {
+sol-code .pre-btn-green::before {
   content: "\26f6";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-size: 10px;
-  color: black;
-  font-weight: bold;
-  opacity: 0;
-  pointer-events: none;
 }
-.pre-top-btns span:hover::before {
+sol-code .pre-top-btns:hover span::before {
+  opacity: 0.6;
+}
+sol-code .pre-top-btns span:hover::before {
   opacity: 1;
 }
-.pre-btn-red:hover {
+sol-code .pre-top-btns span:hover {
   filter: brightness(1.2);
 }
-.pre-btn-orange:hover {
-  filter: brightness(1.2);
-}
-.pre-btn-green:hover {
-  filter: brightness(1.2);
-}
-.codeblock .token.comment,
-.codeblock .token.prolog,
-.codeblock .token.doctype,
-.codeblock .token.cdata {
+sol-code .token.comment,
+sol-code .token.prolog,
+sol-code .token.doctype,
+sol-code .token.cdata {
   color: #7f8c8d;
   font-style: italic;
 }
-.codeblock .token.punctuation {
+sol-code .token.punctuation {
   color: #2c3e50;
 }
-.codeblock .token.operator,
-.codeblock .token.boolean,
-.codeblock .token.symbol,
-.codeblock .token.entity {
+sol-code .token.operator,
+sol-code .token.boolean,
+sol-code .token.symbol,
+sol-code .token.entity {
   color: #2c3e50;
 }
-.codeblock .token.number {
+sol-code .token.number {
   color: #d35400;
 }
-.codeblock .token.property,
-.codeblock .token.tag,
-.codeblock .token.constant,
-.codeblock .token.class-name,
-.codeblock .token.function {
+sol-code .token.property,
+sol-code .token.tag,
+sol-code .token.constant,
+sol-code .token.class-name,
+sol-code .token.function {
   color: #2980b9;
   font-weight: 500;
 }
-.codeblock .token.selector,
-.codeblock .token.attr-name,
-.codeblock .token.string,
-.codeblock .token.char,
-.codeblock .token.builtin,
-.codeblock .token.inserted {
+sol-code .token.selector,
+sol-code .token.attr-name,
+sol-code .token.string,
+sol-code .token.char,
+sol-code .token.builtin,
+sol-code .token.inserted {
   color: #27ae60;
 }
-.codeblock .token.keyword,
-.codeblock .token.atrule,
-.codeblock .token.attr-value,
-.codeblock .token.deleted,
-.codeblock .token.regex,
-.codeblock .token.important {
+sol-code .token.keyword,
+sol-code .token.atrule,
+sol-code .token.attr-value,
+sol-code .token.deleted,
+sol-code .token.regex,
+sol-code .token.important {
   color: #e67e22;
   font-weight: 500;
 }
-.codeblock .token.entity {
+sol-code .token.entity {
   cursor: help;
 }
-.codeblock .token.important,
-.codeblock .token.bold {
+sol-code .token.important,
+sol-code .token.bold {
   font-weight: bold;
 }
-.codeblock .token.italic {
+sol-code .token.italic {
   font-style: italic;
 }
-.codeblock ::selection {
+sol-code ::selection {
   background: rgba(46, 204, 113, 0.2);
 }
-.codeblock pre::-webkit-scrollbar {
+sol-code .pre-content::-webkit-scrollbar {
   height: 6px;
   width: 6px;
 }
-.codeblock pre::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+sol-code .pre-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }
-.codeblock pre::-webkit-scrollbar-track {
+sol-code .pre-content::-webkit-scrollbar-track {
   background: transparent;
 }
-:root.dark {
-  .codeblock {
-    background: #1e1e2f88;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  }
-  .pre-content {
-    color: #f0f0f0;
-  }
-  .pre-top {
-    background: #2c2c3e;
-  }
-  .codeblock .token.comment,
-  .codeblock .token.prolog,
-  .codeblock .token.doctype,
-  .codeblock .token.cdata {
-    color: #95a5a6;
-    font-style: italic;
-  }
-  .codeblock .token.punctuation {
-    color: #ecf0f1;
-  }
-  .codeblock .token.operator,
-  .codeblock .token.boolean,
-  .codeblock .token.symbol,
-  .codeblock .token.entity {
-    color: #ecf0f1;
-  }
-  .codeblock .token.number {
-    color: #e67e22;
-  }
-  .codeblock .token.property,
-  .codeblock .token.tag,
-  .codeblock .token.constant,
-  .codeblock .token.class-name,
-  .codeblock .token.function {
-    color: #3498db;
-    font-weight: 500;
-  }
-  .codeblock .token.selector,
-  .codeblock .token.attr-name,
-  .codeblock .token.string,
-  .codeblock .token.char,
-  .codeblock .token.builtin,
-  .codeblock .token.inserted {
-    color: #2ecc71;
-  }
-  .codeblock .token.keyword,
-  .codeblock .token.atrule,
-  .codeblock .token.attr-value,
-  .codeblock .token.deleted,
-  .codeblock .token.regex,
-  .codeblock .token.important {
-    color: #f39c12;
-    font-weight: 500;
-  }
+:root.dark sol-code {
+  background: #1e1e2f88;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+:root.dark sol-code .pre-content {
+  color: #f0f0f0;
+}
+:root.dark sol-code .pre-top {
+  background: #2c2c3e;
+}
+:root.dark sol-code .pre-copy-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+:root.dark sol-code .pre-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+:root.dark sol-code .pre-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+:root.dark sol-code .token.comment,
+:root.dark sol-code .token.prolog,
+:root.dark sol-code .token.doctype,
+:root.dark sol-code .token.cdata {
+  color: #95a5a6;
+}
+:root.dark sol-code .token.punctuation {
+  color: #ecf0f1;
+}
+:root.dark sol-code .token.operator,
+:root.dark sol-code .token.boolean,
+:root.dark sol-code .token.symbol,
+:root.dark sol-code .token.entity {
+  color: #ecf0f1;
+}
+:root.dark sol-code .token.number {
+  color: #e67e22;
+}
+:root.dark sol-code .token.property,
+:root.dark sol-code .token.tag,
+:root.dark sol-code .token.constant,
+:root.dark sol-code .token.class-name,
+:root.dark sol-code .token.function {
+  color: #3498db;
+}
+:root.dark sol-code .token.selector,
+:root.dark sol-code .token.attr-name,
+:root.dark sol-code .token.string,
+:root.dark sol-code .token.char,
+:root.dark sol-code .token.builtin,
+:root.dark sol-code .token.inserted {
+  color: #2ecc71;
+}
+:root.dark sol-code .token.keyword,
+:root.dark sol-code .token.atrule,
+:root.dark sol-code .token.attr-value,
+:root.dark sol-code .token.deleted,
+:root.dark sol-code .token.regex,
+:root.dark sol-code .token.important {
+  color: #f39c12;
 }
 
 /* src/components/dropdown.css */
+sol-dropdown,
 .dropdown {
   position: relative;
   display: inline-block;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
+  font-family: inherit;
   cursor: pointer;
   user-select: none;
 }
+sol-dropdown .dropdown-btn,
 .dropdown-btn {
   padding: 0.3rem 0.4rem;
   border-radius: 12px;
@@ -495,18 +552,22 @@ flux\\:input:focus {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+sol-dropdown .dropdown-btn:hover,
 .dropdown-btn:hover {
   background: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
 }
+sol-dropdown .dropdown-btn:after,
 .dropdown-btn:after {
   content: "\25be";
   margin-left: 0.5rem;
   font-size: 0.75rem;
   transition: transform 0.2s ease;
 }
+sol-dropdown.open .dropdown-btn:after,
 .dropdown.open .dropdown-btn:after {
   transform: rotate(180deg);
 }
+sol-dropdown .dropdown-content,
 .dropdown-content {
   position: absolute;
   top: 100%;
@@ -519,7 +580,7 @@ flux\\:input:focus {
   overflow-y: auto;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(36px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   max-height: 15rem;
@@ -531,107 +592,126 @@ flux\\:input:focus {
   transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 1000;
 }
+sol-dropdown .dropdown-content::-webkit-scrollbar,
 .dropdown-content::-webkit-scrollbar {
   width: 6px;
 }
+sol-dropdown .dropdown-content::-webkit-scrollbar-thumb,
 .dropdown-content::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }
+sol-dropdown .dropdown-content::-webkit-scrollbar-track,
 .dropdown-content::-webkit-scrollbar-track {
   background: transparent;
 }
+sol-dropdown.open .dropdown-content,
 .dropdown.open .dropdown-content {
   opacity: 1;
   transform: translateY(0) scale(1);
   pointer-events: auto;
 }
+sol-dropdown .dropdown-item,
 .dropdown-item {
   padding: 0.3rem 0.4rem;
   color: var(--color-text-dark, #000);
   transition: background 0.2s, color 0.2s;
   cursor: pointer;
 }
+sol-dropdown .dropdown-item:hover,
 .dropdown-item:hover {
   background: rgba(0, 0, 0, 0.05);
 }
+sol-dropdown .dropdown-item.active,
 .dropdown-item.active {
   font-weight: 600;
   background: rgba(0, 0, 0, 0.1);
 }
+sol-dropdown .dropdown-item[aria-disabled=true],
+sol-dropdown .dropdown-item.placeholder,
 .dropdown-item[aria-disabled=true],
 .dropdown-item.placeholder {
   color: rgba(0, 0, 0, 0.4);
   cursor: default;
   pointer-events: none;
 }
+sol-dropdown input[type=hidden],
 .dropdown input[type=hidden] {
   display: none;
 }
+sol-dropdown .dropdown-divider,
 .dropdown-divider {
   height: 1px;
   margin: 0.25rem 0;
   background: rgba(0, 0, 0, 0.1);
 }
+sol-dropdown .dropdown-label,
 .dropdown-label {
   padding: 0.3rem 0.4rem;
   font-weight: 600;
   color: rgba(0, 0, 0, 0.6);
   cursor: default;
 }
+:root.dark sol-dropdown .dropdown-btn,
 :root.dark .dropdown-btn {
   background: #1c1c1e;
   color: #f0f0f0;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
+:root.dark sol-dropdown .dropdown-btn:hover,
 :root.dark .dropdown-btn:hover {
   background: rgba(255, 255, 255, 0.05);
 }
+:root.dark sol-dropdown .dropdown-content,
 :root.dark .dropdown-content {
   background: transparent;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
 }
+:root.dark sol-dropdown .dropdown-item,
 :root.dark .dropdown-item {
   color: #f0f0f0;
 }
+:root.dark sol-dropdown .dropdown-item:hover,
 :root.dark .dropdown-item:hover {
   background: rgba(255, 255, 255, 0.08);
 }
+:root.dark sol-dropdown .dropdown-item.active,
 :root.dark .dropdown-item.active {
   background: rgba(255, 255, 255, 0.12);
 }
+:root.dark sol-dropdown .dropdown-divider,
 :root.dark .dropdown-divider {
   background: rgba(255, 255, 255, 0.2);
 }
+:root.dark sol-dropdown .dropdown-item[aria-disabled=true],
+:root.dark sol-dropdown .dropdown-item.placeholder,
 :root.dark .dropdown-item[aria-disabled=true],
 :root.dark .dropdown-item.placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
+:root.dark sol-dropdown .dropdown-label,
 :root.dark .dropdown-label {
   color: rgba(255, 255, 255, 0.6);
 }
+:root.dark sol-dropdown .dropdown-content::-webkit-scrollbar-thumb,
 :root.dark .dropdown-content::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
 }
 
 /* src/components/input.css */
+sol-input,
 .sol-input-group {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
+  font-family: inherit;
   width: 100%;
+  position: relative;
 }
+sol-input .sol-label,
 .sol-label {
   font-size: 0.85rem;
   font-weight: 500;
@@ -639,11 +719,12 @@ flux\\:input:focus {
   opacity: 0.6;
   margin-left: 0.2rem;
 }
+sol-input input,
 .sol-input {
   appearance: none;
   -webkit-appearance: none;
   width: 100%;
-  padding: 0.3rem 0.4rem;
+  padding: 0.4rem 0.6rem;
   font-size: 0.95rem;
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -652,20 +733,26 @@ flux\\:input:focus {
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   outline: none;
+  box-sizing: border-box;
 }
+sol-input input::placeholder,
 .sol-input::placeholder {
   color: var(--color-text-dark, #000);
   opacity: 0.3;
 }
+sol-input input:hover,
 .sol-input:hover {
   border-color: rgba(0, 0, 0, 0.2);
   background: var(--color-bg-hover, #ffffff);
 }
+sol-input input:focus,
 .sol-input:focus {
   border-color: var(--color-primary, #0071e3);
   box-shadow: 0 0 0 4px var(--color-focus-glow, rgba(0, 113, 227, 0.15)), 0 2px 8px rgba(0, 0, 0, 0.05);
   background: var(--color-bg-hover, #ffffff);
 }
+sol-input[disabled] input,
+sol-input input:disabled,
 .sol-input:disabled {
   background: var(--color-secondary, #f5f5f5);
   color: var(--color-text-dark, #000);
@@ -673,24 +760,25 @@ flux\\:input:focus {
   cursor: not-allowed;
   box-shadow: none;
 }
+sol-input input.is-invalid,
+.sol-input.is-invalid,
 .sol-input-error {
-  border-color: var(--color-danger, #dc3545) !important;
+  border-color: var(--color-danger, #ff453a) !important;
+  box-shadow: 0 0 0 4px var(--color-error-glow, rgba(255, 69, 58, 0.15)) !important;
 }
-.sol-input-error:focus {
-  box-shadow: 0 0 0 4px var(--color-error-glow, rgba(220, 53, 69, 0.15)) !important;
-}
+sol-input input::-webkit-outer-spin-button,
+sol-input input::-webkit-inner-spin-button,
 .sol-input::-webkit-outer-spin-button,
 .sol-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-.sol-input {
+sol-input input[type=number],
+.sol-input[type=number] {
   -moz-appearance: textfield;
   appearance: none;
 }
-.sol-input-group {
-  position: relative;
-}
+sol-input .sol-error-message,
 .sol-error-message {
   color: var(--color-danger, #ff453a);
   font-size: 0.75rem;
@@ -710,14 +798,12 @@ flux\\:input:focus {
     transform: translateY(0);
   }
 }
-.sol-input.is-invalid {
-  border-color: var(--color-danger, #ff453a) !important;
-  box-shadow: 0 0 0 4px var(--color-error-glow, rgba(255, 69, 58, 0.15)) !important;
-}
+:root.dark sol-input .sol-label,
 :root.dark .sol-label {
   color: var(--color-text-light, #fff);
   opacity: 0.6;
 }
+:root.dark sol-input input,
 :root.dark .sol-input {
   background: rgba(28, 28, 30, 0.8);
   color: var(--color-text-light, #fff);
@@ -726,19 +812,24 @@ flux\\:input:focus {
   -webkit-backdrop-filter: blur(12px);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0, 0, 0, 0.4);
 }
+:root.dark sol-input input::placeholder,
 :root.dark .sol-input::placeholder {
   color: var(--color-text-light, #fff);
   opacity: 0.3;
 }
+:root.dark sol-input input:hover,
 :root.dark .sol-input:hover {
   background: rgba(44, 44, 46, 0.9);
   border-color: rgba(255, 255, 255, 0.25);
 }
+:root.dark sol-input input:focus,
 :root.dark .sol-input:focus {
   background: rgba(44, 44, 46, 1);
   border-color: var(--color-primary-dark, #0a84ff);
   box-shadow: 0 0 0 4px var(--color-focus-glow-dark, rgba(10, 132, 255, 0.2)), 0 4px 12px rgba(0, 0, 0, 0.5);
 }
+:root.dark sol-input input.is-invalid,
+:root.dark .sol-input.is-invalid,
 :root.dark .sol-input-error {
   border-color: var(--color-danger, #ff453a) !important;
 }
@@ -821,8 +912,8 @@ flux\\:input:focus {
 .sol-switch {
   position: relative;
   display: inline-block;
-  width: 52px;
-  height: 32px;
+  width: 65px;
+  height: 26px;
 }
 .sol-switch input {
   opacity: 0;
@@ -836,27 +927,27 @@ flux\\:input:focus {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-bg, #e9e9ea);
+  background-color: #e9e9ea;
   transition: 0.4s;
   border-radius: 32px;
 }
 .slider:before {
   position: absolute;
   content: "";
-  height: 28px;
-  width: 28px;
+  height: 22px;
+  width: 36px;
   left: 2px;
   bottom: 2px;
-  background-color: var(--color-text, white);
+  background-color: white;
   transition: 0.4s;
-  border-radius: 50%;
+  border-radius: 25px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 input:checked + .slider {
   background-color: var(--color-primary, #34c759);
 }
 input:checked + .slider:before {
-  transform: translateX(20px);
+  transform: translateX(25px);
 }
 .slider:hover {
   background-color: var(--color-secondary, #d1d1d6);

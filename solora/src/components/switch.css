@@ -1,56 +1,54 @@
-/* Switch component styles inspired by Apple's design */
-
 .sol-switch {
-    position: relative;
-    display: inline-block;
-    width: 52px;
-    height: 32px;
+  position: relative;
+  display: inline-block;
+  width: 65px;
+  height: 26px;
 }
 
 .sol-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--color-bg, #e9e9ea);
-    transition: 0.4s;
-    border-radius: 32px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e9e9ea;
+  transition: 0.4s;
+  border-radius: 32px;
 }
 
 .slider:before {
-    position: absolute;
-    content: "";
-    height: 28px;
-    width: 28px;
-    left: 2px;
-    bottom: 2px;
-    background-color: var(--color-text, white);
-    transition: 0.4s;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 36px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 25px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 input:checked + .slider {
-    background-color: var(--color-primary, #34c759);
+  background-color: var(--color-primary, #34c759);
 }
 
 input:checked + .slider:before {
-    transform: translateX(20px);
+  transform: translateX(25px);
 }
 
 .slider:hover {
-    background-color: var(--color-secondary, #d1d1d6);
+  background-color: var(--color-secondary, #d1d1d6);
 }
 
 input:checked + .slider:hover {
-    background-color: var(--color-primary, #34c759);
-    opacity: 0.8;
+  background-color: var(--color-primary, #34c759);
+  opacity: 0.8;
 }

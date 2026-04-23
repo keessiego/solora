@@ -29,15 +29,15 @@ export function initSwitch(target) {
 
     // ---- COLORS ----
     function updateColors() {
-        const primary = switchElement.getAttribute('color-primary') || '#34c759';
-        const secondary = switchElement.getAttribute('color-secondary') || '#d1d1d6';
-        const bg = switchElement.getAttribute('color-bg') || '#e9e9ea';
-        const text = switchElement.getAttribute('color-text') || 'white';
+        const primary = switchElement.getAttribute('color-primary');
+        const secondary = switchElement.getAttribute('color-secondary');
+        const bg = switchElement.getAttribute('color-bg');
+        const text = switchElement.getAttribute('color-text');
 
-        switchElement.style.setProperty('--color-primary', primary);
-        switchElement.style.setProperty('--color-secondary', secondary);
-        switchElement.style.setProperty('--color-bg', bg);
-        switchElement.style.setProperty('--color-text', text);
+        if (primary) switchElement.style.setProperty('--color-primary', primary);
+        if (secondary) switchElement.style.setProperty('--color-secondary', secondary);
+        if (bg) switchElement.style.setProperty('--color-bg', bg);
+        if (text) switchElement.style.setProperty('--color-text', text);
     }
 
     updateColors();

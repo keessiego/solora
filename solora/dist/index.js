@@ -1741,181 +1741,374 @@ var require_components2 = __commonJS({
   }
 });
 
+// src/components/button.js
+var SolButton = class extends HTMLElement {
+  constructor() {
+    super();
+    this.button = document.createElement("button");
+  }
+  connectedCallback() {
+    if (this.contains(this.button)) return;
+    while (this.childNodes.length > 0) {
+      this.button.appendChild(this.childNodes[0]);
+    }
+    this.appendChild(this.button);
+    this.updateAttributes();
+  }
+  static get observedAttributes() {
+    return ["disabled", "type"];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (this.contains(this.button)) {
+      this.updateAttributes();
+    }
+  }
+  updateAttributes() {
+    if (this.hasAttribute("disabled")) {
+      this.button.setAttribute("disabled", "disabled");
+    } else {
+      this.button.removeAttribute("disabled");
+    }
+    if (this.hasAttribute("type")) {
+      this.button.setAttribute("type", this.getAttribute("type"));
+    } else {
+      this.button.setAttribute("type", "button");
+    }
+  }
+};
+function initButton() {
+  if (!customElements.get("sol-button")) {
+    customElements.define("sol-button", SolButton);
+  }
+}
+
+// src/components/input.js
+var SolInput = class extends HTMLElement {
+  constructor() {
+    super();
+    this.initialized = false;
+  }
+  // Luister naar wijzigingen in deze attributen om live updates te ondersteunen
+  static get observedAttributes() {
+    return ["type", "placeholder", "value", "label", "disabled", "required", "min", "max", "name"];
+  }
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
+    this.labelEl = document.createElement("label");
+    this.labelEl.className = "sol-label";
+    this.inputEl = document.createElement("input");
+    this.inputEl.className = "sol-input";
+    this.errorEl = document.createElement("span");
+    this.errorEl.className = "sol-error-message";
+    this.appendChild(this.labelEl);
+    this.appendChild(this.inputEl);
+    this.appendChild(this.errorEl);
+    this.updateAttributes();
+    this.bindEvents();
+  }
+  attributeChangedCallback() {
+    if (this.initialized) {
+      this.updateAttributes();
+    }
+  }
+  updateAttributes() {
+    const props = ["type", "placeholder", "value", "name", "min", "max"];
+    props.forEach((prop) => {
+      if (this.hasAttribute(prop)) {
+        this.inputEl.setAttribute(prop, this.getAttribute(prop));
+      } else {
+        this.inputEl.removeAttribute(prop);
+      }
+    });
+    if (this.hasAttribute("disabled")) this.inputEl.setAttribute("disabled", "disabled");
+    else this.inputEl.removeAttribute("disabled");
+    if (this.hasAttribute("required")) this.inputEl.setAttribute("required", "required");
+    else this.inputEl.removeAttribute("required");
+    if (this.hasAttribute("label")) {
+      this.labelEl.textContent = this.getAttribute("label");
+      this.labelEl.style.display = "block";
+    } else {
+      this.labelEl.style.display = "none";
+    }
+  }
+  bindEvents() {
+    this.inputEl.addEventListener("input", (e) => {
+      if (this.inputEl.value !== this.getAttribute("value")) {
+        this.setAttribute("value", this.inputEl.value);
+      }
+      if (this.inputEl.validity.valid) {
+        this.hideError();
+      }
+      this.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    this.inputEl.addEventListener("change", () => {
+      this.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    this.inputEl.addEventListener("invalid", (e) => {
+      e.preventDefault();
+      this.showError();
+    });
+  }
+  showError() {
+    let message = "Ongeldige invoer";
+    if (this.inputEl.validity.valueMissing) {
+      message = "Dit veld is verplicht";
+    } else if (this.inputEl.validity.typeMismatch) {
+      if (this.inputEl.type === "email") message = "Voer een geldig e-mailadres in";
+      if (this.inputEl.type === "url") message = "Voer een geldige link in";
+    } else if (this.inputEl.validity.rangeUnderflow) {
+      message = `Minimum is ${this.inputEl.min}`;
+    }
+    this.errorEl.textContent = message;
+    this.errorEl.style.display = "block";
+    this.inputEl.classList.add("is-invalid");
+  }
+  hideError() {
+    this.errorEl.style.display = "none";
+    this.inputEl.classList.remove("is-invalid");
+  }
+  // Maakt het mogelijk om de input in JS makkelijk aan te passen: myInput.value = "Test";
+  get value() {
+    return this.inputEl ? this.inputEl.value : this.getAttribute("value");
+  }
+  set value(val) {
+    this.setAttribute("value", val);
+    if (this.inputEl) this.inputEl.value = val;
+  }
+};
+function initInput() {
+  if (!customElements.get("sol-input")) {
+    customElements.define("sol-input", SolInput);
+  }
+}
+
 // src/components/codeblock.js
 var import_prismjs = __toESM(require_prism());
 var import_components = __toESM(require_components2());
-function initCodeblocks() {
-  const blocks = document.querySelectorAll(".codeblock");
-  blocks.forEach((block) => {
-    const pre = block.querySelector("pre");
-    const copyBtn = block.querySelector(".pre-copy-btn");
-    const closeBtn = block.querySelector(".close-btn");
-    const minimizeBtn = block.querySelector(".minimize-btn");
-    const preContent = block.querySelector(".pre-content");
-    if (!pre || !preContent) return;
-    if (copyBtn && copyBtn.classList.contains("btn-in-pre")) {
-      preContent.insertBefore(copyBtn, preContent.firstChild);
-    }
-    if (copyBtn && !copyBtn.dataset.bound) {
-      copyBtn.dataset.bound = "true";
-      copyBtn.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(pre.innerText);
-          const oldText = copyBtn.innerText;
-          copyBtn.innerText = "Copied!";
-          setTimeout(() => copyBtn.innerText = oldText, 1200);
-        } catch (err) {
-          console.error("Copy failed:", err);
-        }
-      });
-    }
-    const code = pre.textContent;
-    const lang = (pre.dataset.language || "javascript").toLowerCase();
+var SolCode = class extends HTMLElement {
+  constructor() {
+    super();
+    this.initialized = false;
+  }
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
+    let rawCode = this.textContent.replace(/^\s*\n/, "").replace(/\n\s*$/, "");
+    const lang = (this.getAttribute("language") || this.getAttribute("lang") || "javascript").toLowerCase();
+    this.innerHTML = `
+            <div class="pre-top">
+                <div class="pre-top-btns">
+                    <span class="pre-btn-red close-btn" title="Sluiten"></span>
+                    <span class="pre-btn-orange minimize-btn" title="Minimaliseren"></span>
+                    <span class="pre-btn-green maximize-btn" title="Volledig scherm"></span>
+                </div>
+            </div>
+            <div class="pre-content">
+                <button class="pre-copy-btn btn-in-pre" title="Kopi\xEBren">Kopieer</button>
+                <pre><code class="language-${lang}"></code></pre>
+            </div>
+        `;
+    this.preContent = this.querySelector(".pre-content");
+    this.codeElement = this.querySelector("code");
+    this.copyBtn = this.querySelector(".pre-copy-btn");
+    this.closeBtn = this.querySelector(".close-btn");
+    this.minimizeBtn = this.querySelector(".minimize-btn");
+    this.maximizeBtn = this.querySelector(".maximize-btn");
     if (!import_prismjs.default.languages[lang]) {
       console.warn(`Language '${lang}' not loaded in Prism, using plaintext fallback.`);
-      pre.textContent = code;
+      this.codeElement.textContent = rawCode;
     } else {
-      pre.innerHTML = import_prismjs.default.highlight(code, import_prismjs.default.languages[lang], lang);
+      this.codeElement.innerHTML = import_prismjs.default.highlight(rawCode, import_prismjs.default.languages[lang], lang);
     }
-    if (closeBtn) closeBtn.addEventListener("click", () => {
-      block.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-      block.style.opacity = 0;
-      block.style.transform = "scale(0.95)";
-      setTimeout(() => block.remove(), 300);
+    this.bindEvents(rawCode);
+  }
+  bindEvents(rawCode) {
+    this.copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(rawCode);
+        const oldText = this.copyBtn.innerText;
+        this.copyBtn.innerText = "Gekopieerd!";
+        setTimeout(() => this.copyBtn.innerText = oldText, 1200);
+      } catch (err) {
+        console.error("Copy failed:", err);
+      }
     });
-    if (minimizeBtn) minimizeBtn.addEventListener("click", () => {
-      preContent.classList.toggle("collapsed");
+    this.closeBtn.addEventListener("click", () => {
+      this.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+      this.style.opacity = "0";
+      this.style.transform = "scale(0.95)";
+      setTimeout(() => this.remove(), 300);
     });
-    const maximizeBtn = block.querySelector(".maximize-btn");
-    if (maximizeBtn) initMaximizeButton(block, maximizeBtn);
-  });
-}
-function initMaximizeButton(block, maximizeBtn) {
-  maximizeBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const scrollX = window.scrollX || window.pageXOffset;
-    const scrollY = window.scrollY || window.pageYOffset;
-    if (!block.dataset.origRect) {
-      const rect = block.getBoundingClientRect();
-      block.dataset.origRect = JSON.stringify({
-        top: rect.top + scrollY,
-        left: rect.left + scrollX,
-        width: rect.width,
-        height: rect.height
-      });
-    }
-    void block.offsetWidth;
-    if (block.dataset.isFullscreen !== "true") {
-      const rect = block.getBoundingClientRect();
-      const startRect = { top: rect.top + scrollY, left: rect.left + scrollX, width: rect.width, height: rect.height };
-      Object.assign(block.style, {
-        position: "fixed",
-        top: `${startRect.top}px`,
-        left: `${startRect.left}px`,
-        width: `${startRect.width}px`,
-        height: `${startRect.height}px`,
-        margin: "0",
-        zIndex: 9999,
-        transition: "all 0.3s ease"
-      });
-      void block.offsetWidth;
-      Object.assign(block.style, { top: "0", left: "0", width: "100%", height: "100%", borderRadius: "0" });
-      block.dataset.isFullscreen = "true";
-    } else {
-      const origRect = JSON.parse(block.dataset.origRect);
-      Object.assign(block.style, {
-        transition: "all 0.3s ease",
-        top: `${origRect.top}px`,
-        left: `${origRect.left}px`,
-        width: `${origRect.width}px`,
-        height: "auto",
-        borderRadius: "12px"
-      });
-      block.addEventListener("transitionend", () => {
-        Object.assign(block.style, {
-          transition: "",
-          position: "",
-          top: "",
-          left: "",
-          width: "",
-          height: "",
-          zIndex: ""
+    this.minimizeBtn.addEventListener("click", () => {
+      this.preContent.classList.toggle("collapsed");
+    });
+    this.maximizeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const scrollX = window.scrollX || window.pageXOffset;
+      const scrollY = window.scrollY || window.pageYOffset;
+      if (this.dataset.isFullscreen !== "true") {
+        const rect = this.getBoundingClientRect();
+        this.dataset.origRect = JSON.stringify({
+          top: rect.top + scrollY,
+          left: rect.left + scrollX,
+          width: rect.width,
+          height: rect.height
         });
-        block.dataset.isFullscreen = "false";
-      }, { once: true });
-    }
-  });
+        Object.assign(this.style, {
+          position: "fixed",
+          top: `${rect.top + scrollY}px`,
+          left: `${rect.left + scrollX}px`,
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+          margin: "0",
+          zIndex: "9999",
+          transition: "all 0.3s ease"
+        });
+        void this.offsetWidth;
+        Object.assign(this.style, {
+          top: "0",
+          left: "0",
+          width: "100%",
+          height: "100%",
+          borderRadius: "0"
+        });
+        this.dataset.isFullscreen = "true";
+      } else {
+        const origRect = JSON.parse(this.dataset.origRect);
+        Object.assign(this.style, {
+          transition: "all 0.3s ease",
+          top: `${origRect.top}px`,
+          left: `${origRect.left}px`,
+          width: `${origRect.width}px`,
+          height: "auto",
+          borderRadius: "12px"
+        });
+        this.addEventListener("transitionend", () => {
+          Object.assign(this.style, {
+            transition: "",
+            position: "",
+            top: "",
+            left: "",
+            width: "",
+            height: "",
+            zIndex: ""
+          });
+          this.dataset.isFullscreen = "false";
+        }, { once: true });
+      }
+    });
+  }
+};
+function initCodeblocks() {
+  if (!customElements.get("sol-code")) {
+    customElements.define("sol-code", SolCode);
+  }
 }
 
 // src/components/dropdown.js
-function initDropdowns() {
-  if (typeof window === "undefined") return;
-  document.querySelectorAll(".dropdown").forEach((drop) => {
-    if (drop.dataset.initialized) return;
-    drop.dataset.initialized = "true";
-    const btn = drop.querySelector(".dropdown-btn");
-    const content = drop.querySelector(".dropdown-content");
-    if (!btn || !content) return;
-    let hiddenInput = drop.querySelector('input[type="hidden"]');
-    if (!hiddenInput) {
-      hiddenInput = document.createElement("input");
-      hiddenInput.type = "hidden";
-      hiddenInput.name = drop.dataset.name || "dropdown";
-      drop.appendChild(hiddenInput);
+var SolDropdown = class extends HTMLElement {
+  constructor() {
+    super();
+    this.initialized = false;
+  }
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
+    const fragment = document.createDocumentFragment();
+    while (this.childNodes.length > 0) {
+      fragment.appendChild(this.childNodes[0]);
     }
-    const getItems = () => Array.from(content.querySelectorAll('.dropdown-item:not([aria-disabled="true"])'));
-    const setValue = (item) => {
-      if (item.getAttribute("aria-disabled") === "true") return;
-      btn.innerHTML = item.innerHTML;
-      content.querySelectorAll(".dropdown-item").forEach((i) => i.classList.remove("active"));
-      item.classList.add("active");
-      hiddenInput.value = item.dataset.value ?? item.textContent.trim();
-      drop.dispatchEvent(new CustomEvent("change", { detail: hiddenInput.value }));
-    };
-    const initialItem = content.querySelector(".dropdown-item.active") || content.querySelector('.dropdown-item:not([aria-disabled="true"])');
-    if (initialItem) setValue(initialItem);
-    const toggle = () => drop.classList.toggle("open");
-    const close = () => drop.classList.remove("open");
-    btn.addEventListener("click", (e) => {
+    this.btn = document.createElement("div");
+    this.btn.className = "dropdown-btn";
+    this.btn.setAttribute("tabindex", "0");
+    this.btn.setAttribute("role", "combobox");
+    this.btn.setAttribute("aria-haspopup", "listbox");
+    this.content = document.createElement("div");
+    this.content.className = "dropdown-content";
+    this.content.appendChild(fragment);
+    this.hiddenInput = document.createElement("input");
+    this.hiddenInput.type = "hidden";
+    this.hiddenInput.name = this.getAttribute("name") || "dropdown";
+    this.appendChild(this.btn);
+    this.appendChild(this.content);
+    this.appendChild(this.hiddenInput);
+    this.placeholder = this.getAttribute("placeholder") || null;
+    this.bindEvents();
+    this.initSelection();
+  }
+  getItems() {
+    return Array.from(this.content.querySelectorAll('.dropdown-item:not([aria-disabled="true"]):not(.placeholder)'));
+  }
+  setValue(item) {
+    if (!item || item.getAttribute("aria-disabled") === "true") return;
+    this.btn.innerHTML = item.innerHTML;
+    this.content.querySelectorAll(".dropdown-item").forEach((i) => i.classList.remove("active"));
+    item.classList.add("active");
+    this.hiddenInput.value = item.dataset.value !== void 0 ? item.dataset.value : item.textContent.trim();
+    this.dispatchEvent(new CustomEvent("change", { detail: this.hiddenInput.value, bubbles: true }));
+  }
+  initSelection() {
+    const activeItem = this.content.querySelector(".dropdown-item.active");
+    if (activeItem) {
+      this.setValue(activeItem);
+    } else if (this.placeholder) {
+      this.btn.innerHTML = this.placeholder;
+    } else {
+      const firstItem = this.getItems()[0];
+      if (firstItem) this.setValue(firstItem);
+    }
+  }
+  toggle() {
+    this.classList.toggle("open");
+  }
+  close() {
+    this.classList.remove("open");
+  }
+  bindEvents() {
+    this.btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      toggle();
+      this.toggle();
     });
     document.addEventListener("click", (e) => {
-      if (!drop.contains(e.target)) close();
+      if (!this.contains(e.target)) this.close();
     });
-    btn.addEventListener("keydown", (e) => {
+    this.btn.addEventListener("keydown", (e) => {
       if (!["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key)) return;
-      const items = getItems();
+      const items = this.getItems();
+      if (items.length === 0) return;
       let currentIndex = items.findIndex((i) => i.classList.contains("active"));
       e.preventDefault();
-      drop.classList.add("open");
+      this.classList.add("open");
       if (e.key === "ArrowDown") {
         currentIndex = (currentIndex + 1) % items.length;
       } else if (e.key === "ArrowUp") {
         currentIndex = (currentIndex - 1 + items.length) % items.length;
       } else if (e.key === "Enter") {
-        if (currentIndex >= 0) setValue(items[currentIndex]);
-        close();
+        if (currentIndex >= 0) this.setValue(items[currentIndex]);
+        this.close();
         return;
       } else if (e.key === "Escape") {
-        close();
+        this.close();
         return;
       }
       items.forEach((i) => i.classList.remove("active"));
       items[currentIndex].classList.add("active");
       items[currentIndex].scrollIntoView({ block: "nearest" });
     });
-    content.addEventListener("click", (e) => {
+    this.content.addEventListener("click", (e) => {
       const item = e.target.closest(".dropdown-item");
       if (item) {
-        setValue(item);
-        close();
+        this.setValue(item);
+        this.close();
       }
     });
-    btn.setAttribute("tabindex", "0");
-    btn.setAttribute("role", "combobox");
-    btn.setAttribute("aria-haspopup", "listbox");
-  });
+  }
+};
+function initDropdown() {
+  if (!customElements.get("sol-dropdown")) {
+    customElements.define("sol-dropdown", SolDropdown);
+  }
 }
 
 // src/components/contextMenu.js
@@ -2289,14 +2482,14 @@ function initSwitch(target) {
     switchElement.dispatchEvent(new Event("change", { bubbles: true }));
   });
   function updateColors() {
-    const primary = switchElement.getAttribute("color-primary") || "#34c759";
-    const secondary = switchElement.getAttribute("color-secondary") || "#d1d1d6";
-    const bg = switchElement.getAttribute("color-bg") || "#e9e9ea";
-    const text = switchElement.getAttribute("color-text") || "white";
-    switchElement.style.setProperty("--color-primary", primary);
-    switchElement.style.setProperty("--color-secondary", secondary);
-    switchElement.style.setProperty("--color-bg", bg);
-    switchElement.style.setProperty("--color-text", text);
+    const primary = switchElement.getAttribute("color-primary");
+    const secondary = switchElement.getAttribute("color-secondary");
+    const bg = switchElement.getAttribute("color-bg");
+    const text = switchElement.getAttribute("color-text");
+    if (primary) switchElement.style.setProperty("--color-primary", primary);
+    if (secondary) switchElement.style.setProperty("--color-secondary", secondary);
+    if (bg) switchElement.style.setProperty("--color-bg", bg);
+    if (text) switchElement.style.setProperty("--color-text", text);
   }
   updateColors();
   const observer = new MutationObserver(updateColors);
@@ -2308,8 +2501,10 @@ function initSwitch(target) {
 
 // src/index.js
 function initAll() {
+  initButton();
+  initInput();
   initCodeblocks();
-  initDropdowns();
+  initDropdown();
   initSwitch();
   initContextMenu();
   initThemeToggle();

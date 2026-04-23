@@ -1,4 +1,8 @@
-.codeblock {
+/* ======================
+   Basis Host
+====================== */
+sol-code {
+  display: block; /* Zorgt dat het netjes de breedte inneemt */
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -6,74 +10,71 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   background: #fefefe55;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.pre-content {
+sol-code .pre-content {
   margin: 0;
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #000000;
-  padding-left: 16px;
+  padding: 16px;
   padding-top: 10px;
-  padding-bottom: 10px;
   width: 100%;
   height: 100%;
   overflow-x: auto;
   font-size: 0.9rem;
   line-height: 1.5;
-  /* white-space: pre-wrap; */
   word-break: break-word;
   display: block;
   background: transparent;
   color: inherit;
   position: relative;
-  transition:
-    max-height 0.3s ease,
-    opacity 0.3s ease;
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
   opacity: 1;
 }
 
-.pre-content.collapsed {
+sol-code .pre-content.collapsed {
   max-height: 0;
   opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-/* .codeblock.fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
-  z-index: 9999;
-} */
-
-.pre-copy-btn {
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-
-.pre-copy-btn.btn-in-pre {
+/* ======================
+   Copy knop
+====================== */
+sol-code .pre-copy-btn {
   position: absolute;
   top: 8px;
   right: 8px;
-  /* padding: 4px 10px; */
-  /* font-size: 0.8rem; */
-  /* border-radius: 6px; */
-  /* background: rgba(255, 255, 255, 0.15); */
-  /* color: #000; */
-  /* border: 1px solid rgba(255, 255, 255, 0.3); */
-  /* backdrop-filter: blur(8px); */
-  /* transition: background 0.2s, transform 0.1s; */
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  color: #000;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
   z-index: 5;
+  transition: all 0.2s ease;
 }
 
-/* .pre-copy-btn.btn-in-pre:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: scale(1.05);
-} */
+sol-code .pre-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-.pre-top {
+sol-code .pre-copy-btn:active {
+  transform: translateY(0);
+}
+
+/* ======================
+   macOS Top balk
+====================== */
+sol-code .pre-top {
   background: rgb(74, 74, 74);
   display: flex;
   width: 100%;
@@ -84,235 +85,147 @@
   padding-left: 20px;
 }
 
-.pre-top-btns {
+sol-code .pre-top-btns {
   display: flex;
   gap: 8px;
   z-index: 10;
-  cursor: pointer !important;
 }
 
-.pre-top-btns span {
+sol-code .pre-top-btns span {
   width: 15px;
   height: 15px;
   border-radius: 50%;
   display: inline-block;
+  cursor: pointer;
+  transition: filter 0.2s;
 }
 
-.pre-btn-red {
-  background: #ff5f57;
-  position: relative;
-}
-.pre-btn-orange {
-  background: #ffbd2e;
-  position: relative;
-}
-.pre-btn-green {
-  background: #28c940;
-  position: relative;
-}
+sol-code .pre-btn-red { background: #ff5f57; position: relative; }
+sol-code .pre-btn-orange { background: #ffbd2e; position: relative; }
+sol-code .pre-btn-green { background: #28c940; position: relative; }
 
-/* Iconen toevoegen */
-.pre-btn-red::before {
-  content: '×';
+/* Iconen toevoegen (Hover) */
+sol-code .pre-top-btns span::before {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 13px;
   color: black;
   font-weight: bold;
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.2s;
 }
 
-.pre-btn-orange::before {
-  content: '–';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 13px;
-  color: black;
-  font-weight: bold;
-  opacity: 0;
-  pointer-events: none;
-}
+sol-code .pre-btn-red::before { content: '×'; font-size: 13px; }
+sol-code .pre-btn-orange::before { content: '–'; font-size: 13px; }
+sol-code .pre-btn-green::before { content: "⛶"; font-size: 10px; }
 
-.pre-btn-green::before {
-  content: "⛶";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 10px;
-  color: black;
-  font-weight: bold;
-  opacity: 0;
-  pointer-events: none;
-}
+sol-code .pre-top-btns:hover span::before { opacity: 0.6; }
+sol-code .pre-top-btns span:hover::before { opacity: 1; }
 
-.pre-top-btns span:hover::before { opacity: 1; }
+sol-code .pre-top-btns span:hover { filter: brightness(1.2); }
 
+/* ======================
+   Prism Tokens (Light)
+====================== */
+sol-code .token.comment,
+sol-code .token.prolog,
+sol-code .token.doctype,
+sol-code .token.cdata { color: #7f8c8d; font-style: italic; }
+sol-code .token.punctuation { color: #2c3e50; }
+sol-code .token.operator,
+sol-code .token.boolean,
+sol-code .token.symbol,
+sol-code .token.entity { color: #2c3e50; }
+sol-code .token.number { color: #d35400; }
+sol-code .token.property,
+sol-code .token.tag,
+sol-code .token.constant,
+sol-code .token.class-name,
+sol-code .token.function { color: #2980b9; font-weight: 500; }
+sol-code .token.selector,
+sol-code .token.attr-name,
+sol-code .token.string,
+sol-code .token.char,
+sol-code .token.builtin,
+sol-code .token.inserted { color: #27ae60; }
+sol-code .token.keyword,
+sol-code .token.atrule,
+sol-code .token.attr-value,
+sol-code .token.deleted,
+sol-code .token.regex,
+sol-code .token.important { color: #e67e22; font-weight: 500; }
+sol-code .token.entity { cursor: help; }
+sol-code .token.important,
+sol-code .token.bold { font-weight: bold; }
+sol-code .token.italic { font-style: italic; }
 
-.pre-btn-red:hover {
-  filter: brightness(1.2);
-}
-.pre-btn-orange:hover {
-  filter: brightness(1.2);
-}
-.pre-btn-green:hover {
-  filter: brightness(1.2);
-}
+sol-code ::selection { background: rgba(46, 204, 113, 0.2); }
 
-.codeblock .token.comment,
-.codeblock .token.prolog,
-.codeblock .token.doctype,
-.codeblock .token.cdata {
-  color: #7f8c8d;
-  font-style: italic;
-}
-
-.codeblock .token.punctuation {
-  color: #2c3e50;
-}
-
-.codeblock .token.operator,
-.codeblock .token.boolean,
-.codeblock .token.symbol,
-.codeblock .token.entity {
-  color: #2c3e50;
-}
-
-.codeblock .token.number {
-  color: #d35400;
-}
-
-.codeblock .token.property,
-.codeblock .token.tag,
-.codeblock .token.constant,
-.codeblock .token.class-name,
-.codeblock .token.function {
-  color: #2980b9;
-  font-weight: 500;
-}
-
-.codeblock .token.selector,
-.codeblock .token.attr-name,
-.codeblock .token.string,
-.codeblock .token.char,
-.codeblock .token.builtin,
-.codeblock .token.inserted {
-  color: #27ae60;
-}
-
-.codeblock .token.keyword,
-.codeblock .token.atrule,
-.codeblock .token.attr-value,
-.codeblock .token.deleted,
-.codeblock .token.regex,
-.codeblock .token.important {
-  color: #e67e22;
-  font-weight: 500;
-}
-
-.codeblock .token.entity {
-  cursor: help;
-}
-
-.codeblock .token.important,
-.codeblock .token.bold {
-  font-weight: bold;
-}
-
-.codeblock .token.italic {
-  font-style: italic;
-}
-
-/* Optional: highlight background for selected text */
-.codeblock ::selection {
-  background: rgba(46, 204, 113, 0.2);
-}
-
-.codeblock pre::-webkit-scrollbar {
-  height: 6px;
-  width: 6px;
-}
-
-.codeblock pre::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+/* Custom Scrollbar */
+sol-code .pre-content::-webkit-scrollbar { height: 6px; width: 6px; }
+sol-code .pre-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }
+sol-code .pre-content::-webkit-scrollbar-track { background: transparent; }
 
-.codeblock pre::-webkit-scrollbar-track {
-  background: transparent;
+/* ======================
+   Dark mode support
+====================== */
+:root.dark sol-code {
+  background: #1e1e2f88;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
-/* --- Dark mode --- */
-:root.dark {
-
-  .codeblock {
-    background: #1e1e2f88; /* donkere blur achtergrond */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  }
-
-  .pre-content {
-    color: #f0f0f0;
-  }
-
-  .pre-top {
-    background: #2c2c3e;
-  }
-
-  /* Prism tokens dark */
-  .codeblock .token.comment,
-  .codeblock .token.prolog,
-  .codeblock .token.doctype,
-  .codeblock .token.cdata {
-    color: #95a5a6;
-    font-style: italic;
-  }
-
-  .codeblock .token.punctuation {
-    color: #ecf0f1;
-  }
-
-  .codeblock .token.operator,
-  .codeblock .token.boolean,
-  .codeblock .token.symbol,
-  .codeblock .token.entity {
-    color: #ecf0f1;
-  }
-
-  .codeblock .token.number {
-    color: #e67e22;
-  }
-
-  .codeblock .token.property,
-  .codeblock .token.tag,
-  .codeblock .token.constant,
-  .codeblock .token.class-name,
-  .codeblock .token.function {
-    color: #3498db;
-    font-weight: 500;
-  }
-
-  .codeblock .token.selector,
-  .codeblock .token.attr-name,
-  .codeblock .token.string,
-  .codeblock .token.char,
-  .codeblock .token.builtin,
-  .codeblock .token.inserted {
-    color: #2ecc71;
-  }
-
-  .codeblock .token.keyword,
-  .codeblock .token.atrule,
-  .codeblock .token.attr-value,
-  .codeblock .token.deleted,
-  .codeblock .token.regex,
-  .codeblock .token.important {
-    color: #f39c12;
-    font-weight: 500;
-  }
-
+:root.dark sol-code .pre-content {
+  color: #f0f0f0;
 }
+
+:root.dark sol-code .pre-top {
+  background: #2c2c3e;
+}
+
+:root.dark sol-code .pre-copy-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+:root.dark sol-code .pre-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+:root.dark sol-code .pre-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Prism Tokens Dark */
+:root.dark sol-code .token.comment,
+:root.dark sol-code .token.prolog,
+:root.dark sol-code .token.doctype,
+:root.dark sol-code .token.cdata { color: #95a5a6; }
+:root.dark sol-code .token.punctuation { color: #ecf0f1; }
+:root.dark sol-code .token.operator,
+:root.dark sol-code .token.boolean,
+:root.dark sol-code .token.symbol,
+:root.dark sol-code .token.entity { color: #ecf0f1; }
+:root.dark sol-code .token.number { color: #e67e22; }
+:root.dark sol-code .token.property,
+:root.dark sol-code .token.tag,
+:root.dark sol-code .token.constant,
+:root.dark sol-code .token.class-name,
+:root.dark sol-code .token.function { color: #3498db; }
+:root.dark sol-code .token.selector,
+:root.dark sol-code .token.attr-name,
+:root.dark sol-code .token.string,
+:root.dark sol-code .token.char,
+:root.dark sol-code .token.builtin,
+:root.dark sol-code .token.inserted { color: #2ecc71; }
+:root.dark sol-code .token.keyword,
+:root.dark sol-code .token.atrule,
+:root.dark sol-code .token.attr-value,
+:root.dark sol-code .token.deleted,
+:root.dark sol-code .token.regex,
+:root.dark sol-code .token.important { color: #f39c12; }

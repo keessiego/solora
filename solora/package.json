@@ -1,6 +1,6 @@
 {
   "name": "@kerkhoff-ict/solora",
-  "version": "2.2.0-beta.4",
+  "version": "3.0.0",
   "description": "Simple CSS component library",
   "main": "dist/index.js",
   "style": "dist/index.css",

@@ -1,96 +1,148 @@
-export function initDropdowns() {
-  if (typeof window === "undefined") return;
-
-  document.querySelectorAll(".dropdown").forEach((drop) => {
-    // VOORKOM DUBBELE INITIALISATIE
-    if (drop.dataset.initialized) return;
-    drop.dataset.initialized = "true";
-
-    const btn = drop.querySelector(".dropdown-btn");
-    const content = drop.querySelector(".dropdown-content");
-    if (!btn || !content) return;
-
-    let hiddenInput = drop.querySelector('input[type="hidden"]');
-    if (!hiddenInput) {
-      hiddenInput = document.createElement("input");
-      hiddenInput.type = "hidden";
-      hiddenInput.name = drop.dataset.name || "dropdown";
-      drop.appendChild(hiddenInput);
+class SolDropdown extends HTMLElement {
+    constructor() {
+        super();
+        this.initialized = false;
     }
 
-    // Helper om items op te halen (exclusief disabled)
-    const getItems = () => Array.from(content.querySelectorAll('.dropdown-item:not([aria-disabled="true"])'));
+    connectedCallback() {
+        // Voorkom dubbele rendering
+        if (this.initialized) return;
+        this.initialized = true;
 
-    const setValue = (item) => {
-      if (item.getAttribute("aria-disabled") === "true") return;
-      
-      // Gebruik innerHTML als je icons wilt behouden, of trim() voor schone tekst
-      btn.innerHTML = item.innerHTML; 
-      
-      content.querySelectorAll(".dropdown-item").forEach((i) => i.classList.remove("active"));
-      item.classList.add("active");
-      hiddenInput.value = item.dataset.value ?? item.textContent.trim();
-      
-      // Trigger een event voor als je hierop wilt reageren met andere JS
-      drop.dispatchEvent(new CustomEvent('change', { detail: hiddenInput.value }));
-    };
+        // 1. Pak alle huidige children (jouw dropdown-items) en zet ze tijdelijk apart
+        const fragment = document.createDocumentFragment();
+        while (this.childNodes.length > 0) {
+            fragment.appendChild(this.childNodes[0]);
+        }
 
-    // Initiële waarde zetten
-    const initialItem = content.querySelector(".dropdown-item.active") || content.querySelector('.dropdown-item:not([aria-disabled="true"])');
-    if (initialItem) setValue(initialItem);
+        // 2. Bouw de interne structuur op
+        this.btn = document.createElement('div');
+        this.btn.className = 'dropdown-btn';
+        this.btn.setAttribute('tabindex', '0');
+        this.btn.setAttribute('role', 'combobox');
+        this.btn.setAttribute('aria-haspopup', 'listbox');
 
-    const toggle = () => drop.classList.toggle("open");
-    const close = () => drop.classList.remove("open");
+        this.content = document.createElement('div');
+        this.content.className = 'dropdown-content';
+        this.content.appendChild(fragment); // Zet de items in de popover
 
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggle();
-    });
+        this.hiddenInput = document.createElement('input');
+        this.hiddenInput.type = 'hidden';
+        this.hiddenInput.name = this.getAttribute('name') || 'dropdown';
 
-    document.addEventListener("click", (e) => {
-      if (!drop.contains(e.target)) close();
-    });
+        // 3. Voeg de nieuwe opmaak toe aan het sol-dropdown element
+        this.appendChild(this.btn);
+        this.appendChild(this.content);
+        this.appendChild(this.hiddenInput);
 
-    // Toetsenbord navigatie
-    btn.addEventListener("keydown", (e) => {
-      if (!["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key)) return;
-      
-      const items = getItems();
-      let currentIndex = items.findIndex((i) => i.classList.contains("active"));
+        this.placeholder = this.getAttribute('placeholder') || null;
 
-      e.preventDefault();
-      drop.classList.add("open"); // Altijd openen bij pijltjes
+        // 4. Stel functionaliteit in
+        this.bindEvents();
+        this.initSelection();
+    }
 
-      if (e.key === "ArrowDown") {
-        currentIndex = (currentIndex + 1) % items.length;
-      } else if (e.key === "ArrowUp") {
-        currentIndex = (currentIndex - 1 + items.length) % items.length;
-      } else if (e.key === "Enter") {
-        if (currentIndex >= 0) setValue(items[currentIndex]);
-        close();
-        return;
-      } else if (e.key === "Escape") {
-        close();
-        return;
-      }
+    getItems() {
+        // Haal alle actieve (niet-disabled) items op
+        return Array.from(this.content.querySelectorAll('.dropdown-item:not([aria-disabled="true"]):not(.placeholder)'));
+    }
 
-      // Update visuele focus tijdens navigeren
-      items.forEach((i) => i.classList.remove("active"));
-      items[currentIndex].classList.add("active");
-      items[currentIndex].scrollIntoView({ block: "nearest" });
-    });
+    setValue(item) {
+        if (!item || item.getAttribute("aria-disabled") === "true") return;
+        
+        // Knop tekst en eventuele iconen updaten
+        this.btn.innerHTML = item.innerHTML; 
+        
+        // Active states resetten en zetten
+        this.content.querySelectorAll(".dropdown-item").forEach((i) => i.classList.remove("active"));
+        item.classList.add("active");
+        
+        // Value bepalen (eerst data-value checken, anders de textContent)
+        this.hiddenInput.value = item.dataset.value !== undefined ? item.dataset.value : item.textContent.trim();
+        
+        // Trigger een standard event (bubbles: true zodat je in form-scripts kunt luisteren)
+        this.dispatchEvent(new CustomEvent('change', { detail: this.hiddenInput.value, bubbles: true }));
+    }
 
-    // Item kliks
-    content.addEventListener("click", (e) => {
-      const item = e.target.closest(".dropdown-item");
-      if (item) {
-        setValue(item);
-        close();
-      }
-    });
+    initSelection() {
+        const activeItem = this.content.querySelector(".dropdown-item.active");
+        
+        if (activeItem) {
+            this.setValue(activeItem);
+        } else if (this.placeholder) {
+            this.btn.innerHTML = this.placeholder;
+        } else {
+            // Als er niks is, pak het eerste beschikbare item
+            const firstItem = this.getItems()[0];
+            if (firstItem) this.setValue(firstItem);
+        }
+    }
 
-    btn.setAttribute("tabindex", "0");
-    btn.setAttribute("role", "combobox");
-    btn.setAttribute("aria-haspopup", "listbox");
-  });
+    toggle() {
+        this.classList.toggle("open");
+    }
+
+    close() {
+        this.classList.remove("open");
+    }
+
+    bindEvents() {
+        // Knop klik (openen/sluiten)
+        this.btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            this.toggle();
+        });
+
+        // Buiten klikken is sluiten
+        document.addEventListener("click", (e) => {
+            if (!this.contains(e.target)) this.close();
+        });
+
+        // Toetsenbord navigatie
+        this.btn.addEventListener("keydown", (e) => {
+            if (!["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key)) return;
+            
+            const items = this.getItems();
+            if (items.length === 0) return;
+
+            let currentIndex = items.findIndex((i) => i.classList.contains("active"));
+
+            e.preventDefault();
+            this.classList.add("open"); // Altijd open bij gebruik pijltjes
+
+            if (e.key === "ArrowDown") {
+                currentIndex = (currentIndex + 1) % items.length;
+            } else if (e.key === "ArrowUp") {
+                currentIndex = (currentIndex - 1 + items.length) % items.length;
+            } else if (e.key === "Enter") {
+                if (currentIndex >= 0) this.setValue(items[currentIndex]);
+                this.close();
+                return;
+            } else if (e.key === "Escape") {
+                this.close();
+                return;
+            }
+
+            // Update visuele focus (zonder direct de waarde op te slaan)
+            items.forEach((i) => i.classList.remove("active"));
+            items[currentIndex].classList.add("active");
+            items[currentIndex].scrollIntoView({ block: "nearest" });
+        });
+
+        // Klik op een item binnenin de content
+        this.content.addEventListener("click", (e) => {
+            const item = e.target.closest(".dropdown-item");
+            if (item) {
+                this.setValue(item);
+                this.close();
+            }
+        });
+    }
+}
+
+// Export functie voor handmatige initialisatie
+export function initDropdown() {
+    if (!customElements.get('sol-dropdown')) {
+        customElements.define('sol-dropdown', SolDropdown);
+    }
 }
