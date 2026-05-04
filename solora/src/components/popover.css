@@ -1,0 +1,63 @@
+/* ======================
+   Popover - Apple Style
+====================== */
+
+sol-popover {
+  position: relative;
+  display: inline-block;
+  font-family: inherit;
+}
+
+.sol-popover-trigger {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.popover-content {
+  position: fixed;
+  z-index: 9999;
+  min-width: 12rem;
+  border-radius: 14px;
+  
+  /* Gematcht met sol-card, dropdown en contextMenu */
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+    
+  opacity: 0;
+  transform: scale(0.96);
+  pointer-events: none;
+  transition: 
+    opacity 0.2s ease,
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  padding: 6px; /* Kleiner voor Apple-stijl menu's */
+  display: flex;
+  flex-direction: column;
+}
+
+.popover-content > * {
+  width: 100%; /* Zorg dat kinderen w-full kunnen zijn */
+}
+
+.popover-content.open {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* Dark mode support */
+:root.dark .popover-content {
+  background: rgba(28, 28, 30, 0.7);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  color: #fff;
+}

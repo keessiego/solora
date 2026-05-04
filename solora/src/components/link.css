@@ -1,0 +1,42 @@
+/* ======================
+   Links - Apple Style
+====================== */
+
+a.sol {
+    color: var(--color-primary, #0071e3);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-weight: 400;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+a.sol:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    filter: brightness(1.1);
+}
+
+a.sol:active {
+    opacity: 0.7;
+}
+
+/* Dark mode ondersteuning */
+:root.dark a.sol {
+    color: #2997ff; /* Apple's specifieke link-blauw voor donkere achtergronden */
+}
+
+/* Optioneel: pijltje toevoegen als de gebruiker dat wil via een data-attribute */
+a.sol[data-arrow="true"]::after {
+    content: '›';
+    margin-left: 4px;
+    font-size: 1.1em;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+a.sol[data-arrow="true"]:hover::after {
+    transform: translateX(2px);
+}

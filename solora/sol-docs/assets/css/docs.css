@@ -1,0 +1,344 @@
+:root {
+    --primary: #0071e3;
+    --bg-light: #f5f5f7;
+    --sidebar-bg: rgba(255, 255, 255, 0.8);
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --text-main: #1d1d1f;
+    --text-muted: #86868b;
+    --border: rgba(0, 0, 0, 0.1);
+    --radius: 18px;
+}
+
+html.dark {
+    --bg-light: #000000;
+    --sidebar-bg: rgba(28, 28, 30, 0.8);
+    --card-bg: rgba(28, 28, 30, 0.7);
+    --text-main: #f5f5f7;
+    --text-muted: #a1a1a6;
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    display: flex;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border);
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.sidebar h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    padding-left: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar nav li {
+    margin-bottom: 5px;
+}
+
+.sidebar nav a {
+    text-decoration: none;
+    color: var(--text-main);
+    padding: 10px 15px;
+    border-radius: 12px;
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.sidebar nav a:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+html.dark .sidebar nav a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar nav a.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 280px;
+    flex: 1;
+    padding: 60px 80px;
+    max-width: 1200px;
+}
+
+section {
+    margin-bottom: 100px;
+    scroll-margin-top: 60px;
+}
+
+h2 {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.description {
+    font-size: 19px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 40px;
+}
+
+/* Demo Card */
+.demo-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.demo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Code Snippet Wrapper */
+.code-wrapper {
+    margin-top: 20px;
+}
+
+/* Footer */
+footer {
+    margin-top: 100px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Utils */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Solora Overrides voor Docs */
+sol-theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.sol-theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* API Table */
+.table-responsive {
+    overflow-x: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    margin-bottom: 40px;
+}
+
+.api-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+.api-table th,
+.api-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.api-table th {
+    font-weight: 600;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+html.dark .api-table th {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.api-table td code {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    color: var(--primary);
+}
+
+html.dark .api-table td code {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ff9f0a;
+}
+
+.api-table tbody tr:last-child th,
+.api-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Apple Modal (Lucide) */
+.apple-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.apple-modal.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.apple-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+}
+
+.apple-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    height: 85vh;
+    background: var(--bg-light);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.apple-modal.open .apple-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+.apple-modal-header {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: var(--sidebar-bg);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    z-index: 10;
+}
+
+.apple-modal-title {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.apple-modal-close {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-main);
+    transition: background 0.2s;
+}
+
+.apple-modal-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+html.dark .apple-modal-close {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+html.dark .apple-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.apple-modal iframe {
+    width: 100%;
+    flex: 1;
+    border: none;
+    background: #fff;
+}

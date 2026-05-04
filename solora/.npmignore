@@ -1,0 +1,19 @@
+# Negeer alles in de root
+/*
+
+# Behalve deze mappen/bestanden
+!/dist
+!/package.json
+!/README.md
+!/LICENSE
+
+# Specifieke bronbestanden en configs negeren
+src/
+node_modules/
+postcss.config.js
+package-lock.json
+.git/
+.github/
+.vscode/
+*.tgz
+*.log

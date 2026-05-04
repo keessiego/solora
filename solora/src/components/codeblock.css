@@ -1,7 +1,7 @@
 /* ======================
    Basis Host
 ====================== */
-sol-code {
+sol-code, sol-codeblock {
   display: block; /* Zorgt dat het netjes de breedte inneemt */
   position: relative;
   border-radius: 12px;
@@ -11,6 +11,7 @@ sol-code {
   background: #fefefe55;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  margin: 1.5rem 0;
 }
 
 sol-code .pre-content {
@@ -74,15 +75,26 @@ sol-code .pre-copy-btn:active {
 /* ======================
    macOS Top balk
 ====================== */
-sol-code .pre-top {
+sol-code .pre-top, sol-codeblock .pre-top {
   background: rgb(74, 74, 74);
   display: flex;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 9px;
-  padding-left: 20px;
+  padding: 9px 20px;
+  position: relative;
+}
+
+sol-code .pre-label, sol-codeblock .pre-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 sol-code .pre-top-btns {

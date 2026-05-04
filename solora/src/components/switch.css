@@ -52,3 +52,23 @@ input:checked + .slider:hover {
   background-color: var(--color-primary, #34c759);
   opacity: 0.8;
 }
+
+/* ======================
+   Dark mode support
+====================== */
+:root.dark .slider {
+  background-color: #3a3a3c;
+}
+
+:root.dark .slider:before {
+  background-color: #f2f2f7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+:root.dark .slider:hover {
+  background-color: #48484a;
+}
+
+:root.dark input:checked + .slider {
+  background-color: var(--color-primary, #30d158);
+}

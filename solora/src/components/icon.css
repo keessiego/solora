@@ -1,0 +1,13 @@
+sol-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1;
+    width: fit-content;
+    height: fit-content;
+}
+
+sol-icon svg {
+    display: block;
+}

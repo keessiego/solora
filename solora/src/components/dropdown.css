@@ -5,7 +5,7 @@ sol-dropdown,
 .dropdown {
   position: relative;
   display: inline-block;
-  font-family: inherit; /* Handig om font door te erven */
+  font-family: inherit;
   cursor: pointer;
   user-select: none;
 }
@@ -15,12 +15,12 @@ sol-dropdown,
 ====================== */
 sol-dropdown .dropdown-btn,
 .dropdown-btn {
-  padding: 0.3rem 0.4rem;
+  padding: 0.3rem 0.6rem;
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: var(--color-bg, #fefefe);
   color: var(--color-text-dark, #000);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -28,11 +28,13 @@ sol-dropdown .dropdown-btn,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-height: 36px;
 }
 
 sol-dropdown .dropdown-btn:hover,
 .dropdown-btn:hover {
-  background: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
+  background: var(--color-bg-hover, rgba(0, 0, 0, 0.03));
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 sol-dropdown .dropdown-btn:after,
@@ -41,6 +43,7 @@ sol-dropdown .dropdown-btn:after,
   margin-left: 0.5rem;
   font-size: 0.75rem;
   transition: transform 0.2s ease;
+  opacity: 0.5;
 }
 
 sol-dropdown.open .dropdown-btn:after,
@@ -49,114 +52,110 @@ sol-dropdown.open .dropdown-btn:after,
 }
 
 /* ======================
-   Dropdown content
+   Dropdown content (Portal supported)
 ====================== */
-sol-dropdown .dropdown-content,
 .dropdown-content {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
+  position: fixed;
+  z-index: 9999;
   min-width: 10rem;
-  border-radius: 12px;
-  margin-top: 0.5rem;
+  border-radius: 14px;
   overflow: hidden;
   overflow-y: auto;
-  background: transparent; 
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(36px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  
+  /* Gematcht met sol-card en contextMenu */
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+    
   max-height: 15rem;
   scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,0.2) transparent;
+  scrollbar-color: rgba(0,0,0,0.1) transparent;
   opacity: 0;
-  transform: translateY(-10px) scale(0.95);
+  transform: translateY(-8px) scale(0.96);
   pointer-events: none;
-  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
-  z-index: 1000;
-}
-
-sol-dropdown .dropdown-content::-webkit-scrollbar,
-.dropdown-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-sol-dropdown .dropdown-content::-webkit-scrollbar-thumb,
-.dropdown-content::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.2);
-  border-radius: 3px;
-}
-
-sol-dropdown .dropdown-content::-webkit-scrollbar-track,
-.dropdown-content::-webkit-scrollbar-track {
-  background: transparent;
+  transition: 
+    opacity 0.2s ease,
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  padding: 6px;
 }
 
 /* Show dropdown */
-sol-dropdown.open .dropdown-content,
-.dropdown.open .dropdown-content {
+.dropdown-content.open {
   opacity: 1;
   transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
+/* Custom Scrollbar */
+.dropdown-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+.dropdown-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 /* ======================
    Dropdown items
 ====================== */
-sol-dropdown .dropdown-item,
 .dropdown-item {
-  padding: 0.3rem 0.4rem;
-  color: var(--color-text-dark, #000);
-  transition: background 0.2s, color 0.2s;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  color: var(--color-text-dark, #1d1d1f);
+  transition: all 0.15s ease;
   cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-bottom: 2px;
 }
 
-sol-dropdown .dropdown-item:hover,
+.dropdown-item:last-child {
+  margin-bottom: 0;
+}
+
 .dropdown-item:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
-sol-dropdown .dropdown-item.active,
 .dropdown-item.active {
-  font-weight: 600;
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--color-primary, #0071e3);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.15);
 }
 
 /* Placeholder or disabled items */
-sol-dropdown .dropdown-item[aria-disabled="true"],
-sol-dropdown .dropdown-item.placeholder,
 .dropdown-item[aria-disabled="true"],
 .dropdown-item.placeholder {
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(0, 0, 0, 0.3);
   cursor: default;
   pointer-events: none;
 }
 
-/* ======================
-   Hidden input styling
-====================== */
-sol-dropdown input[type="hidden"],
-.dropdown input[type="hidden"] {
-  display: none;
-}
-
-/* ======================
-   Dividers & Labels
-====================== */
-sol-dropdown .dropdown-divider,
+/* Dividers & Labels */
 .dropdown-divider {
   height: 1px;
-  margin: 0.25rem 0;
-  background: rgba(0, 0, 0, 0.1);
+  margin: 4px 6px;
+  background: rgba(0, 0, 0, 0.06);
 }
 
-sol-dropdown .dropdown-label,
 .dropdown-label {
-  padding: 0.3rem 0.4rem;
+  padding: 0.4rem 0.6rem 0.2rem 0.6rem;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.6);
-  cursor: default;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* ======================
@@ -164,58 +163,40 @@ sol-dropdown .dropdown-label,
 ====================== */
 :root.dark sol-dropdown .dropdown-btn,
 :root.dark .dropdown-btn {
-  background: #1c1c1e;
-  color: #f0f0f0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  background: rgba(44, 44, 46, 0.8);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-:root.dark sol-dropdown .dropdown-btn:hover,
-:root.dark .dropdown-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-:root.dark sol-dropdown .dropdown-content,
 :root.dark .dropdown-content {
-  background: transparent;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  background: rgba(28, 28, 30, 0.7);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
-:root.dark sol-dropdown .dropdown-item,
 :root.dark .dropdown-item {
-  color: #f0f0f0;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-:root.dark sol-dropdown .dropdown-item:hover,
 :root.dark .dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-:root.dark sol-dropdown .dropdown-item.active,
 :root.dark .dropdown-item.active {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--color-primary-dark, #0a84ff);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-:root.dark sol-dropdown .dropdown-divider,
 :root.dark .dropdown-divider {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-:root.dark sol-dropdown .dropdown-item[aria-disabled="true"],
-:root.dark sol-dropdown .dropdown-item.placeholder,
-:root.dark .dropdown-item[aria-disabled="true"],
-:root.dark .dropdown-item.placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-:root.dark sol-dropdown .dropdown-label,
 :root.dark .dropdown-label {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-:root.dark sol-dropdown .dropdown-content::-webkit-scrollbar-thumb,
-:root.dark .dropdown-content::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.2);
+  color: rgba(255, 255, 255, 0.5);
 }

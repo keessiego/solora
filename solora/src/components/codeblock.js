@@ -1,8 +1,7 @@
 import Prism from 'prismjs';
-// Optioneel: laad alle talen als je bundler dit toestaat
 import 'prismjs/components/index.js'; 
 
-class SolCode extends HTMLElement {
+class SolCodeblock extends HTMLElement {
     constructor() {
         super();
         this.initialized = false;
@@ -12,10 +11,17 @@ class SolCode extends HTMLElement {
         if (this.initialized) return;
         this.initialized = true;
 
-        // Haal de code op die de gebruiker in de tag heeft gezet
-        // We verwijderen alleen de eerste en laatste lege witregels voor een strak design
-        let rawCode = this.textContent.replace(/^\s*\n/, '').replace(/\n\s*$/, '');
+        // Haal de code op. We gebruiken innerHTML om de witruimte en tags te behouden.
+        // Vervolgens decoden we HTML entities zodat Prism ze correct kan highlighten.
+        let rawCode = this.innerHTML
+            .replace(/^\s*\n/, '')
+            .replace(/\n\s*$/, '')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&');
+
         const lang = (this.getAttribute('language') || this.getAttribute('lang') || 'javascript').toLowerCase();
+        const label = this.getAttribute('label') || '';
 
         // Maak het element leeg en bouw de nieuwe UI op
         this.innerHTML = `
@@ -25,6 +31,7 @@ class SolCode extends HTMLElement {
                     <span class="pre-btn-orange minimize-btn" title="Minimaliseren"></span>
                     <span class="pre-btn-green maximize-btn" title="Volledig scherm"></span>
                 </div>
+                ${label ? `<div class="pre-label">${label}</div>` : ''}
             </div>
             <div class="pre-content">
                 <button class="pre-copy-btn btn-in-pre" title="Kopiëren">Kopieer</button>
@@ -42,7 +49,7 @@ class SolCode extends HTMLElement {
         // Prism syntax highlighting toepassen
         if (!Prism.languages[lang]) {
             console.warn(`Language '${lang}' not loaded in Prism, using plaintext fallback.`);
-            this.codeElement.textContent = rawCode; // fallback
+            this.codeElement.textContent = rawCode;
         } else {
             this.codeElement.innerHTML = Prism.highlight(rawCode, Prism.languages[lang], lang);
         }
@@ -51,19 +58,15 @@ class SolCode extends HTMLElement {
     }
 
     bindEvents(rawCode) {
-        // --- Copy button ---
         this.copyBtn.addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(rawCode);
                 const oldText = this.copyBtn.innerText;
                 this.copyBtn.innerText = 'Gekopieerd!';
                 setTimeout(() => this.copyBtn.innerText = oldText, 1200);
-            } catch (err) {
-                console.error('Copy failed:', err);
-            }
+            } catch (err) { console.error('Copy failed:', err); }
         });
 
-        // --- Close button ---
         this.closeBtn.addEventListener('click', () => {
             this.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
             this.style.opacity = '0';
@@ -71,76 +74,44 @@ class SolCode extends HTMLElement {
             setTimeout(() => this.remove(), 300);
         });
 
-        // --- Minimize button ---
         this.minimizeBtn.addEventListener('click', () => {
             this.preContent.classList.toggle('collapsed');
         });
 
-        // --- Maximize / Fullscreen button ---
         this.maximizeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-
-            const scrollX = window.scrollX || window.pageXOffset;
-            const scrollY = window.scrollY || window.pageYOffset;
-
-            // Als we nog niet fullscreen zijn
             if (this.dataset.isFullscreen !== "true") {
                 const rect = this.getBoundingClientRect();
-                
-                // Sla de originele afmetingen op om straks weer terug te kunnen
                 this.dataset.origRect = JSON.stringify({
-                    top: rect.top + scrollY,
-                    left: rect.left + scrollX,
+                    top: rect.top + window.scrollY,
+                    left: rect.left + window.scrollX,
                     width: rect.width,
                     height: rect.height
                 });
-
                 Object.assign(this.style, {
                     position: 'fixed',
-                    top: `${rect.top + scrollY}px`,
-                    left: `${rect.left + scrollX}px`,
+                    top: `${rect.top}px`,
+                    left: `${rect.left}px`,
                     width: `${rect.width}px`,
                     height: `${rect.height}px`,
                     margin: '0',
                     zIndex: '9999',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                 });
-
-                void this.offsetWidth; // Forceer een browser reflow voor de animatie
-
-                // Vergroot naar schermgrootte
-                Object.assign(this.style, { 
-                    top: '0', 
-                    left: '0', 
-                    width: '100%', 
-                    height: '100%', 
-                    borderRadius: '0' 
-                });
+                void this.offsetWidth;
+                Object.assign(this.style, { top: '0', left: '0', width: '100vw', height: '100vh', borderRadius: '0' });
                 this.dataset.isFullscreen = "true";
-
             } else {
-                // Herstel naar originele positie
                 const origRect = JSON.parse(this.dataset.origRect);
                 Object.assign(this.style, {
-                    transition: 'all 0.3s ease',
-                    top: `${origRect.top}px`,
-                    left: `${origRect.left}px`,
+                    top: `${origRect.top - window.scrollY}px`,
+                    left: `${origRect.left - window.scrollX}px`,
                     width: `${origRect.width}px`,
-                    height: 'auto',
+                    height: `${origRect.height}px`,
                     borderRadius: '12px'
                 });
-
-                // Na de animatie de CSS opruimen
                 this.addEventListener('transitionend', () => {
-                    Object.assign(this.style, {
-                        transition: '',
-                        position: '',
-                        top: '',
-                        left: '',
-                        width: '',
-                        height: '',
-                        zIndex: ''
-                    });
+                    Object.assign(this.style, { position: '', top: '', left: '', width: '', height: '', zIndex: '', transition: '', margin: '', borderRadius: '' });
                     this.dataset.isFullscreen = "false";
                 }, { once: true });
             }
@@ -148,9 +119,12 @@ class SolCode extends HTMLElement {
     }
 }
 
-// Export functie voor handmatige initialisatie
 export function initCodeblocks() {
+    if (!customElements.get('sol-codeblock')) {
+        customElements.define('sol-codeblock', SolCodeblock);
+    }
+    // Alias support
     if (!customElements.get('sol-code')) {
-        customElements.define('sol-code', SolCode);
+        customElements.define('sol-code', class extends SolCodeblock {});
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@kerkhoff-ict/solora",
-  "version": "3.0.0",
+  "version": "3.2.6",
   "description": "Simple CSS component library",
   "main": "dist/index.js",
   "style": "dist/index.css",
@@ -22,6 +22,7 @@
     "postcss-import": "^16.1.1"
   },
   "dependencies": {
+    "@kerkhoff-ict/solora": "^3.2.0",
     "prismjs": "^1.30.0"
   }
 }

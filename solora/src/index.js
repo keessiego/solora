@@ -7,8 +7,14 @@ import { initDropdown } from './components/dropdown.js';
 import { initContextMenu } from './components/contextMenu.js';
 import { initThemeToggle } from './components/darkToggle.js';
 import { initSwitch } from './components/switch.js';
+import { initIcon } from './components/icon.js';
+import { initAlert } from './components/alert.js';
+import { initCard } from './components/card.js';
+import { initNavbar } from './components/navbar.js';
+import { initCheckbox } from './components/checkbox.js';
+import { initPopover } from './components/popover.js';
 
-function initAll() {
+function initAll(config = {}) {
   initButton();
   initInput();
   initCodeblocks();
@@ -16,6 +22,12 @@ function initAll() {
   initSwitch();
   initContextMenu();
   initThemeToggle();
+  initIcon();
+  initAlert(config.alert || {});
+  initCard();
+  initNavbar();
+  initCheckbox();
+  initPopover();
 }
 
 export { initAll };

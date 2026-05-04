@@ -5,9 +5,47 @@
 @import './components/contextMenu.css';
 @import './components/darkToggle.css';
 @import './components/switch.css';
+@import './components/icon.css';
+@import './components/alert.css';
+@import './components/card.css';
+@import './components/navbar.css';
+@import './components/checkbox.css';
+@import './components/link.css';
+@import './components/popover.css';
 
 :root {
     --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
     --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     --font-mono: 'SF Mono', 'Menlo', 'Consolas', monospace;
+}
+
+/* ======================
+   Global Typography 
+   Resilient to Tailwind/Reset
+====================== */
+h1:not(.sol-ignore) {
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    color: var(--color-text-dark, #1d1d1f);
+    font-family: var(--font-display, var(--font-body));
+}
+
+h2:not(.sol-ignore) {
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--color-text-dark, #1d1d1f);
+    font-family: var(--font-display, var(--font-body));
+}
+
+:root.dark h1:not(.sol-ignore),
+:root.dark h2:not(.sol-ignore) {
+    color: #ffffff;
 }

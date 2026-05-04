@@ -1,0 +1,47 @@
+<?php include __DIR__ . '/../includes/header.php'; ?>
+
+<section id="alerts">
+    <h2>Popups (Alert)</h2>
+    <p class="description">
+        Solora overschrijft automatisch de standaard JavaScript <code>alert()</code> en <code>confirm()</code> functies met een prachtige Apple-stijl glassmorphism popup.
+    </p>
+
+    <div class="demo-card">
+        <div class="demo-grid" style="gap: 20px;">
+            <sol-button color="primary" onclick="alert('Dit is een custom Apple-stijl alert!')">Toon Alert</sol-button>
+            <sol-button color="secondary" onclick="confirm('Weet je zeker dat je dit wilt doen?')">Toon Confirm</sol-button>
+        </div>
+    </div>
+
+    <h3>Hoe het werkt</h3>
+    <p>Zodra <code>initAll()</code> of <code>initAlert()</code> is aangeroepen, worden de standaard <code>window.alert</code> en <code>window.confirm</code> vervangen. Je hoeft je bestaande code dus niet aan te passen!</p>
+
+    <sol-code language="javascript" label="Bestaande Code">
+// Dit opent nu automatisch de Solora popup
+alert("Bestand succesvol opgeslagen");
+
+// Confirm werkt ook (asynchroon via de UI)
+if (confirm("Verwijderen?")) {
+    console.log("Gekozen voor OK");
+}
+    </sol-code>
+
+    <h3 style="margin-top: 40px;">Programmatisch gebruik</h3>
+    <p>Je kunt de popups ook direct aanroepen via de <code>solora</code> global voor meer controle of Promise-based gebruik.</p>
+
+    <sol-code language="javascript" label="Advanced">
+// Met een custom titel
+solora.alert("Systeem", "Je sessie verloopt bijna.");
+
+// Gebruik met Promises (voor confirm)
+solora.confirm("Vraag", "Wil je doorgaan?").then(result => {
+    if (result) {
+        console.log("Gebruiker klikte op OK");
+    } else {
+        console.log("Gebruiker klikte op Cancel");
+    }
+});
+    </sol-code>
+</section>
+
+<?php include __DIR__ . '/../includes/footer.php'; ?>

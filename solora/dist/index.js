@@ -1754,9 +1754,18 @@ var SolButton = class extends HTMLElement {
     }
     this.appendChild(this.button);
     this.updateAttributes();
+    this.setupEventListeners();
+  }
+  setupEventListeners() {
+    this.button.addEventListener("click", (e) => {
+      if (this.hasAttribute("onclick")) {
+        const fn = new Function("event", this.getAttribute("onclick"));
+        fn.call(this, e);
+      }
+    });
   }
   static get observedAttributes() {
-    return ["disabled", "type"];
+    return ["disabled", "type", "variant", "size", "rounded"];
   }
   attributeChangedCallback(name, oldValue, newValue) {
     if (this.contains(this.button)) {
@@ -1774,6 +1783,14 @@ var SolButton = class extends HTMLElement {
     } else {
       this.button.setAttribute("type", "button");
     }
+    const variant = this.getAttribute("variant") || this.getAttribute("color") || "primary";
+    this.button.className = `btn btn-${variant}`;
+    if (this.hasAttribute("size")) {
+      this.button.classList.add(`btn-${this.getAttribute("size")}`);
+    }
+    if (this.hasAttribute("rounded")) {
+      this.button.classList.add("btn-rounded");
+    }
   }
 };
 function initButton() {
@@ -1790,22 +1807,47 @@ var SolInput = class extends HTMLElement {
   }
   // Luister naar wijzigingen in deze attributen om live updates te ondersteunen
   static get observedAttributes() {
-    return ["type", "placeholder", "value", "label", "disabled", "required", "min", "max", "name"];
+    return ["type", "placeholder", "value", "label", "disabled", "required", "autofocus", "min", "max", "name", "variant", "icon", "icon-pos", "multiple", "accept", "icon-bg", "toggle-password"];
   }
   connectedCallback() {
     if (this.initialized) return;
     this.initialized = true;
     this.labelEl = document.createElement("label");
     this.labelEl.className = "sol-label";
+    this.containerEl = document.createElement("div");
+    this.containerEl.className = "sol-input-container";
+    this.wrapperEl = document.createElement("div");
+    this.wrapperEl.className = "sol-input-wrapper";
     this.inputEl = document.createElement("input");
     this.inputEl.className = "sol-input";
+    this.iconEl = document.createElement("sol-icon");
+    this.iconEl.setAttribute("size", "18");
+    this.iconEl.className = "sol-input-icon";
+    this.toggleEl = document.createElement("button");
+    this.toggleEl.type = "button";
+    this.toggleEl.className = "sol-password-toggle";
+    this.toggleEl.innerHTML = '<sol-icon name="eye" size="18"></sol-icon>';
+    this.toggleEl.style.display = "none";
+    this.toggleEl.onclick = () => this.togglePasswordVisibility();
     this.errorEl = document.createElement("span");
     this.errorEl.className = "sol-error-message";
     this.appendChild(this.labelEl);
-    this.appendChild(this.inputEl);
+    this.appendChild(this.containerEl);
+    this.containerEl.appendChild(this.wrapperEl);
+    this.wrapperEl.appendChild(this.inputEl);
+    this.wrapperEl.appendChild(this.toggleEl);
     this.appendChild(this.errorEl);
     this.updateAttributes();
     this.bindEvents();
+  }
+  togglePasswordVisibility() {
+    if (this.inputEl.type === "password") {
+      this.inputEl.type = "text";
+      this.toggleEl.innerHTML = '<sol-icon name="eye-off" size="18"></sol-icon>';
+    } else {
+      this.inputEl.type = "password";
+      this.toggleEl.innerHTML = '<sol-icon name="eye" size="18"></sol-icon>';
+    }
   }
   attributeChangedCallback() {
     if (this.initialized) {
@@ -1813,7 +1855,7 @@ var SolInput = class extends HTMLElement {
     }
   }
   updateAttributes() {
-    const props = ["type", "placeholder", "value", "name", "min", "max"];
+    const props = ["type", "placeholder", "value", "name", "min", "max", "accept"];
     props.forEach((prop) => {
       if (this.hasAttribute(prop)) {
         this.inputEl.setAttribute(prop, this.getAttribute(prop));
@@ -1821,10 +1863,52 @@ var SolInput = class extends HTMLElement {
         this.inputEl.removeAttribute(prop);
       }
     });
+    if (this.hasAttribute("toggle-password") && this.getAttribute("type") === "password") {
+      this.toggleEl.style.display = "flex";
+    } else {
+      this.toggleEl.style.display = "none";
+    }
+    const variant = this.getAttribute("variant") || "default";
+    this.dataset.variant = variant;
+    const iconName = this.getAttribute("icon");
+    const iconPos = this.getAttribute("icon-pos") || "start";
+    const iconBg = this.getAttribute("icon-bg");
+    if (iconName) {
+      this.iconEl.setAttribute("name", iconName);
+      this.dataset.iconPos = iconPos;
+      if (iconBg) {
+        this.dataset.iconBg = iconBg;
+      } else {
+        delete this.dataset.iconBg;
+      }
+      if (iconPos === "start") {
+        this.wrapperEl.prepend(this.iconEl);
+      } else if (iconPos === "end") {
+        this.wrapperEl.appendChild(this.iconEl);
+      } else if (iconPos === "start-outside") {
+        this.containerEl.prepend(this.iconEl);
+      } else if (iconPos === "end-outside") {
+        this.containerEl.appendChild(this.iconEl);
+      }
+      this.iconEl.style.display = "inline-flex";
+    } else {
+      this.iconEl.style.display = "none";
+      delete this.dataset.iconPos;
+      delete this.dataset.iconBg;
+    }
+    if (this.getAttribute("type") === "file") {
+      this.classList.add("is-file-input");
+    } else {
+      this.classList.remove("is-file-input");
+    }
     if (this.hasAttribute("disabled")) this.inputEl.setAttribute("disabled", "disabled");
     else this.inputEl.removeAttribute("disabled");
     if (this.hasAttribute("required")) this.inputEl.setAttribute("required", "required");
     else this.inputEl.removeAttribute("required");
+    if (this.hasAttribute("autofocus")) this.inputEl.setAttribute("autofocus", "autofocus");
+    else this.inputEl.removeAttribute("autofocus");
+    if (this.hasAttribute("multiple")) this.inputEl.setAttribute("multiple", "multiple");
+    else this.inputEl.removeAttribute("multiple");
     if (this.hasAttribute("label")) {
       this.labelEl.textContent = this.getAttribute("label");
       this.labelEl.style.display = "block";
@@ -1839,10 +1923,23 @@ var SolInput = class extends HTMLElement {
       }
       if (this.inputEl.validity.valid) {
         this.hideError();
+        this.inputEl.setCustomValidity("");
       }
       this.dispatchEvent(new Event("input", { bubbles: true }));
     });
     this.inputEl.addEventListener("change", () => {
+      if (this.getAttribute("type") === "file" && this.hasAttribute("max")) {
+        const max = parseInt(this.getAttribute("max"));
+        if (this.inputEl.files.length > max) {
+          const msg = `Maximaal ${max} bestanden toegestaan`;
+          this.showError(msg);
+          this.inputEl.setCustomValidity(msg);
+          return;
+        } else {
+          this.hideError();
+          this.inputEl.setCustomValidity("");
+        }
+      }
       this.dispatchEvent(new Event("change", { bubbles: true }));
     });
     this.inputEl.addEventListener("invalid", (e) => {
@@ -1850,15 +1947,19 @@ var SolInput = class extends HTMLElement {
       this.showError();
     });
   }
-  showError() {
-    let message = "Ongeldige invoer";
-    if (this.inputEl.validity.valueMissing) {
-      message = "Dit veld is verplicht";
-    } else if (this.inputEl.validity.typeMismatch) {
-      if (this.inputEl.type === "email") message = "Voer een geldig e-mailadres in";
-      if (this.inputEl.type === "url") message = "Voer een geldige link in";
-    } else if (this.inputEl.validity.rangeUnderflow) {
-      message = `Minimum is ${this.inputEl.min}`;
+  showError(customMessage) {
+    let message = customMessage || "Ongeldige invoer";
+    if (!customMessage) {
+      if (this.inputEl.validity.valueMissing) {
+        message = "Dit veld is verplicht";
+      } else if (this.inputEl.validity.typeMismatch) {
+        if (this.inputEl.type === "email") message = "Voer een geldig e-mailadres in";
+        if (this.inputEl.type === "url") message = "Voer een geldige link in";
+      } else if (this.inputEl.validity.rangeUnderflow) {
+        message = `Minimum is ${this.inputEl.min}`;
+      } else if (this.inputEl.validity.rangeOverflow) {
+        message = `Maximum is ${this.inputEl.max}`;
+      }
     }
     this.errorEl.textContent = message;
     this.errorEl.style.display = "block";
@@ -1886,7 +1987,7 @@ function initInput() {
 // src/components/codeblock.js
 var import_prismjs = __toESM(require_prism());
 var import_components = __toESM(require_components2());
-var SolCode = class extends HTMLElement {
+var SolCodeblock = class extends HTMLElement {
   constructor() {
     super();
     this.initialized = false;
@@ -1894,8 +1995,9 @@ var SolCode = class extends HTMLElement {
   connectedCallback() {
     if (this.initialized) return;
     this.initialized = true;
-    let rawCode = this.textContent.replace(/^\s*\n/, "").replace(/\n\s*$/, "");
+    let rawCode = this.innerHTML.replace(/^\s*\n/, "").replace(/\n\s*$/, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
     const lang = (this.getAttribute("language") || this.getAttribute("lang") || "javascript").toLowerCase();
+    const label = this.getAttribute("label") || "";
     this.innerHTML = `
             <div class="pre-top">
                 <div class="pre-top-btns">
@@ -1903,6 +2005,7 @@ var SolCode = class extends HTMLElement {
                     <span class="pre-btn-orange minimize-btn" title="Minimaliseren"></span>
                     <span class="pre-btn-green maximize-btn" title="Volledig scherm"></span>
                 </div>
+                ${label ? `<div class="pre-label">${label}</div>` : ""}
             </div>
             <div class="pre-content">
                 <button class="pre-copy-btn btn-in-pre" title="Kopi\xEBren">Kopieer</button>
@@ -1945,55 +2048,38 @@ var SolCode = class extends HTMLElement {
     });
     this.maximizeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const scrollX = window.scrollX || window.pageXOffset;
-      const scrollY = window.scrollY || window.pageYOffset;
       if (this.dataset.isFullscreen !== "true") {
         const rect = this.getBoundingClientRect();
         this.dataset.origRect = JSON.stringify({
-          top: rect.top + scrollY,
-          left: rect.left + scrollX,
+          top: rect.top + window.scrollY,
+          left: rect.left + window.scrollX,
           width: rect.width,
           height: rect.height
         });
         Object.assign(this.style, {
           position: "fixed",
-          top: `${rect.top + scrollY}px`,
-          left: `${rect.left + scrollX}px`,
+          top: `${rect.top}px`,
+          left: `${rect.left}px`,
           width: `${rect.width}px`,
           height: `${rect.height}px`,
           margin: "0",
           zIndex: "9999",
-          transition: "all 0.3s ease"
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
         });
         void this.offsetWidth;
-        Object.assign(this.style, {
-          top: "0",
-          left: "0",
-          width: "100%",
-          height: "100%",
-          borderRadius: "0"
-        });
+        Object.assign(this.style, { top: "0", left: "0", width: "100vw", height: "100vh", borderRadius: "0" });
         this.dataset.isFullscreen = "true";
       } else {
         const origRect = JSON.parse(this.dataset.origRect);
         Object.assign(this.style, {
-          transition: "all 0.3s ease",
-          top: `${origRect.top}px`,
-          left: `${origRect.left}px`,
+          top: `${origRect.top - window.scrollY}px`,
+          left: `${origRect.left - window.scrollX}px`,
           width: `${origRect.width}px`,
-          height: "auto",
+          height: `${origRect.height}px`,
           borderRadius: "12px"
         });
         this.addEventListener("transitionend", () => {
-          Object.assign(this.style, {
-            transition: "",
-            position: "",
-            top: "",
-            left: "",
-            width: "",
-            height: "",
-            zIndex: ""
-          });
+          Object.assign(this.style, { position: "", top: "", left: "", width: "", height: "", zIndex: "", transition: "", margin: "", borderRadius: "" });
           this.dataset.isFullscreen = "false";
         }, { once: true });
       }
@@ -2001,9 +2087,67 @@ var SolCode = class extends HTMLElement {
   }
 };
 function initCodeblocks() {
-  if (!customElements.get("sol-code")) {
-    customElements.define("sol-code", SolCode);
+  if (!customElements.get("sol-codeblock")) {
+    customElements.define("sol-codeblock", SolCodeblock);
   }
+  if (!customElements.get("sol-code")) {
+    customElements.define("sol-code", class extends SolCodeblock {
+    });
+  }
+}
+
+// src/utils/positioning.js
+function calculatePosition(trigger, content, pos = "bottom-left", offset = 8) {
+  const triggerRect = trigger.getBoundingClientRect();
+  const contentWidth = content.offsetWidth;
+  const contentHeight = content.offsetHeight;
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  let top = 0;
+  let left = 0;
+  let [y, x] = pos.split("-");
+  if (!x) {
+    if (y === "top" || y === "bottom") x = "center";
+    else {
+      x = y;
+      y = "center";
+    }
+  }
+  switch (y) {
+    case "top":
+      top = triggerRect.top - contentHeight - offset;
+      break;
+    case "bottom":
+      top = triggerRect.bottom + offset;
+      break;
+    case "center":
+      top = triggerRect.top + triggerRect.height / 2 - contentHeight / 2;
+      break;
+  }
+  switch (x) {
+    case "left":
+      left = triggerRect.left;
+      if (y === "center") left = triggerRect.left - contentWidth - offset;
+      break;
+    case "right":
+      left = triggerRect.right - contentWidth;
+      if (y === "center") left = triggerRect.right + offset;
+      break;
+    case "center":
+      left = triggerRect.left + triggerRect.width / 2 - contentWidth / 2;
+      break;
+  }
+  if (left < 5) left = 5;
+  if (left + contentWidth > viewportWidth - 5) left = viewportWidth - contentWidth - 5;
+  if (top < 5) {
+    if (y === "top") top = triggerRect.bottom + offset;
+    else top = 5;
+  }
+  if (top + contentHeight > viewportHeight - 5) {
+    if (y === "bottom") top = triggerRect.top - contentHeight - offset;
+    else top = viewportHeight - contentHeight - 5;
+  }
+  return { top, left };
 }
 
 // src/components/dropdown.js
@@ -2011,6 +2155,8 @@ var SolDropdown = class extends HTMLElement {
   constructor() {
     super();
     this.initialized = false;
+    this._handleOutsideClick = this.handleOutsideClick.bind(this);
+    this._updatePosition = this.updatePosition.bind(this);
   }
   connectedCallback() {
     if (this.initialized) return;
@@ -2031,11 +2177,18 @@ var SolDropdown = class extends HTMLElement {
     this.hiddenInput.type = "hidden";
     this.hiddenInput.name = this.getAttribute("name") || "dropdown";
     this.appendChild(this.btn);
-    this.appendChild(this.content);
     this.appendChild(this.hiddenInput);
     this.placeholder = this.getAttribute("placeholder") || null;
     this.bindEvents();
     this.initSelection();
+  }
+  disconnectedCallback() {
+    if (this.content && this.content.parentElement) {
+      this.content.parentElement.removeChild(this.content);
+    }
+    document.removeEventListener("click", this._handleOutsideClick);
+    window.removeEventListener("scroll", this._updatePosition, true);
+    window.removeEventListener("resize", this._updatePosition);
   }
   getItems() {
     return Array.from(this.content.querySelectorAll('.dropdown-item:not([aria-disabled="true"]):not(.placeholder)'));
@@ -2060,26 +2213,56 @@ var SolDropdown = class extends HTMLElement {
     }
   }
   toggle() {
-    this.classList.toggle("open");
+    if (this.classList.contains("open")) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+  open() {
+    if (this.content.parentElement !== document.body) {
+      document.body.appendChild(this.content);
+    }
+    this.classList.add("open");
+    this.content.classList.add("open");
+    this.updatePosition();
+    window.addEventListener("scroll", this._updatePosition, true);
+    window.addEventListener("resize", this._updatePosition);
   }
   close() {
     this.classList.remove("open");
+    this.content.classList.remove("open");
+    window.removeEventListener("scroll", this._updatePosition, true);
+    window.removeEventListener("resize", this._updatePosition);
+  }
+  updatePosition() {
+    if (!this.classList.contains("open")) return;
+    const pos = this.getAttribute("pos") || "bottom-left";
+    this.content.style.position = "fixed";
+    this.content.style.width = `${this.btn.offsetWidth}px`;
+    this.content.style.minWidth = "10rem";
+    const { top, left } = calculatePosition(this.btn, this.content, pos, 5);
+    this.content.style.top = `${top}px`;
+    this.content.style.left = `${left}px`;
+  }
+  handleOutsideClick(e) {
+    if (!this.contains(e.target) && !this.content.contains(e.target)) {
+      this.close();
+    }
   }
   bindEvents() {
     this.btn.addEventListener("click", (e) => {
       e.stopPropagation();
       this.toggle();
     });
-    document.addEventListener("click", (e) => {
-      if (!this.contains(e.target)) this.close();
-    });
+    document.addEventListener("click", this._handleOutsideClick);
     this.btn.addEventListener("keydown", (e) => {
       if (!["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key)) return;
       const items = this.getItems();
       if (items.length === 0) return;
       let currentIndex = items.findIndex((i) => i.classList.contains("active"));
       e.preventDefault();
-      this.classList.add("open");
+      if (!this.classList.contains("open")) this.open();
       if (e.key === "ArrowDown") {
         currentIndex = (currentIndex + 1) % items.length;
       } else if (e.key === "ArrowUp") {
@@ -2121,8 +2304,15 @@ function initContextMenu() {
   }
   let contextTarget = null;
   const showMenu = (e) => {
+    if (!document.querySelector("sol-contextmenu")) return;
     e.preventDefault();
+    e.stopPropagation();
     contextTarget = e.target;
+    const isApple = /Mac|iPhone|iPod|iPad/.test(navigator.platform);
+    const symbol = isApple ? "\u2318" : "Ctrl+";
+    const alt = isApple ? "\u2325" : "Alt+";
+    const shift = isApple ? "\u21E7" : "Shift+";
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     const selection = window.getSelection().toString().trim();
     const link = e.target.closest("a");
     const img = e.target.closest("img");
@@ -2130,24 +2320,61 @@ function initContextMenu() {
     const isEditable = input || e.target.isContentEditable;
     const isTextInput = input && (input.type === "text" || input.type === "search" || input.type === "email" || input.type === "password" || input.tagName === "TEXTAREA" || input.isContentEditable);
     let menuHtml = "";
+    const containers = [];
+    let tempEl = e.target;
+    while (tempEl) {
+      const container = tempEl.closest("sol-context-options");
+      if (container) {
+        containers.unshift(container);
+        tempEl = container.parentElement;
+      } else {
+        break;
+      }
+    }
+    containers.forEach((customContainer) => {
+      const children = Array.from(customContainer.children);
+      if (children.length > 0) {
+        const containerLabel = customContainer.getAttribute("label");
+        const firstTag = children[0].tagName.toLowerCase();
+        if (firstTag !== "sol-group-label") {
+          menuHtml += `<div class="sol-menu-label">${containerLabel || "Opties"}</div>`;
+        }
+        children.forEach((child) => {
+          const tag = child.tagName.toLowerCase();
+          if (tag === "sol-item") {
+            const isDisabled = child.hasAttribute("disabled");
+            const isReadonly = child.hasAttribute("readonly");
+            menuHtml += `
+                            <div class="sol-menu-item${isDisabled ? " disabled" : ""}${isReadonly ? " readonly" : ""}" 
+                                 data-action="custom" 
+                                 data-custom-action="${child.getAttribute("action") || ""}">
+                                ${child.getAttribute("label")}
+                            </div>
+                        `;
+          } else if (tag === "sol-group-label") {
+            menuHtml += `<div class="sol-menu-label">${child.getAttribute("label")}</div>`;
+          } else if (tag === "sol-divider") {
+            menuHtml += `<div class="sol-menu-divider"></div>`;
+          }
+        });
+        menuHtml += `<div class="sol-menu-divider"></div>`;
+      }
+    });
     if (selection.length > 0) {
       menuHtml += `
                 <div class="sol-menu-label">Selectie</div>
                 <div class="sol-menu-item" data-action="copy">
-                    Kopieer <span class="sol-menu-shortcut">\u2318C</span>
+                    Kopieer <span class="sol-menu-shortcut">${symbol}C</span>
                 </div>
                 ${isEditable ? `
                 <div class="sol-menu-item" data-action="cut">
-                    Knippen <span class="sol-menu-shortcut">\u2318X</span>
+                    Knippen <span class="sol-menu-shortcut">${symbol}X</span>
                 </div>` : ""}
                 <div class="sol-menu-item" data-action="search-google">
-                    Zoek op Google: <em>"${selection.slice(0, 20)}${selection.length > 20 ? "\u2026" : ""}"</em>
-                </div>
-                <div class="sol-menu-item" data-action="search-wiki">
-                    Zoek op Wikipedia\u2026
+                    Zoek op Google
                 </div>
                 <div class="sol-menu-item" data-action="translate">
-                    Vertaal selectie\u2026
+                    Vertaal\u2026
                 </div>
                 <div class="sol-menu-divider"></div>
             `;
@@ -2157,19 +2384,16 @@ function initContextMenu() {
                 <div class="sol-menu-label">Tekstveld</div>
                 ${selection.length > 0 ? `
                 <div class="sol-menu-item" data-action="cut">
-                    Knippen <span class="sol-menu-shortcut">\u2318X</span>
+                    Knippen <span class="sol-menu-shortcut">${symbol}X</span>
                 </div>
                 <div class="sol-menu-item" data-action="copy">
-                    Kopieer <span class="sol-menu-shortcut">\u2318C</span>
+                    Kopieer <span class="sol-menu-shortcut">${symbol}C</span>
                 </div>` : ""}
                 <div class="sol-menu-item" data-action="paste">
-                    Plakken <span class="sol-menu-shortcut">\u2318V</span>
+                    Plakken <span class="sol-menu-shortcut">${symbol}V</span>
                 </div>
                 <div class="sol-menu-item" data-action="select-all">
-                    Alles selecteren <span class="sol-menu-shortcut">\u2318A</span>
-                </div>
-                <div class="sol-menu-item" data-action="clear-field">
-                    Veld wissen
+                    Alles selecteren <span class="sol-menu-shortcut">${symbol}A</span>
                 </div>
                 <div class="sol-menu-divider"></div>
             `;
@@ -2178,82 +2402,49 @@ function initContextMenu() {
       menuHtml += `
                 <div class="sol-menu-label">Afbeelding</div>
                 <div class="sol-menu-item" data-action="open-img" data-url="${img.src}">
-                    Afbeelding openen in nieuw tabblad
+                    Open afbeelding
                 </div>
                 <div class="sol-menu-item" data-action="copy-img-url" data-url="${img.src}">
-                    Kopieer afbeeldings-URL
+                    Kopieer URL
                 </div>
-                <div class="sol-menu-item" data-action="download-img" data-url="${img.src}" data-filename="${img.alt || "afbeelding"}">
-                    Afbeelding opslaan\u2026
-                </div>
-                ${img.alt ? `
-                <div class="sol-menu-item" data-action="copy-alt" data-text="${img.alt}">
-                    Kopieer alt-tekst
-                </div>` : ""}
                 <div class="sol-menu-divider"></div>
             `;
     }
     if (link) {
-      menuHtml += `
-                <div class="sol-menu-label">Link</div>
-                <div class="sol-menu-item" data-action="open-tab" data-url="${link.href}">
-                    Open in nieuw tabblad
-                </div>
-                <div class="sol-menu-item" data-action="open-window" data-url="${link.href}">
-                    Open in nieuw venster
-                </div>
-                <div class="sol-menu-item" data-action="copy-link" data-url="${link.href}">
-                    Kopieer link-adres
-                </div>
-                <div class="sol-menu-divider"></div>
-            `;
+      const href = link.href;
+      if (href.startsWith("mailto:")) {
+        const email = href.replace("mailto:", "").split("?")[0];
+        menuHtml += `
+                    <div class="sol-menu-label">E-mail</div>
+                    <div class="sol-menu-item" data-action="open-link" data-url="${href}">Stuur e-mail\u2026</div>
+                    <div class="sol-menu-item" data-action="copy-text" data-text="${email}">Kopieer adres</div>
+                `;
+      } else if (href.startsWith("tel:")) {
+        const phone = href.replace("tel:", "").split("?")[0];
+        menuHtml += `
+                    <div class="sol-menu-label">Telefoon</div>
+                    <div class="sol-menu-item" data-action="open-link" data-url="${href}">Bellen\u2026</div>
+                    <div class="sol-menu-item" data-action="copy-text" data-text="${phone}">Kopieer nummer</div>
+                `;
+      } else {
+        menuHtml += `
+                    <div class="sol-menu-label">Link</div>
+                    <div class="sol-menu-item" data-action="open-tab" data-url="${href}">Open in nieuw tabblad</div>
+                    <div class="sol-menu-item" data-action="copy-link" data-url="${href}">Kopieer link</div>
+                `;
+      }
+      menuHtml += `<div class="sol-menu-divider"></div>`;
     }
     menuHtml += `
             <div class="sol-menu-label">Navigatie</div>
-            <div class="sol-menu-item${!history.length || history.state === null ? " disabled" : ""}" data-action="go-back">
-                \u2190 Vorige pagina
-            </div>
-            <div class="sol-menu-item" data-action="go-forward">
-                \u2192 Volgende pagina
-            </div>
             <div class="sol-menu-item" data-action="reload">
-                Vernieuwen <span class="sol-menu-shortcut">\u2318R</span>
-            </div>
-            <div class="sol-menu-item" data-action="hard-reload">
-                Geforceerd vernieuwen <span class="sol-menu-shortcut">\u21E7\u2318R</span>
+                Vernieuwen <span class="sol-menu-shortcut">${symbol}R</span>
             </div>
             <div class="sol-menu-divider"></div>
-        `;
-    menuHtml += `
             <div class="sol-menu-label">Pagina</div>
-            <div class="sol-menu-item" data-action="copy-page-url">
-                Kopieer pagina-URL
-            </div>
-            <div class="sol-menu-item" data-action="view-source">
-                Bekijk paginabron <span class="sol-menu-shortcut">\u2318U</span>
-            </div>
-            <div class="sol-menu-item" data-action="print">
-                Printen <span class="sol-menu-shortcut">\u2318P</span>
-            </div>
-            <div class="sol-menu-item" data-action="save-page">
-                Pagina opslaan <span class="sol-menu-shortcut">\u2318S</span>
-            </div>
-            <div class="sol-menu-item" data-action="scroll-top">
-                Naar boven scrollen
-            </div>
-            <div class="sol-menu-divider"></div>
-        `;
-    menuHtml += `
-            <div class="sol-menu-label">Ontwikkelaar</div>
-            <div class="sol-menu-item" data-action="inspect">
-                Inspecteer element <span class="sol-menu-shortcut">\u2325\u2318I</span>
-            </div>
-            <div class="sol-menu-item" data-action="copy-selector">
-                Kopieer CSS-selector
-            </div>
-            <div class="sol-menu-item" data-action="log-element">
-                Log element in console
-            </div>
+            <div class="sol-menu-item" data-action="copy-page-url">Kopieer pagina-URL</div>
+            ${!isSafari ? `<div class="sol-menu-item" data-action="view-source">Paginabron <span class="sol-menu-shortcut">${symbol}U</span></div>` : ""}
+            <div class="sol-menu-item" data-action="print">Printen <span class="sol-menu-shortcut">${symbol}P</span></div>
         `;
     menu.innerHTML = menuHtml;
     menu.style.display = "block";
@@ -2261,18 +2452,10 @@ function initContextMenu() {
     let posY = e.clientY;
     const menuWidth = menu.offsetWidth;
     const menuHeight = menu.offsetHeight;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    if (posX + menuWidth > windowWidth) {
-      posX = posX - menuWidth;
-    }
-    if (posY + menuHeight > windowHeight) {
-      posY = posY - menuHeight;
-    }
-    posX = Math.max(5, posX);
-    posY = Math.max(5, posY);
-    menu.style.left = `${posX}px`;
-    menu.style.top = `${posY}px`;
+    if (posX + menuWidth > window.innerWidth) posX -= menuWidth;
+    if (posY + menuHeight > window.innerHeight) posY -= menuHeight;
+    menu.style.left = `${Math.max(5, posX)}px`;
+    menu.style.top = `${Math.max(5, posY)}px`;
     requestAnimationFrame(() => menu.classList.add("visible"));
   };
   const hideMenu = () => {
@@ -2280,28 +2463,6 @@ function initContextMenu() {
     setTimeout(() => {
       if (!menu.classList.contains("visible")) menu.style.display = "none";
     }, 150);
-  };
-  const getCssSelector = (el) => {
-    if (!el) return "";
-    const parts = [];
-    while (el && el.nodeType === Node.ELEMENT_NODE) {
-      let selector = el.nodeName.toLowerCase();
-      if (el.id) {
-        selector += `#${el.id}`;
-        parts.unshift(selector);
-        break;
-      }
-      if (el.className) {
-        selector += "." + [...el.classList].join(".");
-      }
-      const siblings = el.parentNode ? [...el.parentNode.children].filter((s) => s.nodeName === el.nodeName) : [];
-      if (siblings.length > 1) {
-        selector += `:nth-of-type(${siblings.indexOf(el) + 1})`;
-      }
-      parts.unshift(selector);
-      el = el.parentNode;
-    }
-    return parts.join(" > ");
   };
   document.addEventListener("contextmenu", showMenu);
   document.addEventListener("click", hideMenu);
@@ -2311,14 +2472,31 @@ function initContextMenu() {
   });
   menu.addEventListener("click", (e) => {
     const item = e.target.closest(".sol-menu-item");
-    if (!item || item.classList.contains("disabled")) return;
+    if (!item || item.classList.contains("disabled") || item.classList.contains("readonly")) return;
     const action = item.dataset.action;
     const url = item.dataset.url;
     const text = item.dataset.text;
-    const filename = item.dataset.filename;
     const sel = window.getSelection().toString().trim();
     switch (action) {
-      // Tekst
+      case "custom": {
+        const customAction = item.dataset.customAction;
+        if (customAction.startsWith("js(")) {
+          const code = customAction.slice(3, -1);
+          try {
+            new Function("target", code).call(contextTarget, contextTarget);
+          } catch (err) {
+            console.error(err);
+          }
+        } else if (customAction.startsWith("php(")) {
+          const code = customAction.slice(4, -1);
+          fetch(window.location.href, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Solora-PHP-Action": "true" },
+            body: new URLSearchParams({ "solora_exec_php": code })
+          });
+        }
+        break;
+      }
       case "copy":
         document.execCommand("copy");
         break;
@@ -2331,60 +2509,27 @@ function initContextMenu() {
       case "select-all":
         document.execCommand("selectAll");
         break;
-      case "clear-field":
-        if (contextTarget?.closest("input, textarea")) contextTarget.closest("input, textarea").value = "";
-        break;
-      // Zoeken & vertalen
-      case "search-google":
-        window.open(`https://www.google.com/search?q=${encodeURIComponent(sel)}`, "_blank");
-        break;
-      case "search-wiki":
-        window.open(`https://nl.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(sel)}`, "_blank");
-        break;
-      case "translate":
-        window.open(`https://translate.google.com/?sl=auto&tl=nl&text=${encodeURIComponent(sel)}`, "_blank");
-        break;
-      // Afbeelding
       case "open-img":
         window.open(url, "_blank");
         break;
       case "copy-img-url":
         navigator.clipboard.writeText(url);
         break;
-      case "copy-alt":
-        navigator.clipboard.writeText(text);
-        break;
-      case "download-img": {
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename || "afbeelding";
-        a.click();
-        break;
-      }
-      // Link
       case "open-tab":
         window.open(url, "_blank");
-        break;
-      case "open-window":
-        window.open(url, "_blank", "noopener,noreferrer");
         break;
       case "copy-link":
         navigator.clipboard.writeText(url);
         break;
-      // Navigatie
-      case "go-back":
-        history.back();
+      case "open-link":
+        window.location.href = url;
         break;
-      case "go-forward":
-        history.forward();
+      case "copy-text":
+        navigator.clipboard.writeText(text);
         break;
       case "reload":
         location.reload();
         break;
-      case "hard-reload":
-        location.href = location.href;
-        break;
-      // Pagina
       case "copy-page-url":
         navigator.clipboard.writeText(location.href);
         break;
@@ -2394,28 +2539,11 @@ function initContextMenu() {
       case "print":
         window.print();
         break;
-      case "save-page":
-        document.execCommand("SaveAs");
+      case "search-google":
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(sel)}`, "_blank");
         break;
-      case "scroll-top":
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        break;
-      // Ontwikkelaar
-      case "inspect":
-        console.log("%c[Inspecteer element]", "color:#6c63ff;font-weight:bold", contextTarget);
-        break;
-      case "copy-selector":
-        navigator.clipboard.writeText(getCssSelector(contextTarget));
-        break;
-      case "log-element":
-        console.log("%c[Sol Context Menu] Geselecteerd element:", "color:#6c63ff", contextTarget);
-        console.table({
-          tag: contextTarget?.tagName,
-          id: contextTarget?.id,
-          classes: contextTarget?.className,
-          selector: getCssSelector(contextTarget),
-          innerText: contextTarget?.innerText?.slice(0, 80)
-        });
+      case "translate":
+        window.open(`https://translate.google.com/?sl=auto&tl=nl&text=${encodeURIComponent(sel)}`, "_blank");
         break;
     }
     hideMenu();
@@ -2499,8 +2627,466 @@ function initSwitch(target) {
   });
 }
 
+// src/components/icon.js
+var iconCache = /* @__PURE__ */ new Map();
+var SolIcon = class extends HTMLElement {
+  constructor() {
+    super();
+    this.initialized = false;
+  }
+  static get observedAttributes() {
+    return ["name", "size", "color", "stroke-width"];
+  }
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
+    this.render();
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (this.initialized && oldValue !== newValue) {
+      this.render();
+    }
+  }
+  async render() {
+    const name = this.getAttribute("name");
+    if (!name) {
+      this.innerHTML = "";
+      return;
+    }
+    const size = this.getAttribute("size") || "24";
+    const color = this.getAttribute("color") || "currentColor";
+    const strokeWidth = this.getAttribute("stroke-width") || "2";
+    try {
+      let svgText;
+      if (iconCache.has(name)) {
+        svgText = iconCache.get(name);
+      } else {
+        const response = await fetch(`https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/${name}.svg`);
+        if (!response.ok) throw new Error(`Icon "${name}" not found`);
+        svgText = await response.text();
+        iconCache.set(name, svgText);
+      }
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(svgText, "image/svg+xml");
+      const svg = doc.querySelector("svg");
+      if (svg) {
+        svg.setAttribute("width", size);
+        svg.setAttribute("height", size);
+        svg.setAttribute("stroke", color);
+        svg.setAttribute("stroke-width", strokeWidth);
+        this.innerHTML = "";
+        this.appendChild(svg);
+      }
+    } catch (error) {
+      console.error(`SolIcon: Fout bij laden van icoon "${name}":`, error);
+      this.innerHTML = "";
+    }
+  }
+};
+function initIcon() {
+  if (!customElements.get("sol-icon")) {
+    customElements.define("sol-icon", SolIcon);
+  }
+}
+
+// src/components/alert.js
+function initAlert(config = {}) {
+  let alertQueue = [];
+  let isProcessing = false;
+  const defaultTitle = config.title || window.location.hostname || "Alert";
+  const processQueue = async () => {
+    if (isProcessing || alertQueue.length === 0) return;
+    isProcessing = true;
+    const { options, resolve } = alertQueue.shift();
+    const result = await renderAlert(options);
+    resolve(result);
+    isProcessing = false;
+    processQueue();
+  };
+  const enqueue = (options) => {
+    return new Promise((resolve) => {
+      alertQueue.push({ options, resolve });
+      processQueue();
+    });
+  };
+  const renderAlert = (options) => {
+    const { title, message, buttons, showInput, defaultValue, placeholder } = options;
+    return new Promise((resolve) => {
+      const overlay = document.createElement("div");
+      overlay.className = "sol-alert-overlay";
+      const container = document.createElement("div");
+      container.className = "sol-alert-container";
+      const content = document.createElement("div");
+      content.className = "sol-alert-content";
+      if (title) {
+        const titleEl = document.createElement("div");
+        titleEl.className = "sol-alert-title";
+        titleEl.innerText = title;
+        content.appendChild(titleEl);
+      }
+      const messageEl = document.createElement("div");
+      messageEl.className = "sol-alert-message";
+      messageEl.innerText = message;
+      content.appendChild(messageEl);
+      let inputEl;
+      if (showInput) {
+        inputEl = document.createElement("input");
+        inputEl.type = "text";
+        inputEl.className = "sol-alert-input";
+        inputEl.value = defaultValue || "";
+        inputEl.placeholder = placeholder || "";
+        content.appendChild(inputEl);
+        setTimeout(() => inputEl.focus(), 250);
+      }
+      const buttonsContainer = document.createElement("div");
+      buttonsContainer.className = "sol-alert-buttons";
+      const close = (value) => {
+        overlay.classList.remove("visible");
+        setTimeout(() => {
+          if (document.body.contains(overlay)) {
+            document.body.removeChild(overlay);
+          }
+          resolve(value);
+        }, 200);
+      };
+      buttons.forEach((btn) => {
+        const button = document.createElement("button");
+        button.className = "sol-alert-button";
+        if (btn.bold) button.classList.add("bold");
+        button.innerText = btn.text;
+        button.onclick = () => {
+          const value = showInput ? btn.value ? inputEl.value : null : btn.value;
+          close(value);
+        };
+        buttonsContainer.appendChild(button);
+      });
+      container.appendChild(content);
+      container.appendChild(buttonsContainer);
+      overlay.appendChild(container);
+      document.body.appendChild(overlay);
+      overlay.offsetHeight;
+      overlay.classList.add("visible");
+    });
+  };
+  window.alert = function(message) {
+    return enqueue({
+      title: defaultTitle,
+      message,
+      buttons: [{ text: "OK", value: true, bold: true }]
+    });
+  };
+  window.confirm = function(message) {
+    return enqueue({
+      title: defaultTitle,
+      message,
+      buttons: [
+        { text: "Cancel", value: false },
+        { text: "OK", value: true, bold: true }
+      ]
+    });
+  };
+  window.prompt = function(message, defaultValue) {
+    return enqueue({
+      title: defaultTitle,
+      message,
+      buttons: [
+        { text: "Cancel", value: null },
+        { text: "OK", value: true, bold: true }
+      ],
+      showInput: true,
+      defaultValue
+    });
+  };
+  window.solora = window.solora || {};
+  window.solora.alert = (title, message) => enqueue({ title, message, buttons: [{ text: "OK", value: true, bold: true }] });
+  window.solora.confirm = (title, message) => enqueue({ title, message, buttons: [{ text: "Cancel", value: false }, { text: "OK", value: true, bold: true }] });
+  window.solora.prompt = (title, message, defaultValue) => enqueue({ title, message, buttons: [{ text: "Cancel", value: null }, { text: "OK", value: true, bold: true }], showInput: true, defaultValue });
+}
+
+// src/components/card.js
+var SolCard = class extends HTMLElement {
+  static get observedAttributes() {
+    return ["bg"];
+  }
+  constructor() {
+    super();
+  }
+  connectedCallback() {
+    this.render();
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "bg" && oldValue !== newValue) {
+      this.updateBackground(newValue);
+    }
+  }
+  updateBackground(bg) {
+    this.classList.remove("custom-bg");
+    if (!bg || bg === "glass") {
+      this.style.backgroundColor = "";
+    } else if (bg.includes("/")) {
+      const [color, opacity] = bg.split("/");
+      const amount = parseFloat(opacity);
+      if (!isNaN(amount)) {
+        this.style.backgroundColor = `color-mix(in srgb, ${color}, transparent ${100 - amount}%)`;
+      }
+    } else {
+      this.style.backgroundColor = bg;
+      if (bg !== "transparent" && !bg.startsWith("rgba") && !bg.startsWith("hsla")) {
+        this.classList.add("custom-bg");
+      }
+    }
+  }
+  render() {
+    if (!this.classList.contains("sol-card")) {
+      this.classList.add("sol-card");
+    }
+    const bg = this.getAttribute("bg");
+    this.updateBackground(bg);
+    if (!this.querySelector(".card-glass-highlight")) {
+      const highlight = document.createElement("div");
+      highlight.className = "card-glass-highlight";
+      this.prepend(highlight);
+    }
+  }
+};
+function initCard() {
+  if (!customElements.get("sol-card")) {
+    customElements.define("sol-card", SolCard);
+  }
+}
+
+// src/components/navbar.js
+var SolNavbar = class extends HTMLElement {
+  constructor() {
+    super();
+  }
+  connectedCallback() {
+    this.render();
+    this.observer = new MutationObserver(() => this.render());
+    this.observer.observe(this, { childList: true, subtree: false });
+  }
+  disconnectedCallback() {
+    if (this.observer) this.observer.disconnect();
+  }
+  render() {
+    const brand = this.getAttribute("brand") || "Solora";
+    const brandHref = this.getAttribute("brand-href") || "#";
+    const items = Array.from(this.children).filter((item) => !item.classList.contains("sol-navbar"));
+    if (this.observer) this.observer.disconnect();
+    const oldNav = this.querySelector(".sol-navbar");
+    const isOpen = oldNav ? oldNav.classList.contains("is-open") : false;
+    this.buildNav(brand, brandHref, items, isOpen);
+    if (this.observer) {
+      this.observer.observe(this, { childList: true, subtree: false });
+    }
+  }
+  buildNav(brand, brandHref, items, isOpen) {
+    const existingNav = this.querySelector(".sol-navbar");
+    if (existingNav) existingNav.remove();
+    const nav = document.createElement("nav");
+    nav.className = "sol-navbar" + (isOpen ? " is-open" : "");
+    const container = document.createElement("div");
+    container.className = "sol-navbar-container";
+    const brandLink = document.createElement("a");
+    brandLink.className = "sol-navbar-brand";
+    brandLink.href = brandHref;
+    brandLink.innerHTML = brand;
+    const toggle = document.createElement("button");
+    toggle.className = "sol-navbar-toggle";
+    toggle.setAttribute("aria-label", "Toggle menu");
+    toggle.innerHTML = "<span></span><span></span><span></span>";
+    const menu = document.createElement("ul");
+    menu.className = "sol-navbar-menu";
+    items.forEach((item) => {
+      const li = document.createElement("li");
+      li.appendChild(item);
+      menu.appendChild(li);
+    });
+    toggle.addEventListener("click", () => {
+      nav.classList.toggle("is-open");
+      if (nav.classList.contains("is-open")) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+    });
+    menu.addEventListener("click", (e) => {
+      if (e.target.tagName === "A" || e.target.closest("a")) {
+        nav.classList.remove("is-open");
+        document.body.style.overflow = "";
+      }
+    });
+    container.appendChild(brandLink);
+    container.appendChild(menu);
+    container.appendChild(toggle);
+    nav.appendChild(container);
+    this.appendChild(nav);
+  }
+};
+function initNavbar() {
+  if (!customElements.get("sol-navbar")) {
+    customElements.define("sol-navbar", SolNavbar);
+  }
+}
+
+// src/components/checkbox.js
+var SolCheck = class extends HTMLElement {
+  constructor() {
+    super();
+    this.input = document.createElement("input");
+    this.input.type = "checkbox";
+    this.input.className = "sol-check-input";
+  }
+  connectedCallback() {
+    if (this.contains(this.input)) return;
+    const labelText = this.innerHTML;
+    this.innerHTML = "";
+    const box = document.createElement("div");
+    box.className = "sol-check-box";
+    box.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    const label = document.createElement("span");
+    label.className = "sol-check-label";
+    label.innerHTML = labelText;
+    this.appendChild(this.input);
+    this.appendChild(box);
+    if (labelText.trim()) {
+      this.appendChild(label);
+    }
+    this.input.checked = this.hasAttribute("checked");
+    if (this.hasAttribute("disabled")) {
+      this.input.disabled = true;
+    }
+    this.addEventListener("click", (e) => {
+      if (this.hasAttribute("disabled")) return;
+      this.input.checked = !this.input.checked;
+      this.dispatchEvent(new CustomEvent("change", {
+        detail: { checked: this.input.checked }
+      }));
+    });
+  }
+  static get observedAttributes() {
+    return ["checked", "disabled"];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "checked") {
+      this.input.checked = this.hasAttribute("checked");
+    }
+    if (name === "disabled") {
+      this.input.disabled = this.hasAttribute("disabled");
+    }
+  }
+  get checked() {
+    return this.input.checked;
+  }
+  set checked(val) {
+    if (val) {
+      this.setAttribute("checked", "");
+    } else {
+      this.removeAttribute("checked");
+    }
+  }
+};
+function initCheckbox() {
+  if (!customElements.get("sol-check")) {
+    customElements.define("sol-check", SolCheck);
+  }
+}
+
+// src/components/popover.js
+var SolPopover = class extends HTMLElement {
+  constructor() {
+    super();
+    this.initialized = false;
+    this._handleOutsideClick = this.handleOutsideClick.bind(this);
+    this._updatePosition = this.updatePosition.bind(this);
+  }
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
+    const triggerSlot = this.querySelector('[slot="trigger"]');
+    const contentNodes = Array.from(this.childNodes).filter((node) => node !== triggerSlot);
+    this.trigger = document.createElement("div");
+    this.trigger.className = "sol-popover-trigger";
+    if (triggerSlot) {
+      this.trigger.appendChild(triggerSlot);
+    } else {
+      this.trigger.textContent = "Klik mij";
+    }
+    this.content = document.createElement("div");
+    this.content.className = "popover-content";
+    contentNodes.forEach((node) => this.content.appendChild(node));
+    this.innerHTML = "";
+    this.appendChild(this.trigger);
+    this.bindEvents();
+  }
+  disconnectedCallback() {
+    if (this.content && this.content.parentElement) {
+      this.content.parentElement.removeChild(this.content);
+    }
+    document.removeEventListener("click", this._handleOutsideClick);
+    window.removeEventListener("scroll", this._updatePosition, true);
+    window.removeEventListener("resize", this._updatePosition);
+  }
+  toggle() {
+    if (this.content.classList.contains("open")) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+  open() {
+    if (this.content.parentElement !== document.body) {
+      document.body.appendChild(this.content);
+    }
+    this.classList.add("open");
+    this.content.classList.add("open");
+    this.updatePosition();
+    window.addEventListener("scroll", this._updatePosition, true);
+    window.addEventListener("resize", this._updatePosition);
+  }
+  close() {
+    this.classList.remove("open");
+    this.content.classList.remove("open");
+    window.removeEventListener("scroll", this._updatePosition, true);
+    window.removeEventListener("resize", this._updatePosition);
+  }
+  updatePosition() {
+    if (!this.content.classList.contains("open")) return;
+    const pos = this.getAttribute("pos") || "bottom-left";
+    const { top, left } = calculatePosition(this.trigger, this.content, pos);
+    this.content.style.top = `${top}px`;
+    this.content.style.left = `${left}px`;
+  }
+  handleOutsideClick(e) {
+    if (!this.contains(e.target) && !this.content.contains(e.target)) {
+      this.close();
+    }
+  }
+  bindEvents() {
+    this.trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.toggle();
+    });
+    this.content.addEventListener("click", (e) => {
+      const newEvent = new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        ...e
+      });
+      this.dispatchEvent(newEvent);
+    });
+    document.addEventListener("click", this._handleOutsideClick);
+  }
+};
+function initPopover() {
+  if (!customElements.get("sol-popover")) {
+    customElements.define("sol-popover", SolPopover);
+  }
+}
+
 // src/index.js
-function initAll() {
+function initAll(config = {}) {
   initButton();
   initInput();
   initCodeblocks();
@@ -2508,6 +3094,12 @@ function initAll() {
   initSwitch();
   initContextMenu();
   initThemeToggle();
+  initIcon();
+  initAlert(config.alert || {});
+  initCard();
+  initNavbar();
+  initCheckbox();
+  initPopover();
 }
 export {
   initAll

@@ -1,21 +1,22 @@
+import { calculatePosition } from '../utils/positioning.js';
+
 class SolDropdown extends HTMLElement {
     constructor() {
         super();
         this.initialized = false;
+        this._handleOutsideClick = this.handleOutsideClick.bind(this);
+        this._updatePosition = this.updatePosition.bind(this);
     }
 
     connectedCallback() {
-        // Voorkom dubbele rendering
         if (this.initialized) return;
         this.initialized = true;
 
-        // 1. Pak alle huidige children (jouw dropdown-items) en zet ze tijdelijk apart
         const fragment = document.createDocumentFragment();
         while (this.childNodes.length > 0) {
             fragment.appendChild(this.childNodes[0]);
         }
 
-        // 2. Bouw de interne structuur op
         this.btn = document.createElement('div');
         this.btn.className = 'dropdown-btn';
         this.btn.setAttribute('tabindex', '0');
@@ -24,81 +25,115 @@ class SolDropdown extends HTMLElement {
 
         this.content = document.createElement('div');
         this.content.className = 'dropdown-content';
-        this.content.appendChild(fragment); // Zet de items in de popover
+        this.content.appendChild(fragment);
 
         this.hiddenInput = document.createElement('input');
         this.hiddenInput.type = 'hidden';
         this.hiddenInput.name = this.getAttribute('name') || 'dropdown';
 
-        // 3. Voeg de nieuwe opmaak toe aan het sol-dropdown element
         this.appendChild(this.btn);
-        this.appendChild(this.content);
         this.appendChild(this.hiddenInput);
+        // We voegen this.content NIET toe aan this, maar later aan document.body (portal)
 
         this.placeholder = this.getAttribute('placeholder') || null;
 
-        // 4. Stel functionaliteit in
         this.bindEvents();
         this.initSelection();
     }
 
+    disconnectedCallback() {
+        if (this.content && this.content.parentElement) {
+            this.content.parentElement.removeChild(this.content);
+        }
+        document.removeEventListener("click", this._handleOutsideClick);
+        window.removeEventListener("scroll", this._updatePosition, true);
+        window.removeEventListener("resize", this._updatePosition);
+    }
+
     getItems() {
-        // Haal alle actieve (niet-disabled) items op
         return Array.from(this.content.querySelectorAll('.dropdown-item:not([aria-disabled="true"]):not(.placeholder)'));
     }
 
     setValue(item) {
         if (!item || item.getAttribute("aria-disabled") === "true") return;
-        
-        // Knop tekst en eventuele iconen updaten
         this.btn.innerHTML = item.innerHTML; 
-        
-        // Active states resetten en zetten
         this.content.querySelectorAll(".dropdown-item").forEach((i) => i.classList.remove("active"));
         item.classList.add("active");
-        
-        // Value bepalen (eerst data-value checken, anders de textContent)
         this.hiddenInput.value = item.dataset.value !== undefined ? item.dataset.value : item.textContent.trim();
-        
-        // Trigger een standard event (bubbles: true zodat je in form-scripts kunt luisteren)
         this.dispatchEvent(new CustomEvent('change', { detail: this.hiddenInput.value, bubbles: true }));
     }
 
     initSelection() {
         const activeItem = this.content.querySelector(".dropdown-item.active");
-        
         if (activeItem) {
             this.setValue(activeItem);
         } else if (this.placeholder) {
             this.btn.innerHTML = this.placeholder;
         } else {
-            // Als er niks is, pak het eerste beschikbare item
             const firstItem = this.getItems()[0];
             if (firstItem) this.setValue(firstItem);
         }
     }
 
     toggle() {
-        this.classList.toggle("open");
+        if (this.classList.contains("open")) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+
+    open() {
+        // Portal: Verplaats content naar body als dat nog niet is gebeurd
+        if (this.content.parentElement !== document.body) {
+            document.body.appendChild(this.content);
+        }
+
+        this.classList.add("open");
+        this.content.classList.add("open");
+        this.updatePosition();
+
+        window.addEventListener("scroll", this._updatePosition, true);
+        window.addEventListener("resize", this._updatePosition);
     }
 
     close() {
         this.classList.remove("open");
+        this.content.classList.remove("open");
+        window.removeEventListener("scroll", this._updatePosition, true);
+        window.removeEventListener("resize", this._updatePosition);
+    }
+
+    updatePosition() {
+        if (!this.classList.contains("open")) return;
+
+        const pos = this.getAttribute('pos') || 'bottom-left';
+        
+        // Positionering van de content (portal)
+        this.content.style.position = 'fixed';
+        this.content.style.width = `${this.btn.offsetWidth}px`;
+        this.content.style.minWidth = '10rem';
+
+        const { top, left } = calculatePosition(this.btn, this.content, pos, 5);
+
+        this.content.style.top = `${top}px`;
+        this.content.style.left = `${left}px`;
+    }
+
+    handleOutsideClick(e) {
+        if (!this.contains(e.target) && !this.content.contains(e.target)) {
+            this.close();
+        }
     }
 
     bindEvents() {
-        // Knop klik (openen/sluiten)
         this.btn.addEventListener("click", (e) => {
             e.stopPropagation();
             this.toggle();
         });
 
-        // Buiten klikken is sluiten
-        document.addEventListener("click", (e) => {
-            if (!this.contains(e.target)) this.close();
-        });
+        document.addEventListener("click", this._handleOutsideClick);
 
-        // Toetsenbord navigatie
         this.btn.addEventListener("keydown", (e) => {
             if (!["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key)) return;
             
@@ -108,7 +143,7 @@ class SolDropdown extends HTMLElement {
             let currentIndex = items.findIndex((i) => i.classList.contains("active"));
 
             e.preventDefault();
-            this.classList.add("open"); // Altijd open bij gebruik pijltjes
+            if (!this.classList.contains("open")) this.open();
 
             if (e.key === "ArrowDown") {
                 currentIndex = (currentIndex + 1) % items.length;
@@ -123,13 +158,11 @@ class SolDropdown extends HTMLElement {
                 return;
             }
 
-            // Update visuele focus (zonder direct de waarde op te slaan)
             items.forEach((i) => i.classList.remove("active"));
             items[currentIndex].classList.add("active");
             items[currentIndex].scrollIntoView({ block: "nearest" });
         });
 
-        // Klik op een item binnenin de content
         this.content.addEventListener("click", (e) => {
             const item = e.target.closest(".dropdown-item");
             if (item) {
