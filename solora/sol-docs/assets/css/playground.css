@@ -1,0 +1,71 @@
+/* ======================
+   Playground - Docs UI
+====================== */
+
+.sol-playground {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.sol-playground-toolbar {
+    background: rgba(0, 0, 0, 0.02);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.sol-playground-toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 5px;
+}
+
+.sol-playground-toolbar-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.sol-playground-preview {
+    padding: 80px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    min-height: 240px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* De 'Apple-style' mesh gradient achtergrond voor glass effects */
+.sol-playground-preview.checkerboard {
+    background-color: #ffffff;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 113, 227, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(255, 59, 48, 0.1) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(94, 92, 230, 0.15) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(52, 199, 89, 0.1) 0px, transparent 50%),
+        /* De subtiele dot grid eroverheen */
+        radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 0);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 30px 30px;
+}
+
+html.dark .sol-playground-preview.checkerboard {
+    background-color: #000;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(10, 132, 255, 0.2) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(255, 69, 58, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(94, 92, 230, 0.2) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(48, 209, 88, 0.15) 0px, transparent 50%),
+        radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
+}

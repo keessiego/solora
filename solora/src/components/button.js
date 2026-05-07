@@ -2,29 +2,66 @@ class SolButton extends HTMLElement {
     constructor() {
         super();
         this.button = document.createElement('button');
+        this._observer = null;
     }
 
     connectedCallback() {
-        if (this.contains(this.button)) return;
-
-        while (this.childNodes.length > 0) {
-            this.button.appendChild(this.childNodes[0]);
+        if (!this.contains(this.button)) {
+            this.appendChild(this.button);
         }
-
-        this.appendChild(this.button);
+        
+        this.syncChildren();
         this.updateAttributes();
-        this.setupEventListeners();
+        this.setupMutationObserver();
     }
 
-    setupEventListeners() {
-        // Zorg dat een klik op de interne button de onclick van de host triggert
-        this.button.addEventListener('click', (e) => {
-            if (this.hasAttribute('onclick')) {
-                // Voer de onclick code uit in de context van dit element
-                const fn = new Function('event', this.getAttribute('onclick'));
-                fn.call(this, e);
+    disconnectedCallback() {
+        if (this._observer) {
+            this._observer.disconnect();
+        }
+    }
+
+    setupMutationObserver() {
+        this._observer = new MutationObserver((mutations) => {
+            let shouldSync = false;
+            mutations.forEach(mutation => {
+                Array.from(mutation.addedNodes).forEach(node => {
+                    if (node !== this.button) {
+                        shouldSync = true;
+                    }
+                });
+            });
+            if (shouldSync) {
+                this.syncChildren();
             }
         });
+
+        this._observer.observe(this, { childList: true });
+    }
+
+    syncChildren() {
+        if (this._observer) this._observer.disconnect();
+
+        // 1. Verzamel alle directe children die NIET onze interne button zijn
+        const nodesToMove = Array.from(this.childNodes).filter(node => node !== this.button);
+        
+        // 2. Als de interne button is verwijderd (bijv. door textContent = ...), voeg hem weer toe
+        if (!this.contains(this.button)) {
+            this.appendChild(this.button);
+        }
+
+        // 3. Maak de interne button leeg voordat we de nieuwe nodes toevoegen
+        // om dubbele tekst/content te voorkomen bij updates.
+        this.button.innerHTML = '';
+
+        // 4. Verplaats de 'vreemde' nodes naar binnen in de interne button
+        nodesToMove.forEach(node => {
+            this.button.appendChild(node);
+        });
+
+        if (this._observer) {
+            this._observer.observe(this, { childList: true });
+        }
     }
 
     static get observedAttributes() {
@@ -54,12 +91,15 @@ class SolButton extends HTMLElement {
         const variant = this.getAttribute('variant') || this.getAttribute('color') || 'primary';
         this.button.className = `btn btn-${variant}`;
         
-        if (this.hasAttribute('size')) {
-            this.button.classList.add(`btn-${this.getAttribute('size')}`);
+        const size = this.getAttribute('size');
+        if (size) {
+            this.button.classList.add(`btn-${size}`);
         }
 
         if (this.hasAttribute('rounded')) {
             this.button.classList.add('btn-rounded');
+        } else {
+            this.button.classList.remove('btn-rounded');
         }
     }
 }

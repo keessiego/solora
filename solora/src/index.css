@@ -2,6 +2,7 @@
 @import './components/codeblock.css';
 @import './components/dropdown.css';
 @import './components/input.css';
+@import './components/textarea.css';
 @import './components/contextMenu.css';
 @import './components/darkToggle.css';
 @import './components/switch.css';
@@ -9,14 +10,47 @@
 @import './components/alert.css';
 @import './components/card.css';
 @import './components/navbar.css';
+@import './components/navbarDropdown.css';
 @import './components/checkbox.css';
 @import './components/link.css';
 @import './components/popover.css';
+@import './components/modal.css';
+@import './components/window.css';
+@import './components/table.css';
+@import './components/notification.css';
+@import './components/sidebar.css';
+@import './components/layout.css';
 
 :root {
     --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
     --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     --font-mono: 'SF Mono', 'Menlo', 'Consolas', monospace;
+
+    /* Glass Variants - Light Mode (Default = Alert style, Glass = Card style) */
+    --sol-glass-default-bg: rgba(255, 255, 255, 0.8);
+    --sol-glass-default-blur: 100px;
+    --sol-glass-default-border: rgba(255, 255, 255, 0.4);
+    
+    --sol-glass-glass-bg: rgba(255, 255, 255, 0.25);
+    --sol-glass-glass-blur: 8px;
+    --sol-glass-glass-border: rgba(255, 255, 255, 0.3);
+
+    --sol-sidebar-top: 0px;
+}
+
+:root:has(sol-navbar[sticky]:not([hidden]):not(.hidden):not(.is-hidden)) {
+    --sol-sidebar-top: var(--sol-navbar-height, 44px);
+}
+
+:root.dark {
+    /* Glass Variants - Dark Mode */
+    --sol-glass-default-bg: rgba(28, 28, 30, 0.3);
+    --sol-glass-default-blur: 100px;
+    --sol-glass-default-border: rgba(255, 255, 255, 0.1);
+
+    --sol-glass-glass-bg: rgba(28, 28, 30, 0.2);
+    --sol-glass-glass-blur: 8px;
+    --sol-glass-glass-border: rgba(255, 255, 255, 0.1);
 }
 
 /* ======================

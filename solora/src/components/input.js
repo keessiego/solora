@@ -160,6 +160,11 @@ class SolInput extends HTMLElement {
     bindEvents() {
         // Waarde up-to-date houden en validatie-fouten verbergen bij het typen
         this.inputEl.addEventListener('input', (e) => {
+            // Telefonische validatie: alleen getallen, spaties, plus en minteken toestaan
+            if (this.getAttribute('type') === 'tel') {
+                this.inputEl.value = this.inputEl.value.replace(/[^0-9\s\+\-]/g, '');
+            }
+
             // Synchroniseer het value-attribuut
             if (this.inputEl.value !== this.getAttribute('value')) {
                 this.setAttribute('value', this.inputEl.value);

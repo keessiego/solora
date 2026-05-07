@@ -288,16 +288,18 @@ sol-input .sol-input::placeholder,
    Interactie (Focus & Hover)
 ====================== */
 sol-input .sol-input:hover,
+sol-textarea .sol-textarea:hover,
 .sol-input:hover {
   border-color: rgba(0, 0, 0, 0.2);
   background: var(--color-bg-hover, #ffffff);
 }
 
 sol-input .sol-input:focus,
+sol-textarea .sol-textarea:focus,
 .sol-input:focus {
-  border-color: var(--color-primary, #0071e3);
+  border-color: var(--color-primary, #0071e3) !important;
   box-shadow: 0 0 0 4px var(--color-focus-glow, rgba(0, 113, 227, 0.15)), 
-              0 2px 8px rgba(0, 0, 0, 0.05);
+              0 2px 8px rgba(0, 0, 0, 0.05) !important;
   background: var(--color-bg-hover, #ffffff);
 }
 
@@ -305,7 +307,9 @@ sol-input .sol-input:focus,
    States (Disabled / Error)
 ====================== */
 sol-input[disabled] .sol-input,
+sol-textarea[disabled] .sol-textarea,
 sol-input .sol-input:disabled,
+sol-textarea .sol-textarea:disabled,
 .sol-input:disabled {
   background: var(--color-secondary, #f5f5f5);
   color: var(--color-text-dark, #000);
@@ -387,17 +391,19 @@ sol-input .sol-error-message,
 }
 
 :root.dark sol-input .sol-input:hover,
+:root.dark sol-textarea .sol-textarea:hover,
 :root.dark .sol-input:hover {
   background: rgba(44, 44, 46, 0.9);
   border-color: rgba(255, 255, 255, 0.25);
 }
 
 :root.dark sol-input .sol-input:focus,
+:root.dark sol-textarea .sol-textarea:focus,
 :root.dark .sol-input:focus {
   background: rgba(44, 44, 46, 1);
-  border-color: var(--color-primary-dark, #0a84ff);
+  border-color: var(--color-primary-dark, #0a84ff) !important;
   box-shadow: 0 0 0 4px var(--color-focus-glow-dark, rgba(10, 132, 255, 0.2)), 
-              0 4px 12px rgba(0, 0, 0, 0.5);
+              0 4px 12px rgba(0, 0, 0, 0.5) !important;
 }
 
 :root.dark sol-input .sol-input.is-invalid,

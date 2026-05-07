@@ -1,47 +1,94 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Sidebar Navigation - Active State (Simple version for separate pages)
-    const navLinks = document.querySelectorAll('.sidebar nav a');
-    const currentPath = window.location.pathname;
-    
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (currentPath.endsWith(href) || (currentPath.endsWith('/') && href === '/index.php')) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
+    // 1. Global Settings Modal
+    const settingsBtn = document.getElementById('open-settings');
+    const settingsModal = document.getElementById('settings-modal');
+    const themeDropdown = document.getElementById('setting-theme');
+    const variantDropdown = document.getElementById('setting-variant');
+
+    if (settingsBtn && settingsModal) {
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.setAttribute('open', '');
+        });
+
+        const STORAGE_THEME = 'solora-theme';
+        const STORAGE_VARIANT = 'solora-variant';
+
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            localStorage.setItem(STORAGE_THEME, theme);
+        };
+
+        const applyVariant = (variant) => {
+            const components = document.querySelectorAll('sol-sidebar, sol-modal, sol-dropdown, sol-context-options, sol-card, sol-input, sol-textarea, sol-contextmenu, sol-navbar, sol-notification, sol-button');
+            components.forEach(comp => {
+                // Sla componenten in de preview-sectie over zodat deze "pure" blijven
+                if (comp.closest('.sol-playground-preview')) return;
+
+                comp.setAttribute('variant', variant);
+                
+                // Extra: sidebar gaat floating bij glass voor de mooiste look
+                if (comp.tagName === 'SOL-SIDEBAR') {
+                    if (variant === 'glass') {
+                        comp.setAttribute('floating', '');
+                        comp.removeAttribute('compact');
+                    } else {
+                        comp.removeAttribute('floating');
+                        comp.setAttribute('compact', '');
+                    }
+                }
+            });
+            localStorage.setItem(STORAGE_VARIANT, variant);
+        };
+
+        // Initialize from storage
+        const savedTheme = localStorage.getItem(STORAGE_THEME) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const savedVariant = localStorage.getItem(STORAGE_VARIANT) || 'default';
+
+        applyTheme(savedTheme);
+        applyVariant(savedVariant);
+
+        // Sync dropdowns
+        setTimeout(() => {
+            if (themeDropdown) {
+                const item = themeDropdown.querySelector(`.dropdown-item[data-value="${savedTheme}"]`);
+                if (item) themeDropdown.setValue(item);
+            }
+            if (variantDropdown) {
+                const item = variantDropdown.querySelector(`.dropdown-item[data-value="${savedVariant}"]`);
+                if (item) variantDropdown.setValue(item);
+            }
+        }, 100);
+
+        // Listen for changes
+        if (themeDropdown) {
+            themeDropdown.addEventListener('change', (e) => applyTheme(e.detail));
         }
-    });
+        if (variantDropdown) {
+            variantDropdown.addEventListener('change', (e) => applyVariant(e.detail));
+        }
+    }
 
-    // 2. Apple Modal for Lucide Icons
+    // 3. Apple Modal for Lucide Icons
     const lucideLink = document.getElementById('open-lucide');
-    const modal = document.getElementById('lucide-modal');
-    if (lucideLink && modal) {
-        const closeBtn = document.getElementById('close-lucide-modal');
+    const lucideModal = document.getElementById('lucide-modal');
+    if (lucideLink && lucideModal) {
         const iframe = document.getElementById('lucide-iframe');
-        const backdrop = modal.querySelector('.apple-modal-backdrop');
 
-        const openModal = (e) => {
+        // Manual Fix: Geef de container een ID voor styling (portal workaround)
+        if (lucideModal.container) {
+            lucideModal.container.id = 'lucide-modal-container';
+        }
+
+        lucideLink.addEventListener('click', (e) => {
             e.preventDefault();
             if (!iframe.src || iframe.src === window.location.href) {
                 iframe.src = "https://lucide.dev/icons";
             }
-            modal.classList.add('open');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        };
-
-        const closeModal = () => {
-            modal.classList.remove('open');
-            document.body.style.overflow = '';
-        };
-
-        lucideLink.addEventListener('click', openModal);
-        closeBtn.addEventListener('click', closeModal);
-        backdrop.addEventListener('click', closeModal);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('open')) {
-                closeModal();
-            }
+            lucideModal.setAttribute('open', '');
         });
     }
 });

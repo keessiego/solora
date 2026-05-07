@@ -3,7 +3,8 @@
 ====================== */
 
 :root {
-  --navbar-height: 44px;
+  --sol-navbar-height: 44px;
+  --navbar-height: var(--sol-navbar-height);
   --navbar-bg: rgba(255, 255, 255, 0.72);
   --navbar-bg-dark: rgba(29, 29, 31, 0.72);
   --navbar-blur: 20px;
@@ -71,6 +72,13 @@ sol-navbar[sticky] .sol-navbar {
   z-index: 1001;
 }
 
+.sol-navbar-logo {
+  max-height: 24px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
 :root.dark .sol-navbar-brand {
   color: var(--navbar-text-dark);
 }
@@ -91,21 +99,36 @@ sol-navbar[sticky] .sol-navbar {
   height: 100%;
 }
 
-.sol-navbar-menu li a {
-  color: var(--navbar-text);
-  text-decoration: none;
+.sol-navbar-menu li a,
+.sol-navbar-menu li sol-dropdown .dropdown-btn,
+.sol-navbar-menu li sol-button[variant="popover"] button {
+  color: var(--navbar-text) !important;
+  text-decoration: none !important;
   font-size: 14px !important;
   font-weight: 500 !important;
   opacity: var(--navbar-link-opacity);
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, color 0.2s;
   letter-spacing: -0.01em;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  cursor: pointer;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-body);
 }
 
-:root.dark .sol-navbar-menu li a {
-  color: var(--navbar-text-dark);
+:root.dark .sol-navbar-menu li a,
+:root.dark .sol-navbar-menu li sol-dropdown .dropdown-btn,
+:root.dark .sol-navbar-menu li sol-button[variant="popover"] button {
+  color: var(--navbar-text-dark) !important;
 }
 
-.sol-navbar-menu li a:hover {
+.sol-navbar-menu li a:hover,
+.sol-navbar-menu li sol-dropdown .dropdown-btn:hover,
+.sol-navbar-menu li sol-button[variant="popover"] button:hover {
   opacity: var(--navbar-link-hover-opacity);
 }
 
@@ -210,11 +233,16 @@ a.sol-nav:hover {
     border-bottom: 1px solid var(--navbar-border-dark);
   }
 
-  .sol-navbar-menu li a {
-    display: block;
+  .sol-navbar-menu li a,
+  .sol-navbar-menu li sol-dropdown .dropdown-btn,
+  .sol-navbar-menu li sol-button[variant="popover"] button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 18px 0;
     font-size: 18px;
     font-weight: 400;
     width: 100%;
+    height: auto;
   }
 }

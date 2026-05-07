@@ -6,51 +6,54 @@
         Veelzijdige containers met een hoogwaardig Apple-stijl "liquid glass" effect.
     </p>
 
-    <div class="demo-grid">
-        <sol-card style="width: 300px;">
-            <h3 style="margin-top: 0;">Standaard (Glass)</h3>
-            <p>De standaardstijl is "glass".</p>
-        </sol-card>
+    <div class="sol-playground" id="card-playground">
+        <div class="sol-playground-toolbar">
+            <span class="sol-playground-toolbar-label">Configuratie</span>
+            
+            <sol-dropdown label="Variant" data-prop="variant">
+                <div class="dropdown-item" data-value="default">Default</div>
+                <div class="dropdown-item" data-value="glass">Glass</div>
+            </sol-dropdown>
 
-        <sol-card bg="white" style="width: 300px;">
-            <h3 style="margin-top: 0;">White Card</h3>
-            <p>Gebruik <code>bg="white"</code> voor een solide witte achtergrond.</p>
-        </sol-card>
+            <sol-dropdown label="Animated" data-prop="animated">
+                <div class="dropdown-item" data-value="false">Uit</div>
+                <div class="dropdown-item" data-value="true">Aan (Hover effect)</div>
+            </sol-dropdown>
 
-        <sol-card bg="#ffebf0" style="width: 300px;">
-            <h3 style="margin-top: 0;">Custom Color</h3>
-            <p>Gebruik hex-codes zoals <code>bg="#ffebf0"</code>.</p>
-        </sol-card>
+            <div class="sol-playground-toolbar-divider"></div>
 
-        <sol-card bg="white/30" style="width: 300px;">
-            <h3 style="margin-top: 0;">Opacity Syntax</h3>
-            <p>Gebruik <code>bg="white/30"</code> voor 30% wit met behoud van blur.</p>
-        </sol-card>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="sol-playground-toolbar-label">Achtergrond (bg)</span>
+                <sol-input data-prop="bg" placeholder="Bijv. primary/20, white" value="" style="width: 180px;"></sol-input>
+            </div>
+        </div>
+        <div class="sol-playground-preview checkerboard">
+            <sol-card id="playground-card" style="width: 350px;">
+                <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                    <sol-icon name="grid-2x2-check" size="20" color="var(--color-primary)"></sol-icon> Interactieve Card
+                </h3>
+                <p style="color: var(--text-muted); line-height: 1.5; font-size: 14px;">
+                    Dit is een voorbeeld van de Solora Card component. Pas de eigenschappen in de toolbar aan om het effect te zien.
+                </p>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <sol-button variant="primary" size="sm">Actie</sol-button>
+                    <sol-button variant="secondary" size="sm">Annuleer</sol-button>
+                </div>
+            </sol-card>
+        </div>
     </div>
 
-    <h3 style="margin-top: 60px;">Geanimeerde Card</h3>
-    <div class="demo-card">
-        <sol-card animated bg="primary/20" style="max-width: 400px;">
-            <h3 style="margin: 0;">Brand Transparency</h3>
-            <p>Je kunt ook je primary kleur gebruiken met transparantie: <code>bg="primary/20"</code>.</p>
-        </sol-card>
-    </div>
-
-    <sol-code language="html" label="Usage">
-&lt;!-- Standaard glass --&gt;
-&lt;sol-card bg="glass"&gt;...&lt;/sol-card&gt;
-
-&lt;!-- Kleur met transparantie (behoudt blur!) --&gt;
-&lt;sol-card bg="white/30"&gt;...&lt;/sol-card&gt;
-&lt;sol-card bg="primary/20"&gt;...&lt;/sol-card&gt;
-
-&lt;!-- Solide kleur (geen blur) --&gt;
-&lt;sol-card bg="white"&gt;...&lt;/sol-card&gt;
+    <sol-code language="html" label="Gebruik">
+&lt;sol-card variant="glass" bg="primary/20" animated&gt;
+    &lt;h3&gt;Mijn Card&lt;/h3&gt;
+    &lt;p&gt;Inhoud van de card...&lt;/p&gt;
+&lt;/sol-card&gt;
     </sol-code>
 
     <h3 style="margin-top: 60px; margin-bottom: 20px;">API Referentie</h3>
-    <div class="table-responsive">
-        <table class="api-table">
+    
+    <sol-table>
+        <table>
             <thead>
                 <tr>
                     <th>Attribuut</th>
@@ -61,20 +64,36 @@
             </thead>
             <tbody>
                 <tr>
+                    <td><code>variant</code></td>
+                    <td><code>"default" | "glass"</code></td>
+                    <td><code>"default"</code></td>
+                    <td>De visuele stijl van de card. De <code>glass</code> variant heeft minder blur en een hogere transparantie.</td>
+                </tr>
+                <tr>
                     <td><code>bg</code></td>
-                    <td>string</td>
-                    <td><code>"glass"</code></td>
-                    <td>Bepaalt de achtergrondkleur. Ondersteunt <code>glass</code>, CSS kleurnamen, hex-codes of de <code>kleur/opacity</code> syntax (bijv. <code>white/30</code>).</td>
+                    <td><code>string</code></td>
+                    <td>-</td>
+                    <td>Bepaalt de achtergrondkleur. Ondersteunt CSS kleurnamen, hex-codes of de <code>kleur/opacity</code> syntax (bijv. <code>white/30</code> of <code>primary/20</code>). Behoudt altijd de glazen blur-effecten op de achtergrond.</td>
                 </tr>
                 <tr>
                     <td><code>animated</code></td>
-                    <td>boolean</td>
+                    <td><code>boolean</code></td>
                     <td><code>false</code></td>
-                    <td>Activeert het hover-effect (omhoog komen en lichte vergroting) en het vloeibare glas-effect.</td>
+                    <td>Activeert een subtiel hover-effect (de card komt omhoog en wordt licht vergroot) en simuleert een vloeibaar glas-effect als je met de muis beweegt.</td>
                 </tr>
             </tbody>
         </table>
+    </sol-table>
+
+    <h3 style="margin-top: 40px; margin-bottom: 20px;">Technische Details</h3>
+    <div class="demo-card">
+        <ul style="padding-left: 20px; line-height: 1.6;">
+            <li><strong>Liquid Glass:</strong> Bij het gebruik van <code>animated</code> wordt een pseudo-element gecreëerd dat een glimmend effect simuleert. Dit effect beweegt mee met de grootte van de card.</li>
+            <li><strong>Slot Systeem:</strong> Plaats simpelweg HTML-content (headings, teksten, knoppen) binnen de <code>&lt;sol-card&gt;</code> tags. De content wordt automatisch gestyled en voorzien van de juiste padding.</li>
+            <li><strong>Achtergrond Parsing:</strong> Het <code>bg</code> attribuut wordt via Javascript geparseerd. Als je <code>/</code> gebruikt (bijv. <code>white/50</code>), rekent Solora dit automatisch om naar de juiste CSS kleursamenstelling voor het glazen oppervlak, zonder dat je complexe rgba() functies hoeft te schrijven.</li>
+        </ul>
     </div>
+
 </section>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

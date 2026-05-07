@@ -1,0 +1,125 @@
+/* ======================
+   Push Notifications (Toasts)
+====================== */
+
+.sol-notification-area {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 999999;
+  pointer-events: none;
+}
+
+.sol-notification-toast {
+  pointer-events: auto;
+  width: 320px;
+  background: var(--sol-glass-default-bg);
+  backdrop-filter: blur(var(--sol-glass-default-blur)) saturate(200%);
+  -webkit-backdrop-filter: blur(var(--sol-glass-default-blur)) saturate(200%);
+  border: 1px solid var(--sol-glass-default-border);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(120%);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  font-family: var(--font-body);
+}
+
+.sol-notification-toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.sol-notification-toast.variant-glass {
+  background: var(--sol-glass-glass-bg);
+  backdrop-filter: blur(var(--sol-glass-glass-blur)) saturate(200%);
+  -webkit-backdrop-filter: blur(var(--sol-glass-glass-blur)) saturate(200%);
+  border: 1px solid var(--sol-glass-glass-border);
+  border-radius: 20px;
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.4),
+    0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.sol-notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.sol-notification-title {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--color-text-dark, #1d1d1f);
+}
+
+.sol-notification-close {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.sol-notification-close:hover {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.sol-notification-message {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.4;
+}
+
+/* ======================
+   Dark mode support
+====================== */
+:root.dark .sol-notification-toast {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+:root.dark .sol-notification-toast.variant-glass {
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.1),
+    0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+:root.dark .sol-notification-title {
+  color: #fff;
+}
+
+:root.dark .sol-notification-message {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+:root.dark .sol-notification-close {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+:root.dark .sol-notification-close:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ======================
+   Types / Colors
+====================== */
+.sol-notification-toast.type-success .sol-notification-title { color: var(--color-success, #28a745); }
+.sol-notification-toast.type-error .sol-notification-title { color: var(--color-danger, #dc3545); }
+.sol-notification-toast.type-warning .sol-notification-title { color: var(--color-warning, #ffc107); }
+.sol-notification-toast.type-info .sol-notification-title { color: var(--color-primary, #0071e3); }
+
+/* Dark mode typed titles */
+:root.dark .sol-notification-toast.type-success .sol-notification-title { color: #32d74b; }
+:root.dark .sol-notification-toast.type-error .sol-notification-title { color: #ff453a; }
+:root.dark .sol-notification-toast.type-warning .sol-notification-title { color: #ffd60a; }
+:root.dark .sol-notification-toast.type-info .sol-notification-title { color: #0a84ff; }

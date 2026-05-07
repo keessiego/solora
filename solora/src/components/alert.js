@@ -23,7 +23,7 @@ export function initAlert(config = {}) {
     };
 
     const renderAlert = (options) => {
-        const { title, message, buttons, showInput, defaultValue, placeholder } = options;
+        const { title, message, buttons, showInput, defaultValue, placeholder, variant } = options;
         
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
@@ -31,6 +31,9 @@ export function initAlert(config = {}) {
             
             const container = document.createElement('div');
             container.className = 'sol-alert-container';
+            if (variant) {
+                container.classList.add(`variant-${variant}`);
+            }
             
             const content = document.createElement('div');
             content.className = 'sol-alert-content';
@@ -127,8 +130,27 @@ export function initAlert(config = {}) {
 
     // Programmatic access
     window.solora = window.solora || {};
-    window.solora.alert = (title, message) => enqueue({ title, message, buttons: [{ text: 'OK', value: true, bold: true }] });
-    window.solora.confirm = (title, message) => enqueue({ title, message, buttons: [{ text: 'Cancel', value: false }, { text: 'OK', value: true, bold: true }] });
-    window.solora.prompt = (title, message, defaultValue) => enqueue({ title, message, buttons: [{ text: 'Cancel', value: null }, { text: 'OK', value: true, bold: true }], showInput: true, defaultValue });
+    
+    window.solora.alert = (title, message, variant) => {
+        if (typeof title === 'object') return enqueue(title);
+        return enqueue({ title, message, variant, buttons: [{ text: 'OK', value: true, bold: true }] });
+    };
+    
+    window.solora.confirm = (title, message, variant) => {
+        if (typeof title === 'object') return enqueue(title);
+        return enqueue({ title, message, variant, buttons: [
+            { text: 'Cancel', value: false }, 
+            { text: 'OK', value: true, bold: true }
+        ]});
+    };
+    
+    window.solora.prompt = (title, message, defaultValue, variant) => {
+        if (typeof title === 'object') return enqueue(title);
+        return enqueue({ 
+            title, message, defaultValue, variant, 
+            buttons: [{ text: 'Cancel', value: null }, { text: 'OK', value: true, bold: true }], 
+            showInput: true 
+        });
+    };
 }
 

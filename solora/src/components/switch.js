@@ -15,17 +15,37 @@ export function initSwitch(target) {
 
     const input = document.createElement('input');
     input.type = 'checkbox';
+    if (switchElement.hasAttribute('name')) {
+        input.name = switchElement.getAttribute('name');
+    }
 
     const slider = document.createElement('div');
     slider.className = 'slider';
 
+    const errorEl = document.createElement('div');
+    errorEl.className = 'sol-error-message sol-switch-error';
+    errorEl.style.display = 'none';
+
     switchElement.appendChild(input);
     switchElement.appendChild(slider);
+    switchElement.appendChild(errorEl);
 
     slider.addEventListener('click', () => {
         input.checked = !input.checked;
+        switchElement.hideError();
         switchElement.dispatchEvent(new Event('change', { bubbles: true }));
     });
+
+    switchElement.showError = (message = 'Ongeldige invoer') => {
+        switchElement.classList.add('is-invalid');
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+    };
+
+    switchElement.hideError = () => {
+        switchElement.classList.remove('is-invalid');
+        errorEl.style.display = 'none';
+    };
 
     // ---- COLORS ----
     function updateColors() {

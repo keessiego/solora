@@ -14,11 +14,30 @@ class SolNavbar extends HTMLElement {
         if (this.observer) this.observer.disconnect();
     }
 
+    static get observedAttributes() {
+        return ['brand', 'brand-href', 'logo', 'sticky'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue !== newValue) {
+            this.render();
+        }
+    }
+
     render() {
         const brand = this.getAttribute('brand') || 'Solora';
         const brandHref = this.getAttribute('brand-href') || '#';
         
-        const items = Array.from(this.children).filter(item => !item.classList.contains('sol-navbar'));
+        // Verzamel alle items:
+        // 1. Directe kinderen van sol-navbar (nieuwe items)
+        // 2. Items die al in de <li>'s van de huidige menu-structuur zitten (van vorige render)
+        let items = Array.from(this.children).filter(item => !item.classList.contains('sol-navbar'));
+        
+        const existingMenu = this.querySelector('.sol-navbar-menu');
+        if (existingMenu) {
+            const existingItems = Array.from(existingMenu.querySelectorAll('li > *'));
+            items = [...items, ...existingItems];
+        }
         
         if (this.observer) this.observer.disconnect();
 
@@ -45,7 +64,24 @@ class SolNavbar extends HTMLElement {
         const brandLink = document.createElement('a');
         brandLink.className = 'sol-navbar-brand';
         brandLink.href = brandHref;
-        brandLink.innerHTML = brand;
+        
+        const logo = this.getAttribute('logo');
+        if (logo) {
+            const logoImg = document.createElement('img');
+            logoImg.src = logo;
+            logoImg.alt = brand;
+            logoImg.className = 'sol-navbar-logo';
+            brandLink.appendChild(logoImg);
+            
+            // Als er ook tekst is (brand is niet leeg en niet ongedefinieerd), voeg we een span toe
+            if (brand && brand !== 'Solora' && this.getAttribute('brand') !== '') {
+                const brandText = document.createElement('span');
+                brandText.innerHTML = brand;
+                brandLink.appendChild(brandText);
+            }
+        } else {
+            brandLink.innerHTML = brand;
+        }
         
         const toggle = document.createElement('button');
         toggle.className = 'sol-navbar-toggle';
@@ -71,7 +107,9 @@ class SolNavbar extends HTMLElement {
         });
 
         menu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A' || e.target.closest('a')) {
+            // Sluit alleen als het een normale link is, niet als het in een dropdown zit
+            const isDropdownTrigger = e.target.closest('sol-nav-dropdown');
+            if ((e.target.tagName === 'A' || e.target.closest('a')) && !isDropdownTrigger) {
                 nav.classList.remove('is-open');
                 document.body.style.overflow = '';
             }

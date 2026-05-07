@@ -26,6 +26,32 @@ if (confirm("Verwijderen?")) {
 }
     </sol-code>
 
+    <h3 style="margin-top: 40px;">Varianten</h3>
+    <p>Net als cards ondersteunen popups nu varianten via de <code>solora</code> API.</p>
+    
+    <div class="demo-card">
+        <div class="demo-grid" style="gap: 20px;">
+            <sol-button color="primary" onclick="solora.alert({ title: 'Default', message: 'Dit is de standaard variant.', variant: 'default' })">Default Alert</sol-button>
+            <sol-button color="secondary" onclick="solora.alert({ title: 'Glass', message: 'Dit is de glass variant (transparanter).', variant: 'primary' })">Glass Alert</sol-button>
+        </div>
+    </div>
+
+    <sol-code language="javascript" label="Varianten Gebruiken">
+// Default (zoals popovers)
+solora.alert({
+    title: "Update",
+    message: "Versie 3.2 is beschikbaar",
+    variant: "default"
+});
+
+// Glass (subtieler)
+solora.alert({
+    title: "Melding",
+    message: "Bestand is geüpload",
+    variant: "primary"
+});
+    </sol-code>
+
     <h3 style="margin-top: 40px;">Programmatisch gebruik</h3>
     <p>Je kunt de popups ook direct aanroepen via de <code>solora</code> global voor meer controle of Promise-based gebruik.</p>
 

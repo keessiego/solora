@@ -54,13 +54,51 @@ class SolCodeblock extends HTMLElement {
             this.codeElement.innerHTML = Prism.highlight(rawCode, Prism.languages[lang], lang);
         }
 
-        this.bindEvents(rawCode);
+        this._rawCode = rawCode;
+        this.bindEvents();
+        this.checkSavedState();
     }
 
-    bindEvents(rawCode) {
+    setCode(newCode) {
+        // Zorg dat we de code onthouden voor de kopieer-knop
+        this._currentCode = newCode;
+        
+        const lang = (this.getAttribute('language') || this.getAttribute('lang') || 'javascript').toLowerCase();
+        
+        if (this.codeElement) {
+            if (!Prism.languages[lang]) {
+                this.codeElement.textContent = newCode;
+            } else {
+                this.codeElement.innerHTML = Prism.highlight(newCode, Prism.languages[lang], lang);
+            }
+        }
+        
+        // Update de copy-event listener indien nodig, of gebruik een reference
+        this._rawCode = newCode;
+    }
+
+    checkSavedState() {
+        const savedState = sessionStorage.getItem(this.storageKey);
+        if (savedState) {
+            this.dataset.origRect = savedState;
+            this.dataset.isFullscreen = "true";
+            Object.assign(this.style, {
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                width: '100vw',
+                height: '100vh',
+                margin: '0',
+                borderRadius: '0',
+                zIndex: '9999'
+            });
+        }
+    }
+
+    bindEvents() {
         this.copyBtn.addEventListener('click', async () => {
             try {
-                await navigator.clipboard.writeText(rawCode);
+                await navigator.clipboard.writeText(this._rawCode);
                 const oldText = this.copyBtn.innerText;
                 this.copyBtn.innerText = 'Gekopieerd!';
                 setTimeout(() => this.copyBtn.innerText = oldText, 1200);

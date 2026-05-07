@@ -25,6 +25,35 @@
 &lt;/sol-dropdown&gt;
     </sol-code>
 
+    <h3 style="margin-top: 40px;">Varianten</h3>
+    <p>Naast de standaard compacte stijl ondersteunt de dropdown ook een <code>glass</code> variant voor een modernere look.</p>
+    
+    <div class="demo-card">
+        <div class="demo-grid">
+            <div style="display:flex; flex-direction:column; gap: 8px;">
+                <span style="font-size: 12px; font-weight: 600; opacity: 0.6;">DEFAULT</span>
+                <sol-dropdown variant="default" placeholder="Standaard stijl">
+                    <div class="dropdown-item">Optie A</div>
+                    <div class="dropdown-item">Optie B</div>
+                </sol-dropdown>
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap: 8px;">
+                <span style="font-size: 12px; font-weight: 600; opacity: 0.6;">GLASS</span>
+                <sol-dropdown variant="glass" placeholder="Glass stijl">
+                    <div class="dropdown-item">Optie A</div>
+                    <div class="dropdown-item">Optie B</div>
+                </sol-dropdown>
+            </div>
+        </div>
+    </div>
+
+    <sol-code language="html" label="Glass Variant">
+&lt;sol-dropdown variant="glass" placeholder="Kies een stijl"&gt;
+    &lt;div class="dropdown-item"&gt;Apple Design&lt;/div&gt;
+&lt;/sol-dropdown&gt;
+    </sol-code>
+
     <h3 style="margin-top: 60px; margin-bottom: 20px;">API Referentie</h3>
     <div class="table-responsive">
         <table class="api-table">
@@ -48,6 +77,12 @@
                     <td>string</td>
                     <td>-</td>
                     <td>Tekst die wordt weergegeven als er niets geselecteerd is.</td>
+                </tr>
+                <tr>
+                    <td><code>variant</code></td>
+                    <td><code>"default" | "glass"</code></td>
+                    <td><code>"default"</code></td>
+                    <td>Bepaalt de visuele stijl van de dropdown en het menu.</td>
                 </tr>
             </tbody>
         </table>

@@ -28,90 +28,74 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
     background-color: var(--bg-light);
     color: var(--text-main);
-    display: flex;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+sol-page {
     min-height: 100vh;
 }
 
-/* Sidebar */
-.sidebar {
-    width: 280px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    background: var(--sidebar-bg);
-    backdrop-filter: blur(20px);
-    border-right: 1px solid var(--border);
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
-}
-
-.sidebar h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 40px;
-    padding-left: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.sidebar nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar nav li {
-    margin-bottom: 5px;
-}
-
-.sidebar nav a {
-    text-decoration: none;
-    color: var(--text-main);
-    padding: 10px 15px;
-    border-radius: 12px;
-    display: block;
-    font-size: 15px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.sidebar nav a:hover {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-html.dark .sidebar nav a:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.sidebar nav a.active {
-    background: var(--primary);
-    color: white;
+/* Sidebar behavior fix */
+sol-sidebar[sticky] {
+    height: 100vh !important;
+    position: sticky !important;
+    top: 0 !important;
 }
 
 /* Main Content */
 .main-content {
-    margin-left: 280px;
     flex: 1;
-    padding: 60px 80px;
-    max-width: 1200px;
+    padding: 60px 100px;
+    max-width: 1400px;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 40px 20px;
+    }
 }
 
 section {
-    margin-bottom: 100px;
+    margin-bottom: 80px;
     scroll-margin-top: 60px;
 }
 
 h2 {
-    font-size: 40px;
+    font-size: 32px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     letter-spacing: -0.5px;
 }
+
+/* Lucide Modal Custom Width (Manual Fix) */
+#lucide-modal-container {
+    width: 95vw !important;
+    max-width: 1400px !important;
+}
+
+/* Sidebar behavior fix: Force viewport height and prevent stretching */
+@media (min-width: 769px) {
+    sol-sidebar[sticky] {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        position: sticky !important;
+        top: 0 !important;
+        align-self: flex-start !important;
+    }
+}
+
+/* Manual Fix: Z-Index for Dropdowns and Context Menu in Docs */
+.dropdown-content {
+    z-index: 1000000 !important; /* Forceer boven alles */
+}
+
+.sol-context-menu {
+    z-index: 1000001 !important;
+}
+
+
+
+
 
 .description {
     font-size: 19px;

@@ -15,12 +15,12 @@ sol-dropdown,
 ====================== */
 sol-dropdown .dropdown-btn,
 .dropdown-btn {
-  padding: 0.3rem 0.6rem;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: var(--color-bg, #fefefe);
+  padding: 4px 10px;
+  border-radius: 8px; /* Strakker */
+  border: 0.5px solid var(--sol-glass-default-border);
+  background: var(--sol-glass-default-bg);
   color: var(--color-text-dark, #000);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -28,20 +28,28 @@ sol-dropdown .dropdown-btn,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 36px;
+  min-height: 28px; /* Compacter */
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+sol-dropdown .dropdown-btn.variant-glass,
+.dropdown-btn.variant-glass {
+  background: var(--sol-glass-glass-bg);
+  backdrop-filter: blur(var(--sol-glass-glass-blur)) saturate(200%);
+  border: 1px solid var(--sol-glass-glass-border);
 }
 
 sol-dropdown .dropdown-btn:hover,
 .dropdown-btn:hover {
-  background: var(--color-bg-hover, rgba(0, 0, 0, 0.03));
-  border-color: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 sol-dropdown .dropdown-btn:after,
 .dropdown-btn:after {
   content: "▾";
   margin-left: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   transition: transform 0.2s ease;
   opacity: 0.5;
 }
@@ -58,19 +66,16 @@ sol-dropdown.open .dropdown-btn:after,
   position: fixed;
   z-index: 9999;
   min-width: 10rem;
-  border-radius: 14px;
+  border-radius: 8px;
   overflow: hidden;
   overflow-y: auto;
   
-  /* Gematcht met sol-card en contextMenu */
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(25px) saturate(200%);
-  -webkit-backdrop-filter: blur(25px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 
-    0 10px 25px -5px rgba(0, 0, 0, 0.1),
-    0 8px 10px -6px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(0, 0, 0, 0.05);
+  /* Gematcht met contextMenu variant-default */
+  background-color: var(--sol-glass-default-bg);
+  backdrop-filter: blur(var(--sol-glass-default-blur));
+  -webkit-backdrop-filter: blur(var(--sol-glass-default-blur));
+  border: 0.5px solid var(--sol-glass-default-border);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
     
   max-height: 15rem;
   scrollbar-width: thin;
@@ -81,7 +86,20 @@ sol-dropdown.open .dropdown-btn:after,
   transition: 
     opacity 0.2s ease,
     transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  padding: 3px; /* Strakke padding */
+}
+
+/* Glass variant */
+.dropdown-content.variant-glass {
+  border-radius: 16px;
   padding: 6px;
+  background-color: var(--sol-glass-glass-bg);
+  backdrop-filter: blur(var(--sol-glass-glass-blur)) saturate(200%);
+  -webkit-backdrop-filter: blur(var(--sol-glass-glass-blur)) saturate(200%);
+  border: 1px solid var(--sol-glass-glass-border);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
 /* Show dropdown */
@@ -108,30 +126,63 @@ sol-dropdown.open .dropdown-btn:after,
 /* ======================
    Dropdown items
 ====================== */
-.dropdown-item {
-  padding: 0.4rem 0.6rem;
-  border-radius: 8px;
+.dropdown-item,
+.dropdown-content a,
+.dropdown-content button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  box-sizing: border-box;
+  padding: 2px 6px; /* Heel compacte padding */
+  border-radius: 4px; /* Kleinere radius voor items */
   color: var(--color-text-dark, #1d1d1f);
+  text-decoration: none;
   transition: all 0.15s ease;
   cursor: pointer;
-  font-size: 0.88rem;
+  font-size: 0.8rem; /* Kleinere tekst */
   font-weight: 500;
+  margin-bottom: 1px;
+}
+
+.dropdown-content.variant-glass .dropdown-item,
+.dropdown-content.variant-glass a,
+.dropdown-content.variant-glass button {
+  padding: 6px 10px;
+  font-size: 0.88rem;
+  border-radius: 8px;
   margin-bottom: 2px;
 }
 
-.dropdown-item:last-child {
+/* Voorkom dubbele padding als een <a> in een <button> zit */
+.dropdown-content button a {
+  display: inline;
+  padding: 0;
+  width: auto;
+  color: inherit;
+}
+
+.dropdown-item:last-child,
+.dropdown-content a:last-child,
+.dropdown-content button:last-child {
   margin-bottom: 0;
 }
 
-.dropdown-item:hover {
+.dropdown-item:hover,
+.dropdown-content a:hover,
+.dropdown-content button:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
-.dropdown-item.active {
-  background: var(--color-primary, #0071e3);
+.dropdown-item.active,
+.dropdown-content a.active,
+.dropdown-content button.active {
+  background: #0063e1; /* Simpelere, vlakkere blauwe kleur */
   color: #fff;
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.15);
+  box-shadow: none;
 }
 
 /* Placeholder or disabled items */
@@ -145,17 +196,37 @@ sol-dropdown.open .dropdown-btn:after,
 /* Dividers & Labels */
 .dropdown-divider {
   height: 1px;
-  margin: 4px 6px;
+  margin: 3px 4px;
   background: rgba(0, 0, 0, 0.06);
 }
 
 .dropdown-label {
-  padding: 0.4rem 0.6rem 0.2rem 0.6rem;
+  padding: 4px 6px 2px 6px;
   font-weight: 600;
   color: rgba(0, 0, 0, 0.4);
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* ======================
+   Dropdown danger variant
+====================== */
+.dropdown-item[variant="danger"],
+.dropdown-content a[variant="danger"],
+.dropdown-content button[variant="danger"] {
+  color: var(--color-danger, #dc3545);
+}
+
+.dropdown-item[variant="danger"]:hover,
+.dropdown-content a[variant="danger"]:hover,
+.dropdown-content button[variant="danger"]:hover,
+.dropdown-item[variant="danger"].active,
+.dropdown-content a[variant="danger"].active,
+.dropdown-content button[variant="danger"].active {
+  background: var(--color-danger, #dc3545);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
 }
 
 /* ======================
@@ -170,24 +241,26 @@ sol-dropdown.open .dropdown-btn:after,
 }
 
 :root.dark .dropdown-content {
-  background: rgba(28, 28, 30, 0.7);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 
     0 20px 40px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
-:root.dark .dropdown-item {
+:root.dark .dropdown-item,
+:root.dark .dropdown-content a,
+:root.dark .dropdown-content button {
   color: rgba(255, 255, 255, 0.9);
 }
 
-:root.dark .dropdown-item:hover {
+:root.dark .dropdown-item:hover,
+:root.dark .dropdown-content a:hover,
+:root.dark .dropdown-content button:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-:root.dark .dropdown-item.active {
+:root.dark .dropdown-item.active,
+:root.dark .dropdown-content a.active,
+:root.dark .dropdown-content button.active {
   background: var(--color-primary-dark, #0a84ff);
   color: #fff;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -199,4 +272,21 @@ sol-dropdown.open .dropdown-btn:after,
 
 :root.dark .dropdown-label {
   color: rgba(255, 255, 255, 0.5);
+}
+
+:root.dark .dropdown-item[variant="danger"],
+:root.dark .dropdown-content a[variant="danger"],
+:root.dark .dropdown-content button[variant="danger"] {
+  color: #ff453a; /* Apple's specific dark mode red */
+}
+
+:root.dark .dropdown-item[variant="danger"]:hover,
+:root.dark .dropdown-content a[variant="danger"]:hover,
+:root.dark .dropdown-content button[variant="danger"]:hover,
+:root.dark .dropdown-item[variant="danger"].active,
+:root.dark .dropdown-content a[variant="danger"].active,
+:root.dark .dropdown-content button[variant="danger"].active {
+  background: #ff453a;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255, 69, 58, 0.2);
 }

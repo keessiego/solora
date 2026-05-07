@@ -1,6 +1,6 @@
 class SolCard extends HTMLElement {
     static get observedAttributes() {
-        return ['bg'];
+        return ['bg', 'variant'];
     }
 
     constructor() {
@@ -12,9 +12,20 @@ class SolCard extends HTMLElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'bg' && oldValue !== newValue) {
+        if (oldValue === newValue) return;
+        
+        if (name === 'bg') {
             this.updateBackground(newValue);
+        } else if (name === 'variant') {
+            this.updateVariant(oldValue, newValue);
         }
+    }
+
+    updateVariant(oldValue, newValue) {
+        if (oldValue) {
+            this.classList.remove(`variant-${oldValue}`);
+        }
+        this.classList.add(`variant-${newValue || 'default'}`);
     }
 
     updateBackground(bg) {
@@ -43,6 +54,9 @@ class SolCard extends HTMLElement {
         if (!this.classList.contains('sol-card')) {
             this.classList.add('sol-card');
         }
+        
+        const variant = this.getAttribute('variant') || 'default';
+        this.updateVariant(null, variant);
         
         const bg = this.getAttribute('bg');
         this.updateBackground(bg);

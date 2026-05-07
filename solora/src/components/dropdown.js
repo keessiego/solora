@@ -17,22 +17,29 @@ class SolDropdown extends HTMLElement {
             fragment.appendChild(this.childNodes[0]);
         }
 
+        const variant = this.getAttribute('variant') || 'default';
+
         this.btn = document.createElement('div');
-        this.btn.className = 'dropdown-btn';
+        this.btn.className = `dropdown-btn variant-${variant}`;
         this.btn.setAttribute('tabindex', '0');
         this.btn.setAttribute('role', 'combobox');
         this.btn.setAttribute('aria-haspopup', 'listbox');
 
         this.content = document.createElement('div');
-        this.content.className = 'dropdown-content';
+        this.content.className = `dropdown-content variant-${variant}`;
         this.content.appendChild(fragment);
 
         this.hiddenInput = document.createElement('input');
         this.hiddenInput.type = 'hidden';
         this.hiddenInput.name = this.getAttribute('name') || 'dropdown';
 
+        this.errorEl = document.createElement('div');
+        this.errorEl.className = 'sol-error-message sol-dropdown-error';
+        this.errorEl.style.display = 'none';
+
         this.appendChild(this.btn);
         this.appendChild(this.hiddenInput);
+        this.appendChild(this.errorEl);
         // We voegen this.content NIET toe aan this, maar later aan document.body (portal)
 
         this.placeholder = this.getAttribute('placeholder') || null;
@@ -50,17 +57,46 @@ class SolDropdown extends HTMLElement {
         window.removeEventListener("resize", this._updatePosition);
     }
 
+    showError(message = 'Ongeldige invoer') {
+        this.btn.classList.add('is-invalid');
+        this.errorEl.textContent = message;
+        this.errorEl.style.display = 'block';
+    }
+
+    hideError() {
+        this.btn.classList.remove('is-invalid');
+        this.errorEl.style.display = 'none';
+    }
+
     getItems() {
         return Array.from(this.content.querySelectorAll('.dropdown-item:not([aria-disabled="true"]):not(.placeholder)'));
     }
 
     setValue(item) {
         if (!item || item.getAttribute("aria-disabled") === "true") return;
-        this.btn.innerHTML = item.innerHTML; 
+        this.btn.textContent = item.textContent.trim(); 
         this.content.querySelectorAll(".dropdown-item").forEach((i) => i.classList.remove("active"));
         item.classList.add("active");
         this.hiddenInput.value = item.dataset.value !== undefined ? item.dataset.value : item.textContent.trim();
+        this.hideError();
         this.dispatchEvent(new CustomEvent('change', { detail: this.hiddenInput.value, bubbles: true }));
+    }
+
+    static get observedAttributes() {
+        return ['variant', 'name', 'placeholder', 'pos'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'variant' && this.content) {
+            const oldVariant = oldValue || 'default';
+            const newVariant = newValue || 'default';
+            this.content.classList.remove(`variant-${oldVariant}`);
+            this.content.classList.add(`variant-${newVariant}`);
+            if (this.btn) {
+                this.btn.classList.remove(`variant-${oldVariant}`);
+                this.btn.classList.add(`variant-${newVariant}`);
+            }
+        }
     }
 
     initSelection() {

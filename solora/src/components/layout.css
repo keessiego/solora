@@ -1,0 +1,36 @@
+sol-page {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 100%;
+    align-items: flex-start;
+    padding: 0;
+    gap: 0;
+    box-sizing: border-box;
+}
+
+sol-page:has(sol-sidebar[floating]) {
+    padding: 24px;
+    gap: 24px;
+}
+
+sol-main {
+    flex: 1;
+    min-width: 0;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    sol-page {
+        flex-direction: column;
+    }
+    
+    sol-page:has(sol-sidebar[floating]) {
+        padding: 16px;
+        gap: 16px;
+    }
+    
+    sol-main {
+        width: 100%;
+    }
+}

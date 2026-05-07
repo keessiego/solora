@@ -1746,23 +1746,50 @@ var SolButton = class extends HTMLElement {
   constructor() {
     super();
     this.button = document.createElement("button");
+    this._observer = null;
   }
   connectedCallback() {
-    if (this.contains(this.button)) return;
-    while (this.childNodes.length > 0) {
-      this.button.appendChild(this.childNodes[0]);
+    if (!this.contains(this.button)) {
+      this.appendChild(this.button);
     }
-    this.appendChild(this.button);
+    this.syncChildren();
     this.updateAttributes();
-    this.setupEventListeners();
+    this.setupMutationObserver();
   }
-  setupEventListeners() {
-    this.button.addEventListener("click", (e) => {
-      if (this.hasAttribute("onclick")) {
-        const fn = new Function("event", this.getAttribute("onclick"));
-        fn.call(this, e);
+  disconnectedCallback() {
+    if (this._observer) {
+      this._observer.disconnect();
+    }
+  }
+  setupMutationObserver() {
+    this._observer = new MutationObserver((mutations) => {
+      let shouldSync = false;
+      mutations.forEach((mutation) => {
+        Array.from(mutation.addedNodes).forEach((node) => {
+          if (node !== this.button) {
+            shouldSync = true;
+          }
+        });
+      });
+      if (shouldSync) {
+        this.syncChildren();
       }
     });
+    this._observer.observe(this, { childList: true });
+  }
+  syncChildren() {
+    if (this._observer) this._observer.disconnect();
+    const nodesToMove = Array.from(this.childNodes).filter((node) => node !== this.button);
+    if (!this.contains(this.button)) {
+      this.appendChild(this.button);
+    }
+    this.button.innerHTML = "";
+    nodesToMove.forEach((node) => {
+      this.button.appendChild(node);
+    });
+    if (this._observer) {
+      this._observer.observe(this, { childList: true });
+    }
   }
   static get observedAttributes() {
     return ["disabled", "type", "variant", "size", "rounded"];
@@ -1785,11 +1812,14 @@ var SolButton = class extends HTMLElement {
     }
     const variant = this.getAttribute("variant") || this.getAttribute("color") || "primary";
     this.button.className = `btn btn-${variant}`;
-    if (this.hasAttribute("size")) {
-      this.button.classList.add(`btn-${this.getAttribute("size")}`);
+    const size = this.getAttribute("size");
+    if (size) {
+      this.button.classList.add(`btn-${size}`);
     }
     if (this.hasAttribute("rounded")) {
       this.button.classList.add("btn-rounded");
+    } else {
+      this.button.classList.remove("btn-rounded");
     }
   }
 };
@@ -1918,6 +1948,9 @@ var SolInput = class extends HTMLElement {
   }
   bindEvents() {
     this.inputEl.addEventListener("input", (e) => {
+      if (this.getAttribute("type") === "tel") {
+        this.inputEl.value = this.inputEl.value.replace(/[^0-9\s\+\-]/g, "");
+      }
       if (this.inputEl.value !== this.getAttribute("value")) {
         this.setAttribute("value", this.inputEl.value);
       }
@@ -1984,6 +2017,118 @@ function initInput() {
   }
 }
 
+// src/components/textarea.js
+var SolTextarea = class extends HTMLElement {
+  constructor() {
+    super();
+    this.initialized = false;
+  }
+  static get observedAttributes() {
+    return ["placeholder", "value", "label", "disabled", "required", "autofocus", "name", "variant", "rows", "cols", "resize"];
+  }
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
+    this.labelEl = document.createElement("label");
+    this.labelEl.className = "sol-label";
+    this.containerEl = document.createElement("div");
+    this.containerEl.className = "sol-input-container sol-textarea-container";
+    this.wrapperEl = document.createElement("div");
+    this.wrapperEl.className = "sol-input-wrapper sol-textarea-wrapper";
+    this.inputEl = document.createElement("textarea");
+    this.inputEl.className = "sol-input sol-textarea";
+    this.errorEl = document.createElement("span");
+    this.errorEl.className = "sol-error-message";
+    this.appendChild(this.labelEl);
+    this.appendChild(this.containerEl);
+    this.containerEl.appendChild(this.wrapperEl);
+    this.wrapperEl.appendChild(this.inputEl);
+    this.appendChild(this.errorEl);
+    this.updateAttributes();
+    this.bindEvents();
+  }
+  attributeChangedCallback() {
+    if (this.initialized) {
+      this.updateAttributes();
+    }
+  }
+  updateAttributes() {
+    const props = ["placeholder", "value", "name", "rows", "cols"];
+    props.forEach((prop) => {
+      if (this.hasAttribute(prop)) {
+        this.inputEl.setAttribute(prop, this.getAttribute(prop));
+      } else {
+        this.inputEl.removeAttribute(prop);
+      }
+    });
+    if (!this.hasAttribute("value") && this.textContent.trim().length > 0) {
+      this.inputEl.value = this.textContent.trim();
+    } else if (this.hasAttribute("value")) {
+      this.inputEl.value = this.getAttribute("value");
+    }
+    const variant = this.getAttribute("variant") || "default";
+    this.dataset.variant = variant;
+    const resize = this.getAttribute("resize") || "vertical";
+    this.inputEl.style.resize = resize;
+    if (this.hasAttribute("disabled")) this.inputEl.setAttribute("disabled", "disabled");
+    else this.inputEl.removeAttribute("disabled");
+    if (this.hasAttribute("required")) this.inputEl.setAttribute("required", "required");
+    else this.inputEl.removeAttribute("required");
+    if (this.hasAttribute("autofocus")) this.inputEl.setAttribute("autofocus", "autofocus");
+    else this.inputEl.removeAttribute("autofocus");
+    if (this.hasAttribute("label")) {
+      this.labelEl.textContent = this.getAttribute("label");
+      this.labelEl.style.display = "block";
+    } else {
+      this.labelEl.style.display = "none";
+    }
+  }
+  bindEvents() {
+    this.inputEl.addEventListener("input", (e) => {
+      if (this.inputEl.value !== this.getAttribute("value")) {
+        this.setAttribute("value", this.inputEl.value);
+      }
+      if (this.inputEl.validity.valid) {
+        this.hideError();
+        this.inputEl.setCustomValidity("");
+      }
+      this.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    this.inputEl.addEventListener("change", () => {
+      this.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    this.inputEl.addEventListener("invalid", (e) => {
+      e.preventDefault();
+      this.showError();
+    });
+  }
+  showError(customMessage) {
+    let message = customMessage || "Ongeldige invoer";
+    if (!customMessage && this.inputEl.validity.valueMissing) {
+      message = "Dit veld is verplicht";
+    }
+    this.errorEl.textContent = message;
+    this.errorEl.style.display = "block";
+    this.inputEl.classList.add("is-invalid");
+  }
+  hideError() {
+    this.errorEl.style.display = "none";
+    this.inputEl.classList.remove("is-invalid");
+  }
+  get value() {
+    return this.inputEl ? this.inputEl.value : this.getAttribute("value");
+  }
+  set value(val) {
+    this.setAttribute("value", val);
+    if (this.inputEl) this.inputEl.value = val;
+  }
+};
+function initTextarea() {
+  if (!customElements.get("sol-textarea")) {
+    customElements.define("sol-textarea", SolTextarea);
+  }
+}
+
 // src/components/codeblock.js
 var import_prismjs = __toESM(require_prism());
 var import_components = __toESM(require_components2());
@@ -2024,12 +2169,43 @@ var SolCodeblock = class extends HTMLElement {
     } else {
       this.codeElement.innerHTML = import_prismjs.default.highlight(rawCode, import_prismjs.default.languages[lang], lang);
     }
-    this.bindEvents(rawCode);
+    this._rawCode = rawCode;
+    this.bindEvents();
+    this.checkSavedState();
   }
-  bindEvents(rawCode) {
+  setCode(newCode) {
+    this._currentCode = newCode;
+    const lang = (this.getAttribute("language") || this.getAttribute("lang") || "javascript").toLowerCase();
+    if (this.codeElement) {
+      if (!import_prismjs.default.languages[lang]) {
+        this.codeElement.textContent = newCode;
+      } else {
+        this.codeElement.innerHTML = import_prismjs.default.highlight(newCode, import_prismjs.default.languages[lang], lang);
+      }
+    }
+    this._rawCode = newCode;
+  }
+  checkSavedState() {
+    const savedState = sessionStorage.getItem(this.storageKey);
+    if (savedState) {
+      this.dataset.origRect = savedState;
+      this.dataset.isFullscreen = "true";
+      Object.assign(this.style, {
+        position: "fixed",
+        top: "0",
+        left: "0",
+        width: "100vw",
+        height: "100vh",
+        margin: "0",
+        borderRadius: "0",
+        zIndex: "9999"
+      });
+    }
+  }
+  bindEvents() {
     this.copyBtn.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText(rawCode);
+        await navigator.clipboard.writeText(this._rawCode);
         const oldText = this.copyBtn.innerText;
         this.copyBtn.innerText = "Gekopieerd!";
         setTimeout(() => this.copyBtn.innerText = oldText, 1200);
@@ -2165,19 +2341,24 @@ var SolDropdown = class extends HTMLElement {
     while (this.childNodes.length > 0) {
       fragment.appendChild(this.childNodes[0]);
     }
+    const variant = this.getAttribute("variant") || "default";
     this.btn = document.createElement("div");
-    this.btn.className = "dropdown-btn";
+    this.btn.className = `dropdown-btn variant-${variant}`;
     this.btn.setAttribute("tabindex", "0");
     this.btn.setAttribute("role", "combobox");
     this.btn.setAttribute("aria-haspopup", "listbox");
     this.content = document.createElement("div");
-    this.content.className = "dropdown-content";
+    this.content.className = `dropdown-content variant-${variant}`;
     this.content.appendChild(fragment);
     this.hiddenInput = document.createElement("input");
     this.hiddenInput.type = "hidden";
     this.hiddenInput.name = this.getAttribute("name") || "dropdown";
+    this.errorEl = document.createElement("div");
+    this.errorEl.className = "sol-error-message sol-dropdown-error";
+    this.errorEl.style.display = "none";
     this.appendChild(this.btn);
     this.appendChild(this.hiddenInput);
+    this.appendChild(this.errorEl);
     this.placeholder = this.getAttribute("placeholder") || null;
     this.bindEvents();
     this.initSelection();
@@ -2190,16 +2371,41 @@ var SolDropdown = class extends HTMLElement {
     window.removeEventListener("scroll", this._updatePosition, true);
     window.removeEventListener("resize", this._updatePosition);
   }
+  showError(message = "Ongeldige invoer") {
+    this.btn.classList.add("is-invalid");
+    this.errorEl.textContent = message;
+    this.errorEl.style.display = "block";
+  }
+  hideError() {
+    this.btn.classList.remove("is-invalid");
+    this.errorEl.style.display = "none";
+  }
   getItems() {
     return Array.from(this.content.querySelectorAll('.dropdown-item:not([aria-disabled="true"]):not(.placeholder)'));
   }
   setValue(item) {
     if (!item || item.getAttribute("aria-disabled") === "true") return;
-    this.btn.innerHTML = item.innerHTML;
+    this.btn.textContent = item.textContent.trim();
     this.content.querySelectorAll(".dropdown-item").forEach((i) => i.classList.remove("active"));
     item.classList.add("active");
     this.hiddenInput.value = item.dataset.value !== void 0 ? item.dataset.value : item.textContent.trim();
+    this.hideError();
     this.dispatchEvent(new CustomEvent("change", { detail: this.hiddenInput.value, bubbles: true }));
+  }
+  static get observedAttributes() {
+    return ["variant", "name", "placeholder", "pos"];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "variant" && this.content) {
+      const oldVariant = oldValue || "default";
+      const newVariant = newValue || "default";
+      this.content.classList.remove(`variant-${oldVariant}`);
+      this.content.classList.add(`variant-${newVariant}`);
+      if (this.btn) {
+        this.btn.classList.remove(`variant-${oldVariant}`);
+        this.btn.classList.add(`variant-${newVariant}`);
+      }
+    }
   }
   initSelection() {
     const activeItem = this.content.querySelector(".dropdown-item.active");
@@ -2304,7 +2510,9 @@ function initContextMenu() {
   }
   let contextTarget = null;
   const showMenu = (e) => {
-    if (!document.querySelector("sol-contextmenu")) return;
+    const contextEl = document.querySelector("sol-contextmenu");
+    if (!contextEl) return;
+    let activeVariant = contextEl.getAttribute("variant") || "default";
     e.preventDefault();
     e.stopPropagation();
     contextTarget = e.target;
@@ -2322,15 +2530,37 @@ function initContextMenu() {
     let menuHtml = "";
     const containers = [];
     let tempEl = e.target;
-    while (tempEl) {
-      const container = tempEl.closest("sol-context-options");
-      if (container) {
-        containers.unshift(container);
-        tempEl = container.parentElement;
-      } else {
+    while (tempEl && tempEl !== document) {
+      if (tempEl.tagName && tempEl.tagName.toLowerCase() === "sol-context-options") {
+        if (!containers.includes(tempEl)) {
+          containers.unshift(tempEl);
+        }
+      }
+      if (tempEl.children) {
+        Array.from(tempEl.children).forEach((child) => {
+          if (child.tagName && child.tagName.toLowerCase() === "sol-context-options") {
+            if (!containers.includes(child)) {
+              containers.unshift(child);
+            }
+          }
+          if (child.tagName && child.tagName.toLowerCase() === "template") {
+            const tplOpts = child.content.querySelector("sol-context-options");
+            if (tplOpts && !containers.includes(tplOpts)) {
+              containers.unshift(tplOpts);
+            }
+          }
+        });
+      }
+      tempEl = tempEl.parentElement;
+    }
+    for (let i = containers.length - 1; i >= 0; i--) {
+      if (containers[i].hasAttribute("variant")) {
+        activeVariant = containers[i].getAttribute("variant");
         break;
       }
     }
+    menu.classList.remove("variant-default", "variant-glass");
+    menu.classList.add(`variant-${activeVariant}`);
     containers.forEach((customContainer) => {
       const children = Array.from(customContainer.children);
       if (children.length > 0) {
@@ -2344,10 +2574,23 @@ function initContextMenu() {
           if (tag === "sol-item") {
             const isDisabled = child.hasAttribute("disabled");
             const isReadonly = child.hasAttribute("readonly");
+            const type = child.getAttribute("type") || child.getAttribute("variant");
+            const href = child.getAttribute("href");
+            const target = child.getAttribute("target") || "_self";
+            let actionAttr = "custom";
+            let customAction = child.getAttribute("action") || "";
+            let urlAttr = "";
+            if (!customAction && child.hasAttribute("onclick")) {
+              customAction = `js(${child.getAttribute("onclick")})`;
+            } else if (!customAction && href) {
+              actionAttr = target === "_blank" ? "open-tab" : "open-link";
+              urlAttr = href;
+            }
             menuHtml += `
-                            <div class="sol-menu-item${isDisabled ? " disabled" : ""}${isReadonly ? " readonly" : ""}" 
-                                 data-action="custom" 
-                                 data-custom-action="${child.getAttribute("action") || ""}">
+                            <div class="sol-menu-item${isDisabled ? " disabled" : ""}${isReadonly ? " readonly" : ""}${type ? ` type-${type}` : ""}" 
+                                 data-action="${actionAttr}" 
+                                 data-url="${urlAttr.replace(/"/g, "&quot;")}"
+                                 data-custom-action="${customAction.replace(/"/g, "&quot;")}">
                                 ${child.getAttribute("label")}
                             </div>
                         `;
@@ -2601,14 +2844,31 @@ function initSwitch(target) {
   switchElement.classList.add("sol-switch");
   const input = document.createElement("input");
   input.type = "checkbox";
+  if (switchElement.hasAttribute("name")) {
+    input.name = switchElement.getAttribute("name");
+  }
   const slider = document.createElement("div");
   slider.className = "slider";
+  const errorEl = document.createElement("div");
+  errorEl.className = "sol-error-message sol-switch-error";
+  errorEl.style.display = "none";
   switchElement.appendChild(input);
   switchElement.appendChild(slider);
+  switchElement.appendChild(errorEl);
   slider.addEventListener("click", () => {
     input.checked = !input.checked;
+    switchElement.hideError();
     switchElement.dispatchEvent(new Event("change", { bubbles: true }));
   });
+  switchElement.showError = (message = "Ongeldige invoer") => {
+    switchElement.classList.add("is-invalid");
+    errorEl.textContent = message;
+    errorEl.style.display = "block";
+  };
+  switchElement.hideError = () => {
+    switchElement.classList.remove("is-invalid");
+    errorEl.style.display = "none";
+  };
   function updateColors() {
     const primary = switchElement.getAttribute("color-primary");
     const secondary = switchElement.getAttribute("color-secondary");
@@ -2710,12 +2970,15 @@ function initAlert(config = {}) {
     });
   };
   const renderAlert = (options) => {
-    const { title, message, buttons, showInput, defaultValue, placeholder } = options;
+    const { title, message, buttons, showInput, defaultValue, placeholder, variant } = options;
     return new Promise((resolve) => {
       const overlay = document.createElement("div");
       overlay.className = "sol-alert-overlay";
       const container = document.createElement("div");
       container.className = "sol-alert-container";
+      if (variant) {
+        container.classList.add(`variant-${variant}`);
+      }
       const content = document.createElement("div");
       content.className = "sol-alert-content";
       if (title) {
@@ -2798,15 +3061,34 @@ function initAlert(config = {}) {
     });
   };
   window.solora = window.solora || {};
-  window.solora.alert = (title, message) => enqueue({ title, message, buttons: [{ text: "OK", value: true, bold: true }] });
-  window.solora.confirm = (title, message) => enqueue({ title, message, buttons: [{ text: "Cancel", value: false }, { text: "OK", value: true, bold: true }] });
-  window.solora.prompt = (title, message, defaultValue) => enqueue({ title, message, buttons: [{ text: "Cancel", value: null }, { text: "OK", value: true, bold: true }], showInput: true, defaultValue });
+  window.solora.alert = (title, message, variant) => {
+    if (typeof title === "object") return enqueue(title);
+    return enqueue({ title, message, variant, buttons: [{ text: "OK", value: true, bold: true }] });
+  };
+  window.solora.confirm = (title, message, variant) => {
+    if (typeof title === "object") return enqueue(title);
+    return enqueue({ title, message, variant, buttons: [
+      { text: "Cancel", value: false },
+      { text: "OK", value: true, bold: true }
+    ] });
+  };
+  window.solora.prompt = (title, message, defaultValue, variant) => {
+    if (typeof title === "object") return enqueue(title);
+    return enqueue({
+      title,
+      message,
+      defaultValue,
+      variant,
+      buttons: [{ text: "Cancel", value: null }, { text: "OK", value: true, bold: true }],
+      showInput: true
+    });
+  };
 }
 
 // src/components/card.js
 var SolCard = class extends HTMLElement {
   static get observedAttributes() {
-    return ["bg"];
+    return ["bg", "variant"];
   }
   constructor() {
     super();
@@ -2815,9 +3097,18 @@ var SolCard = class extends HTMLElement {
     this.render();
   }
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "bg" && oldValue !== newValue) {
+    if (oldValue === newValue) return;
+    if (name === "bg") {
       this.updateBackground(newValue);
+    } else if (name === "variant") {
+      this.updateVariant(oldValue, newValue);
     }
+  }
+  updateVariant(oldValue, newValue) {
+    if (oldValue) {
+      this.classList.remove(`variant-${oldValue}`);
+    }
+    this.classList.add(`variant-${newValue || "default"}`);
   }
   updateBackground(bg) {
     this.classList.remove("custom-bg");
@@ -2840,6 +3131,8 @@ var SolCard = class extends HTMLElement {
     if (!this.classList.contains("sol-card")) {
       this.classList.add("sol-card");
     }
+    const variant = this.getAttribute("variant") || "default";
+    this.updateVariant(null, variant);
     const bg = this.getAttribute("bg");
     this.updateBackground(bg);
     if (!this.querySelector(".card-glass-highlight")) {
@@ -2868,10 +3161,23 @@ var SolNavbar = class extends HTMLElement {
   disconnectedCallback() {
     if (this.observer) this.observer.disconnect();
   }
+  static get observedAttributes() {
+    return ["brand", "brand-href", "logo", "sticky"];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue !== newValue) {
+      this.render();
+    }
+  }
   render() {
     const brand = this.getAttribute("brand") || "Solora";
     const brandHref = this.getAttribute("brand-href") || "#";
-    const items = Array.from(this.children).filter((item) => !item.classList.contains("sol-navbar"));
+    let items = Array.from(this.children).filter((item) => !item.classList.contains("sol-navbar"));
+    const existingMenu = this.querySelector(".sol-navbar-menu");
+    if (existingMenu) {
+      const existingItems = Array.from(existingMenu.querySelectorAll("li > *"));
+      items = [...items, ...existingItems];
+    }
     if (this.observer) this.observer.disconnect();
     const oldNav = this.querySelector(".sol-navbar");
     const isOpen = oldNav ? oldNav.classList.contains("is-open") : false;
@@ -2890,7 +3196,21 @@ var SolNavbar = class extends HTMLElement {
     const brandLink = document.createElement("a");
     brandLink.className = "sol-navbar-brand";
     brandLink.href = brandHref;
-    brandLink.innerHTML = brand;
+    const logo = this.getAttribute("logo");
+    if (logo) {
+      const logoImg = document.createElement("img");
+      logoImg.src = logo;
+      logoImg.alt = brand;
+      logoImg.className = "sol-navbar-logo";
+      brandLink.appendChild(logoImg);
+      if (brand && brand !== "Solora" && this.getAttribute("brand") !== "") {
+        const brandText = document.createElement("span");
+        brandText.innerHTML = brand;
+        brandLink.appendChild(brandText);
+      }
+    } else {
+      brandLink.innerHTML = brand;
+    }
     const toggle = document.createElement("button");
     toggle.className = "sol-navbar-toggle";
     toggle.setAttribute("aria-label", "Toggle menu");
@@ -2911,7 +3231,8 @@ var SolNavbar = class extends HTMLElement {
       }
     });
     menu.addEventListener("click", (e) => {
-      if (e.target.tagName === "A" || e.target.closest("a")) {
+      const isDropdownTrigger = e.target.closest("sol-nav-dropdown");
+      if ((e.target.tagName === "A" || e.target.closest("a")) && !isDropdownTrigger) {
         nav.classList.remove("is-open");
         document.body.style.overflow = "";
       }
@@ -2926,6 +3247,87 @@ var SolNavbar = class extends HTMLElement {
 function initNavbar() {
   if (!customElements.get("sol-navbar")) {
     customElements.define("sol-navbar", SolNavbar);
+  }
+}
+
+// src/components/navbarDropdown.js
+var SolNavDropdown = class extends HTMLElement {
+  constructor() {
+    super();
+    this.initialized = false;
+    this.isOpen = false;
+    this._handleOutsideClick = this.handleOutsideClick.bind(this);
+    this._updatePosition = this.updatePosition.bind(this);
+  }
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
+    const label = this.getAttribute("label") || "Menu";
+    this.contentWrapper = document.createElement("div");
+    this.contentWrapper.className = "sol-nav-dropdown-content";
+    while (this.childNodes.length > 0) {
+      this.contentWrapper.appendChild(this.childNodes[0]);
+    }
+    this.render(label);
+    this.bindEvents();
+  }
+  render(label) {
+    this.innerHTML = "";
+    this.trigger = document.createElement("button");
+    this.trigger.className = "sol-nav-dropdown-trigger";
+    this.trigger.innerHTML = `<span>${label}</span><span class="chevron"></span>`;
+    this.appendChild(this.trigger);
+    this.appendChild(this.contentWrapper);
+  }
+  toggle() {
+    if (this.isOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+  open() {
+    this.isOpen = true;
+    this.classList.add("open");
+    if (window.innerWidth > 768) {
+      this.updatePosition();
+      window.addEventListener("scroll", this._updatePosition, true);
+      window.addEventListener("resize", this._updatePosition);
+    }
+    document.addEventListener("click", this._handleOutsideClick);
+    this.dispatchEvent(new CustomEvent("open", { bubbles: true }));
+  }
+  close() {
+    this.isOpen = false;
+    this.classList.remove("open");
+    window.removeEventListener("scroll", this._updatePosition, true);
+    window.removeEventListener("resize", this._updatePosition);
+    document.removeEventListener("click", this._handleOutsideClick);
+    this.dispatchEvent(new CustomEvent("close", { bubbles: true }));
+  }
+  updatePosition() {
+    if (!this.isOpen || window.innerWidth <= 768) return;
+  }
+  handleOutsideClick(e) {
+    if (!this.contains(e.target)) {
+      this.close();
+    }
+  }
+  bindEvents() {
+    this.trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.toggle();
+    });
+    this.contentWrapper.addEventListener("click", (e) => {
+      if (e.target.tagName === "A" || e.target.closest("a")) {
+        this.close();
+      }
+    });
+  }
+};
+function initNavDropdown() {
+  if (!customElements.get("sol-nav-dropdown")) {
+    customElements.define("sol-nav-dropdown", SolNavDropdown);
   }
 }
 
@@ -2947,25 +3349,37 @@ var SolCheck = class extends HTMLElement {
     const label = document.createElement("span");
     label.className = "sol-check-label";
     label.innerHTML = labelText;
+    this.errorEl = document.createElement("div");
+    this.errorEl.className = "sol-error-message sol-check-error";
+    this.errorEl.style.display = "none";
     this.appendChild(this.input);
     this.appendChild(box);
     if (labelText.trim()) {
       this.appendChild(label);
     }
+    this.appendChild(this.errorEl);
     this.input.checked = this.hasAttribute("checked");
     if (this.hasAttribute("disabled")) {
       this.input.disabled = true;
     }
+    if (this.hasAttribute("name")) {
+      this.input.name = this.getAttribute("name");
+    }
     this.addEventListener("click", (e) => {
       if (this.hasAttribute("disabled")) return;
+      if (e.target === this.input) return;
       this.input.checked = !this.input.checked;
+      this.hideError();
       this.dispatchEvent(new CustomEvent("change", {
         detail: { checked: this.input.checked }
       }));
     });
+    this.input.addEventListener("change", () => {
+      this.hideError();
+    });
   }
   static get observedAttributes() {
-    return ["checked", "disabled"];
+    return ["checked", "disabled", "name"];
   }
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === "checked") {
@@ -2973,6 +3387,9 @@ var SolCheck = class extends HTMLElement {
     }
     if (name === "disabled") {
       this.input.disabled = this.hasAttribute("disabled");
+    }
+    if (name === "name") {
+      this.input.name = newValue;
     }
   }
   get checked() {
@@ -2984,6 +3401,15 @@ var SolCheck = class extends HTMLElement {
     } else {
       this.removeAttribute("checked");
     }
+  }
+  showError(message = "Ongeldige invoer") {
+    this.classList.add("is-invalid");
+    this.errorEl.textContent = message;
+    this.errorEl.style.display = "block";
+  }
+  hideError() {
+    this.classList.remove("is-invalid");
+    this.errorEl.style.display = "none";
   }
 };
 function initCheckbox() {
@@ -3085,10 +3511,592 @@ function initPopover() {
   }
 }
 
+// src/components/modal.js
+var SolModal = class extends HTMLElement {
+  constructor() {
+    super();
+    this.overlay = document.createElement("div");
+    this.overlay.className = "sol-modal-overlay";
+    this.container = document.createElement("div");
+    this.container.className = "sol-modal-container";
+    this.content = document.createElement("div");
+    this.content.className = "sol-modal-content";
+    this.footer = document.createElement("div");
+    this.footer.className = "sol-modal-footer";
+    this.overlay.appendChild(this.container);
+    this.container.appendChild(this.content);
+    this.container.appendChild(this.footer);
+  }
+  connectedCallback() {
+    if (!document.body.contains(this.overlay)) {
+      document.body.appendChild(this.overlay);
+    }
+    this.render();
+    this.setupObservers();
+  }
+  setupObservers() {
+    const observer = new MutationObserver(() => this.render());
+    observer.observe(this, { childList: true, attributes: true, subtree: true });
+  }
+  static get observedAttributes() {
+    return ["variant", "open", "size"];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "open") {
+      if (newValue !== null) {
+        this.open();
+      } else {
+        this.close();
+      }
+    } else {
+      this.render();
+    }
+  }
+  open() {
+    this.overlay.style.display = "flex";
+    this.overlay.offsetHeight;
+    this.overlay.classList.add("visible");
+    document.body.style.overflow = "hidden";
+  }
+  close() {
+    this.overlay.classList.remove("visible");
+    setTimeout(() => {
+      if (!this.overlay.classList.contains("visible")) {
+        this.overlay.style.display = "none";
+        document.body.style.overflow = "";
+        this.removeAttribute("open");
+      }
+    }, 200);
+  }
+  render() {
+    if (this._isRendering) return;
+    this._isRendering = true;
+    const variant = this.getAttribute("variant") || "default";
+    const size = this.getAttribute("size") || "sm";
+    this.container.className = `sol-modal-container variant-${variant} size-${size}`;
+    const buttons = Array.from(this.querySelectorAll("sol-modal-button"));
+    buttons.forEach((btn) => {
+      if (!this.footer.contains(btn)) {
+        this.footer.appendChild(btn);
+      }
+    });
+    const children = Array.from(this.childNodes);
+    children.forEach((node) => {
+      if (node !== this.overlay) {
+        this.content.appendChild(node);
+      }
+    });
+    Array.from(this.footer.querySelectorAll("sol-modal-button")).forEach((btn) => {
+      if (!btn._hasModalListener) {
+        btn.addEventListener("click", () => {
+          if (btn.hasAttribute("close-modal")) {
+            this.close();
+          }
+        });
+        btn._hasModalListener = true;
+      }
+    });
+    this.overlay.onclick = (e) => {
+      if (e.target === this.overlay) this.close();
+    };
+    this._isRendering = false;
+  }
+};
+var SolModalButton = class extends HTMLElement {
+  constructor() {
+    super();
+    this.button = document.createElement("button");
+    this.initialized = false;
+  }
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
+    while (this.childNodes.length > 0) {
+      this.button.appendChild(this.childNodes[0]);
+    }
+    this.appendChild(this.button);
+    this.updateAttributes();
+  }
+  static get observedAttributes() {
+    return ["variant", "bold", "type", "form"];
+  }
+  attributeChangedCallback() {
+    this.updateAttributes();
+  }
+  updateAttributes() {
+    const variant = this.getAttribute("variant") || "default";
+    const isBold = this.hasAttribute("bold");
+    this.button.className = `sol-modal-button variant-${variant}`;
+    if (isBold) this.button.classList.add("bold");
+    if (this.hasAttribute("type")) {
+      this.button.setAttribute("type", this.getAttribute("type"));
+    }
+    if (this.hasAttribute("form")) {
+      this.button.setAttribute("form", this.getAttribute("form"));
+    }
+  }
+};
+function initModal() {
+  if (!customElements.get("sol-modal")) {
+    customElements.define("sol-modal", SolModal);
+  }
+  if (!customElements.get("sol-modal-button")) {
+    customElements.define("sol-modal-button", SolModalButton);
+  }
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("sol-button[toggle-modal]");
+    if (btn) {
+      const modalId = btn.getAttribute("toggle-modal");
+      const modal = document.getElementById(modalId);
+      if (modal && modal.tagName === "SOL-MODAL") {
+        modal.setAttribute("open", "");
+      }
+    }
+  });
+}
+
+// src/components/window.js
+var SolWindow = class extends HTMLElement {
+  constructor() {
+    super();
+    this.initialized = false;
+  }
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
+    const title = this.getAttribute("title") || "";
+    const content = this.innerHTML;
+    this.innerHTML = `
+            <div class="window-top">
+                <div class="window-top-btns">
+                    <span class="window-btn-red close-btn" title="Sluiten"></span>
+                    <span class="window-btn-orange minimize-btn" title="Minimaliseren"></span>
+                    <span class="window-btn-green maximize-btn" title="Volledig scherm"></span>
+                </div>
+                ${title ? `<div class="window-title">${title}</div>` : ""}
+            </div>
+            <div class="window-content">
+                ${content}
+            </div>
+        `;
+    this.windowContent = this.querySelector(".window-content");
+    this.closeBtn = this.querySelector(".close-btn");
+    this.minimizeBtn = this.querySelector(".minimize-btn");
+    this.maximizeBtn = this.querySelector(".maximize-btn");
+    this.bindEvents();
+  }
+  bindEvents() {
+    this.closeBtn.addEventListener("click", () => {
+      this.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+      this.style.opacity = "0";
+      this.style.transform = "scale(0.95)";
+      setTimeout(() => this.remove(), 300);
+    });
+    this.minimizeBtn.addEventListener("click", () => {
+      this.windowContent.classList.toggle("collapsed");
+    });
+    this.maximizeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (this.dataset.isFullscreen !== "true") {
+        const rect = this.getBoundingClientRect();
+        this.dataset.origRect = JSON.stringify({
+          top: rect.top + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width,
+          height: rect.height
+        });
+        Object.assign(this.style, {
+          position: "fixed",
+          top: `${rect.top}px`,
+          left: `${rect.left}px`,
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+          margin: "0",
+          zIndex: "9999",
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+        });
+        void this.offsetWidth;
+        Object.assign(this.style, { top: "0", left: "0", width: "100vw", height: "100vh", borderRadius: "0" });
+        this.dataset.isFullscreen = "true";
+      } else {
+        const origRect = JSON.parse(this.dataset.origRect);
+        Object.assign(this.style, {
+          top: `${origRect.top - window.scrollY}px`,
+          left: `${origRect.left - window.scrollX}px`,
+          width: `${origRect.width}px`,
+          height: `${origRect.height}px`,
+          borderRadius: "12px"
+        });
+        this.addEventListener("transitionend", () => {
+          Object.assign(this.style, { position: "", top: "", left: "", width: "", height: "", zIndex: "", transition: "", margin: "", borderRadius: "" });
+          this.dataset.isFullscreen = "false";
+        }, { once: true });
+      }
+    });
+  }
+};
+if (!window._solFsListenerAdded) {
+  window._solFsListenerAdded = true;
+  window.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "r") {
+      Object.keys(sessionStorage).forEach((key) => {
+        if (key.startsWith("sol-fs-")) {
+          sessionStorage.removeItem(key);
+        }
+      });
+    }
+  });
+}
+function initWindow() {
+  if (!customElements.get("sol-window")) {
+    customElements.define("sol-window", SolWindow);
+  }
+}
+
+// src/components/table.js
+var SolTable = class extends HTMLElement {
+  constructor() {
+    super();
+  }
+  connectedCallback() {
+    const table = this.querySelector("table");
+    if (table && !table.classList.contains("sol-table")) {
+      table.classList.add("sol-table");
+    }
+  }
+};
+function initTable() {
+  if (!customElements.get("sol-table")) {
+    customElements.define("sol-table", SolTable);
+  }
+}
+
+// src/components/notification.js
+function initNotification() {
+  window.solora = window.solora || {};
+  let area = document.querySelector(".sol-notification-area");
+  if (!area) {
+    area = document.createElement("div");
+    area.className = "sol-notification-area";
+    document.body.appendChild(area);
+  }
+  const notifyHandler = (options) => {
+    if (typeof options === "string") {
+      const el = document.getElementById(options);
+      if (el && typeof el.show === "function") {
+        el.show();
+      } else {
+        console.warn(`Solora: Notification with ID '${options}' not found or is not a sol-notification.`);
+      }
+      return;
+    }
+    let { title, message, variant, type, duration } = options;
+    if (duration === void 0) duration = 5e3;
+    const toast = document.createElement("div");
+    toast.className = "sol-notification-toast";
+    if (variant) toast.classList.add(`variant-${variant}`);
+    if (type) toast.classList.add(`type-${type}`);
+    toast.innerHTML = `
+            <div class="sol-notification-header">
+                <span class="sol-notification-title">${title || ""}</span>
+                <button class="sol-notification-close">&times;</button>
+            </div>
+            <div class="sol-notification-message">${message || ""}</div>
+        `;
+    area.appendChild(toast);
+    requestAnimationFrame(() => {
+      toast.classList.add("show");
+    });
+    const closeToast = () => {
+      toast.classList.remove("show");
+      toast.addEventListener("transitionend", () => toast.remove());
+    };
+    toast.querySelector(".sol-notification-close").onclick = closeToast;
+    if (duration > 0) {
+      setTimeout(closeToast, duration);
+    }
+  };
+  window.solora.notify = notifyHandler;
+  window.solora.notificate = notifyHandler;
+  class SolNotification extends HTMLElement {
+    connectedCallback() {
+      this.style.display = "none";
+      if (this.hasAttribute("show")) {
+        this.show();
+      }
+    }
+    show() {
+      window.solora.notify({
+        title: this.getAttribute("title") || "",
+        message: this.getAttribute("message") || this.innerHTML.trim() || "",
+        variant: this.getAttribute("variant"),
+        type: this.getAttribute("type"),
+        duration: this.hasAttribute("duration") ? parseInt(this.getAttribute("duration")) : 5e3
+      });
+    }
+  }
+  if (!customElements.get("sol-notification")) {
+    customElements.define("sol-notification", SolNotification);
+  }
+  class SolLaravelNotification extends HTMLElement {
+    connectedCallback() {
+      this.style.display = "none";
+      const variant = this.getAttribute("variant");
+      const duration = this.hasAttribute("duration") ? parseInt(this.getAttribute("duration")) : 5e3;
+      const success = this.getAttribute("success");
+      if (success) window.solora.notify({ title: "Succes", message: success, type: "success", variant, duration });
+      const error = this.getAttribute("error");
+      if (error) window.solora.notify({ title: "Fout", message: error, type: "error", variant, duration });
+      const info = this.getAttribute("info");
+      if (info) window.solora.notify({ title: "Info", message: info, type: "info", variant, duration });
+      const warning = this.getAttribute("warning");
+      if (warning) window.solora.notify({ title: "Let op", message: warning, type: "warning", variant, duration });
+    }
+  }
+  if (!customElements.get("sol-laravel-notification")) {
+    customElements.define("sol-laravel-notification", SolLaravelNotification);
+  }
+}
+
+// src/components/sidebar.js
+var SolSidebar = class extends HTMLElement {
+  constructor() {
+    super();
+    this._navbarObserver = null;
+    this._navbarResizeObserver = null;
+  }
+  connectedCallback() {
+    this.updateActiveItem();
+    this.setupNavbarObserver();
+  }
+  disconnectedCallback() {
+    this.disconnectObservers();
+  }
+  static get observedAttributes() {
+    return ["variant", "fixed", "sticky", "floating", "compact"];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "sticky") {
+      if (newValue !== null) {
+        this.setupNavbarObserver();
+      } else {
+        this.disconnectObservers();
+        this.style.removeProperty("--sol-sidebar-top");
+      }
+    }
+  }
+  setupNavbarObserver() {
+    this.disconnectObservers();
+    const updateTop = () => {
+      const navbar2 = document.querySelector("sol-navbar[sticky]");
+      let topValue = "0px";
+      if (navbar2) {
+        const rect = navbar2.getBoundingClientRect();
+        const isVisible = rect.height > 0 && window.getComputedStyle(navbar2).display !== "none" && !navbar2.hasAttribute("hidden");
+        if (isVisible) {
+          topValue = rect.height + "px";
+        }
+      }
+      this.style.setProperty("--sol-sidebar-top", topValue);
+    };
+    updateTop();
+    const navbar = document.querySelector("sol-navbar");
+    if (navbar) {
+      this._navbarResizeObserver = new ResizeObserver(updateTop);
+      this._navbarResizeObserver.observe(navbar);
+      this._navbarObserver = new MutationObserver(updateTop);
+      this._navbarObserver.observe(navbar, {
+        attributes: true,
+        attributeFilter: ["hidden", "style", "class", "sticky"]
+      });
+    } else {
+      this._bodyObserver = new MutationObserver((mutations) => {
+        if (document.querySelector("sol-navbar")) {
+          this.setupNavbarObserver();
+          this._bodyObserver.disconnect();
+          this._bodyObserver = null;
+        }
+      });
+      this._bodyObserver.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+  disconnectObservers() {
+    if (this._navbarObserver) {
+      this._navbarObserver.disconnect();
+      this._navbarObserver = null;
+    }
+    if (this._navbarResizeObserver) {
+      this._navbarResizeObserver.disconnect();
+      this._navbarResizeObserver = null;
+    }
+    if (this._bodyObserver) {
+      this._bodyObserver.disconnect();
+      this._bodyObserver = null;
+    }
+  }
+  updateActiveItem() {
+    const currentPath = window.location.pathname;
+    const items = this.querySelectorAll(".sol-sidebar-item");
+    items.forEach((item) => {
+      const href = item.getAttribute("href");
+      if (href && (currentPath === href || currentPath.endsWith(href) || currentPath === "/" && (href === "/index.php" || href === "index.php"))) {
+        item.classList.add("active");
+      } else {
+        item.classList.remove("active");
+      }
+    });
+  }
+};
+function initSidebar() {
+  if (!customElements.get("sol-sidebar")) {
+    customElements.define("sol-sidebar", SolSidebar);
+  }
+}
+
+// src/components/layout.js
+var SolPage = class extends HTMLElement {
+  constructor() {
+    super();
+  }
+};
+var SolMain = class extends HTMLElement {
+  constructor() {
+    super();
+  }
+};
+function initLayout() {
+  if (!customElements.get("sol-page")) {
+    customElements.define("sol-page", SolPage);
+  }
+  if (!customElements.get("sol-main")) {
+    customElements.define("sol-main", SolMain);
+  }
+}
+
+// src/components/laravelSupport.js
+function initLaravelSupport() {
+  const applyErrors = (errors) => {
+    const allSolInputs = document.querySelectorAll("sol-input, sol-textarea, sol-check, sol-dropdown, sol-switch");
+    allSolInputs.forEach((el) => {
+      if (typeof el.hideError === "function") el.hideError();
+    });
+    if (!errors || typeof errors !== "object") return;
+    Object.keys(errors).forEach((field) => {
+      const nameBracket = field.replace(/\.(\w+)/g, "[$1]");
+      const messages = Array.isArray(errors[field]) ? errors[field] : [errors[field]];
+      const message = messages[0];
+      const elements = document.querySelectorAll(`
+                [name="${field}"], [name="${field}[]"],
+                [name="${nameBracket}"], [name="${nameBracket}[]"],
+                [data-name="${field}"]
+            `);
+      elements.forEach((el) => {
+        const solComponent = el.closest("sol-input, sol-textarea, sol-check, sol-dropdown, sol-switch") || el;
+        if (solComponent && typeof solComponent.showError === "function") {
+          solComponent.showError(message);
+        }
+      });
+    });
+  };
+  const originalFetch = window.fetch;
+  if (originalFetch) {
+    window.fetch = async function(...args) {
+      try {
+        const response = await originalFetch.apply(this, args);
+        if (response.status === 422) {
+          const clone = response.clone();
+          clone.json().then((data) => {
+            if (data && data.errors) {
+              applyErrors(data.errors);
+            }
+          }).catch(() => {
+          });
+        }
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    };
+  }
+  if (typeof window !== "undefined" && window.XMLHttpRequest) {
+    const originalXHRSend = window.XMLHttpRequest.prototype.send;
+    if (originalXHRSend) {
+      window.XMLHttpRequest.prototype.send = function(...args) {
+        this.addEventListener("load", function() {
+          if (this.status === 422) {
+            try {
+              const data = JSON.parse(this.responseText);
+              if (data && data.errors) {
+                applyErrors(data.errors);
+              }
+            } catch (e) {
+            }
+          }
+        });
+        return originalXHRSend.apply(this, args);
+      };
+    }
+  }
+  document.addEventListener("submit", (e) => {
+    const form = e.target;
+    const allSolInputs = form.querySelectorAll("sol-input, sol-textarea, sol-check, sol-dropdown, sol-switch");
+    allSolInputs.forEach((el) => {
+      if (typeof el.hideError === "function") el.hideError();
+    });
+  });
+  document.addEventListener("inertia:invalid", (event) => {
+    if (event.detail && event.detail.errors) {
+      applyErrors(event.detail.errors);
+    }
+  });
+  document.addEventListener("inertia:start", () => {
+    applyErrors({});
+  });
+  document.addEventListener("livewire:initialized", () => {
+    window.Livewire.hook("commit", ({ component, commit, respond, succeed, fail }) => {
+      succeed(({ snapshot, effect }) => {
+        if (snapshot.memo && snapshot.memo.errors) {
+          applyErrors(snapshot.memo.errors);
+        } else {
+          applyErrors({});
+        }
+      });
+      fail(() => {
+      });
+    });
+  });
+  document.addEventListener("livewire:load", () => {
+    window.Livewire.hook("message.processed", (message, component) => {
+      if (message.response && message.response.serverMemo && message.response.serverMemo.errors) {
+        applyErrors(message.response.serverMemo.errors);
+      } else {
+        applyErrors({});
+      }
+    });
+  });
+  const checkMetaErrors = () => {
+    const metaErrors = document.querySelector('meta[name="laravel-errors"]');
+    if (metaErrors && metaErrors.content) {
+      try {
+        const parsedErrors = JSON.parse(metaErrors.content);
+        setTimeout(() => applyErrors(parsedErrors), 50);
+      } catch (e) {
+        console.error("Solora: Kon laravel-errors meta tag niet parsen.", e);
+      }
+    }
+  };
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", checkMetaErrors);
+  } else {
+    checkMetaErrors();
+  }
+}
+
 // src/index.js
 function initAll(config = {}) {
   initButton();
   initInput();
+  initTextarea();
   initCodeblocks();
   initDropdown();
   initSwitch();
@@ -3098,8 +4106,16 @@ function initAll(config = {}) {
   initAlert(config.alert || {});
   initCard();
   initNavbar();
+  initNavDropdown();
   initCheckbox();
   initPopover();
+  initModal();
+  initWindow();
+  initTable();
+  initNotification();
+  initSidebar();
+  initLayout();
+  initLaravelSupport();
 }
 export {
   initAll

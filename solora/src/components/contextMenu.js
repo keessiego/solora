@@ -11,7 +11,10 @@ export function initContextMenu() {
 
     const showMenu = (e) => {
         // Alleen tonen als <sol-contextmenu> op de pagina staat
-        if (!document.querySelector('sol-contextmenu')) return;
+        const contextEl = document.querySelector('sol-contextmenu');
+        if (!contextEl) return;
+
+        let activeVariant = contextEl.getAttribute('variant') || 'default';
 
         e.preventDefault();
         e.stopPropagation();
@@ -37,15 +40,47 @@ export function initContextMenu() {
         // ── CONTEXT: Custom opties (ondersteunt nesting) ──────────
         const containers = [];
         let tempEl = e.target;
-        while (tempEl) {
-            const container = tempEl.closest('sol-context-options');
-            if (container) {
-                containers.unshift(container); // Buiten naar binnen
-                tempEl = container.parentElement;
-            } else {
+        
+        while (tempEl && tempEl !== document) {
+            // Als we direct op een sol-context-options klikken
+            if (tempEl.tagName && tempEl.tagName.toLowerCase() === 'sol-context-options') {
+                if (!containers.includes(tempEl)) {
+                    containers.unshift(tempEl);
+                }
+            } 
+            
+            // Controleer of dit element sol-context-options als directe kinderen heeft
+            if (tempEl.children) {
+                Array.from(tempEl.children).forEach(child => {
+                    if (child.tagName && child.tagName.toLowerCase() === 'sol-context-options') {
+                        if (!containers.includes(child)) {
+                            containers.unshift(child);
+                        }
+                    }
+                    
+                    // Ondersteuning voor <template><sol-context-options></template> (bijv. in TR)
+                    if (child.tagName && child.tagName.toLowerCase() === 'template') {
+                        const tplOpts = child.content.querySelector('sol-context-options');
+                        if (tplOpts && !containers.includes(tplOpts)) {
+                            containers.unshift(tplOpts);
+                        }
+                    }
+                });
+            }
+
+            tempEl = tempEl.parentElement;
+        }
+
+        // Bepaal variant: overschrijf globaal als een lokale <sol-context-options variant="..."> heeft
+        for (let i = containers.length - 1; i >= 0; i--) {
+            if (containers[i].hasAttribute('variant')) {
+                activeVariant = containers[i].getAttribute('variant');
                 break;
             }
         }
+        
+        menu.classList.remove('variant-default', 'variant-glass');
+        menu.classList.add(`variant-${activeVariant}`);
 
         containers.forEach(customContainer => {
             const children = Array.from(customContainer.children);
@@ -62,10 +97,26 @@ export function initContextMenu() {
                     if (tag === 'sol-item') {
                         const isDisabled = child.hasAttribute('disabled');
                         const isReadonly = child.hasAttribute('readonly');
+                        const type = child.getAttribute('type') || child.getAttribute('variant');
+                        const href = child.getAttribute('href');
+                        const target = child.getAttribute('target') || '_self';
+                        
+                        let actionAttr = 'custom';
+                        let customAction = child.getAttribute('action') || '';
+                        let urlAttr = '';
+
+                        if (!customAction && child.hasAttribute('onclick')) {
+                            customAction = `js(${child.getAttribute('onclick')})`;
+                        } else if (!customAction && href) {
+                            actionAttr = (target === '_blank') ? 'open-tab' : 'open-link';
+                            urlAttr = href;
+                        }
+
                         menuHtml += `
-                            <div class="sol-menu-item${isDisabled ? ' disabled' : ''}${isReadonly ? ' readonly' : ''}" 
-                                 data-action="custom" 
-                                 data-custom-action="${child.getAttribute('action') || ''}">
+                            <div class="sol-menu-item${isDisabled ? ' disabled' : ''}${isReadonly ? ' readonly' : ''}${type ? ` type-${type}` : ''}" 
+                                 data-action="${actionAttr}" 
+                                 data-url="${urlAttr.replace(/"/g, '&quot;')}"
+                                 data-custom-action="${customAction.replace(/"/g, '&quot;')}">
                                 ${child.getAttribute('label')}
                             </div>
                         `;
