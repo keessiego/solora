@@ -44,6 +44,9 @@ if ($current_page === 'index') $current_page = 'get-started';
                     <a href="/pages/sidebar.php" class="sol-sidebar-item">
                         <sol-icon name="columns" size="16"></sol-icon> Sidebar
                     </a>
+                    <a href="/pages/hr.php" class="sol-sidebar-item">
+                        <sol-icon name="minus" size="16"></sol-icon> Separator (HR)
+                    </a>
                     <a href="/pages/card.php" class="sol-sidebar-item">
                         <sol-icon name="layout" size="16"></sol-icon> Cards
                     </a>

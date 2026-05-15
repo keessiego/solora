@@ -23,8 +23,13 @@ export function initAlert(config = {}) {
     };
 
     const renderAlert = (options) => {
-        const { title, message, buttons, showInput, defaultValue, placeholder, variant } = options;
+        let { title, message, buttons, showInput, defaultValue, placeholder, variant } = options;
         
+        // Ensure buttons always exists
+        if (!buttons || !Array.isArray(buttons)) {
+            buttons = [{ text: 'OK', value: true, bold: true }];
+        }
+
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.className = 'sol-alert-overlay';
@@ -132,12 +137,25 @@ export function initAlert(config = {}) {
     window.solora = window.solora || {};
     
     window.solora.alert = (title, message, variant) => {
-        if (typeof title === 'object') return enqueue(title);
+        if (typeof title === 'object') {
+            return enqueue({
+                buttons: [{ text: 'OK', value: true, bold: true }],
+                ...title
+            });
+        }
         return enqueue({ title, message, variant, buttons: [{ text: 'OK', value: true, bold: true }] });
     };
     
     window.solora.confirm = (title, message, variant) => {
-        if (typeof title === 'object') return enqueue(title);
+        if (typeof title === 'object') {
+            return enqueue({
+                buttons: [
+                    { text: 'Cancel', value: false }, 
+                    { text: 'OK', value: true, bold: true }
+                ],
+                ...title
+            });
+        }
         return enqueue({ title, message, variant, buttons: [
             { text: 'Cancel', value: false }, 
             { text: 'OK', value: true, bold: true }
@@ -145,7 +163,13 @@ export function initAlert(config = {}) {
     };
     
     window.solora.prompt = (title, message, defaultValue, variant) => {
-        if (typeof title === 'object') return enqueue(title);
+        if (typeof title === 'object') {
+            return enqueue({ 
+                buttons: [{ text: 'Cancel', value: null }, { text: 'OK', value: true, bold: true }], 
+                showInput: true,
+                ...title 
+            });
+        }
         return enqueue({ 
             title, message, defaultValue, variant, 
             buttons: [{ text: 'Cancel', value: null }, { text: 'OK', value: true, bold: true }], 

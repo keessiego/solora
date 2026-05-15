@@ -21,6 +21,7 @@ import { initTable } from './components/table.js';
 import { initNotification } from './components/notification.js';
 import { initSidebar } from './components/sidebar.js';
 import { initLayout } from './components/layout.js';
+import { initHr } from './components/hr.js';
 import { initLaravelSupport } from './components/laravelSupport.js';
 
 function initAll(config = {}) {
@@ -45,6 +46,7 @@ function initAll(config = {}) {
   initNotification();
   initSidebar();
   initLayout();
+  initHr();
   initLaravelSupport();
 }
 

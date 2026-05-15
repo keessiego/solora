@@ -13,6 +13,12 @@ class SolButton extends HTMLElement {
         this.syncChildren();
         this.updateAttributes();
         this.setupMutationObserver();
+
+        if (this.hasAttribute('autofocus')) {
+            requestAnimationFrame(() => {
+                this.button.focus();
+            });
+        }
     }
 
     disconnectedCallback() {
@@ -65,7 +71,7 @@ class SolButton extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['disabled', 'type', 'variant', 'size', 'rounded'];
+        return ['disabled', 'type', 'variant', 'size', 'rounded', 'autofocus', 'bg'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -81,6 +87,12 @@ class SolButton extends HTMLElement {
             this.button.removeAttribute('disabled');
         }
 
+        if (this.hasAttribute('autofocus')) {
+            this.button.setAttribute('autofocus', 'autofocus');
+        } else {
+            this.button.removeAttribute('autofocus');
+        }
+
         if (this.hasAttribute('type')) {
             this.button.setAttribute('type', this.getAttribute('type'));
         } else {
@@ -91,6 +103,34 @@ class SolButton extends HTMLElement {
         const variant = this.getAttribute('variant') || this.getAttribute('color') || 'primary';
         this.button.className = `btn btn-${variant}`;
         
+        // Background afhandelen
+        const bg = this.getAttribute('bg');
+        if (bg) {
+            this.button.classList.add('has-custom-bg');
+            if (bg === 'primary') {
+                this.button.style.backgroundColor = 'var(--color-primary, #0071e3)';
+                this.button.style.color = 'var(--color-text-light, #fff)';
+            } else if (bg === 'secondary') {
+                this.button.style.backgroundColor = 'var(--color-secondary, #f5f5f5)';
+                this.button.style.color = 'var(--color-text-dark, #000)';
+            } else if (bg === 'success') {
+                this.button.style.backgroundColor = 'var(--color-success, #28a745)';
+                this.button.style.color = 'var(--color-text-light, #fff)';
+            } else if (bg === 'warning') {
+                this.button.style.backgroundColor = 'var(--color-warning, #ffc107)';
+                this.button.style.color = 'var(--color-text-dark, #000)';
+            } else if (bg === 'danger') {
+                this.button.style.backgroundColor = 'var(--color-danger, #dc3545)';
+                this.button.style.color = 'var(--color-text-light, #fff)';
+            } else {
+                this.button.style.backgroundColor = bg;
+            }
+        } else {
+            this.button.classList.remove('has-custom-bg');
+            this.button.style.backgroundColor = '';
+            this.button.style.color = '';
+        }
+
         const size = this.getAttribute('size');
         if (size) {
             this.button.classList.add(`btn-${size}`);

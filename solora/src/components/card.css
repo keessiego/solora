@@ -10,6 +10,52 @@ sol-card {
     color: var(--color-text-dark, #1d1d1f);
 }
 
+sol-card[hidden] {
+    display: none !important;
+}
+
+/* Transitions */
+sol-card.sol-animate-fade { animation: sol-card-fade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+sol-card.sol-animate-up { animation: sol-card-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+sol-card.sol-animate-down { animation: sol-card-down 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+sol-card.sol-animate-left { animation: sol-card-left 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+sol-card.sol-animate-right { animation: sol-card-right 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+sol-card.sol-animate-zoom { animation: sol-card-zoom 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
+sol-card.sol-animate-reverse {
+    animation-direction: reverse;
+}
+
+@keyframes sol-card-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes sol-card-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sol-card-down {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sol-card-left {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes sol-card-right {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes sol-card-zoom {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
 /* Default variant (Old-school Alert style) */
 sol-card.variant-default {
     background-color: var(--sol-glass-default-bg);

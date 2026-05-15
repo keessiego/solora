@@ -7,6 +7,48 @@ class SolCard extends HTMLElement {
         super();
     }
 
+    show() {
+        if (!this.hasAttribute('hidden')) return;
+
+        const transition = this.getAttribute('transition');
+        
+        if (transition !== null) {
+            const variant = transition || 'fade';
+            this.classList.add(`sol-animate-${variant}`);
+            this.removeAttribute('hidden');
+            
+            const onAnimationEnd = () => {
+                this.classList.remove(`sol-animate-${variant}`);
+                this.removeEventListener('animationend', onAnimationEnd);
+            };
+            this.addEventListener('animationend', onAnimationEnd);
+        } else {
+            this.removeAttribute('hidden');
+        }
+    }
+
+    hide() {
+        if (this.hasAttribute('hidden')) return;
+
+        const transition = this.getAttribute('transition');
+
+        if (transition !== null) {
+            const variant = transition || 'fade';
+            // We use a reverse class or just the same animation if it looks okay, 
+            // but for a better feel we add a 'reverse' modifier.
+            this.classList.add(`sol-animate-${variant}`, 'sol-animate-reverse');
+            
+            const onAnimationEnd = () => {
+                this.classList.remove(`sol-animate-${variant}`, 'sol-animate-reverse');
+                this.setAttribute('hidden', '');
+                this.removeEventListener('animationend', onAnimationEnd);
+            };
+            this.addEventListener('animationend', onAnimationEnd);
+        } else {
+            this.setAttribute('hidden', '');
+        }
+    }
+
     connectedCallback() {
         this.render();
     }

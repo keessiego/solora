@@ -1755,6 +1755,11 @@ var SolButton = class extends HTMLElement {
     this.syncChildren();
     this.updateAttributes();
     this.setupMutationObserver();
+    if (this.hasAttribute("autofocus")) {
+      requestAnimationFrame(() => {
+        this.button.focus();
+      });
+    }
   }
   disconnectedCallback() {
     if (this._observer) {
@@ -1792,7 +1797,7 @@ var SolButton = class extends HTMLElement {
     }
   }
   static get observedAttributes() {
-    return ["disabled", "type", "variant", "size", "rounded"];
+    return ["disabled", "type", "variant", "size", "rounded", "autofocus", "bg"];
   }
   attributeChangedCallback(name, oldValue, newValue) {
     if (this.contains(this.button)) {
@@ -1805,6 +1810,11 @@ var SolButton = class extends HTMLElement {
     } else {
       this.button.removeAttribute("disabled");
     }
+    if (this.hasAttribute("autofocus")) {
+      this.button.setAttribute("autofocus", "autofocus");
+    } else {
+      this.button.removeAttribute("autofocus");
+    }
     if (this.hasAttribute("type")) {
       this.button.setAttribute("type", this.getAttribute("type"));
     } else {
@@ -1812,6 +1822,32 @@ var SolButton = class extends HTMLElement {
     }
     const variant = this.getAttribute("variant") || this.getAttribute("color") || "primary";
     this.button.className = `btn btn-${variant}`;
+    const bg = this.getAttribute("bg");
+    if (bg) {
+      this.button.classList.add("has-custom-bg");
+      if (bg === "primary") {
+        this.button.style.backgroundColor = "var(--color-primary, #0071e3)";
+        this.button.style.color = "var(--color-text-light, #fff)";
+      } else if (bg === "secondary") {
+        this.button.style.backgroundColor = "var(--color-secondary, #f5f5f5)";
+        this.button.style.color = "var(--color-text-dark, #000)";
+      } else if (bg === "success") {
+        this.button.style.backgroundColor = "var(--color-success, #28a745)";
+        this.button.style.color = "var(--color-text-light, #fff)";
+      } else if (bg === "warning") {
+        this.button.style.backgroundColor = "var(--color-warning, #ffc107)";
+        this.button.style.color = "var(--color-text-dark, #000)";
+      } else if (bg === "danger") {
+        this.button.style.backgroundColor = "var(--color-danger, #dc3545)";
+        this.button.style.color = "var(--color-text-light, #fff)";
+      } else {
+        this.button.style.backgroundColor = bg;
+      }
+    } else {
+      this.button.classList.remove("has-custom-bg");
+      this.button.style.backgroundColor = "";
+      this.button.style.color = "";
+    }
     const size = this.getAttribute("size");
     if (size) {
       this.button.classList.add(`btn-${size}`);
@@ -1869,6 +1905,11 @@ var SolInput = class extends HTMLElement {
     this.appendChild(this.errorEl);
     this.updateAttributes();
     this.bindEvents();
+    if (this.hasAttribute("autofocus")) {
+      requestAnimationFrame(() => {
+        this.inputEl.focus();
+      });
+    }
   }
   togglePasswordVisibility() {
     if (this.inputEl.type === "password") {
@@ -2046,6 +2087,11 @@ var SolTextarea = class extends HTMLElement {
     this.appendChild(this.errorEl);
     this.updateAttributes();
     this.bindEvents();
+    if (this.hasAttribute("autofocus")) {
+      requestAnimationFrame(() => {
+        this.inputEl.focus();
+      });
+    }
   }
   attributeChangedCallback() {
     if (this.initialized) {
@@ -2970,7 +3016,10 @@ function initAlert(config = {}) {
     });
   };
   const renderAlert = (options) => {
-    const { title, message, buttons, showInput, defaultValue, placeholder, variant } = options;
+    let { title, message, buttons, showInput, defaultValue, placeholder, variant } = options;
+    if (!buttons || !Array.isArray(buttons)) {
+      buttons = [{ text: "OK", value: true, bold: true }];
+    }
     return new Promise((resolve) => {
       const overlay = document.createElement("div");
       overlay.className = "sol-alert-overlay";
@@ -3062,18 +3111,37 @@ function initAlert(config = {}) {
   };
   window.solora = window.solora || {};
   window.solora.alert = (title, message, variant) => {
-    if (typeof title === "object") return enqueue(title);
+    if (typeof title === "object") {
+      return enqueue({
+        buttons: [{ text: "OK", value: true, bold: true }],
+        ...title
+      });
+    }
     return enqueue({ title, message, variant, buttons: [{ text: "OK", value: true, bold: true }] });
   };
   window.solora.confirm = (title, message, variant) => {
-    if (typeof title === "object") return enqueue(title);
+    if (typeof title === "object") {
+      return enqueue({
+        buttons: [
+          { text: "Cancel", value: false },
+          { text: "OK", value: true, bold: true }
+        ],
+        ...title
+      });
+    }
     return enqueue({ title, message, variant, buttons: [
       { text: "Cancel", value: false },
       { text: "OK", value: true, bold: true }
     ] });
   };
   window.solora.prompt = (title, message, defaultValue, variant) => {
-    if (typeof title === "object") return enqueue(title);
+    if (typeof title === "object") {
+      return enqueue({
+        buttons: [{ text: "Cancel", value: null }, { text: "OK", value: true, bold: true }],
+        showInput: true,
+        ...title
+      });
+    }
     return enqueue({
       title,
       message,
@@ -3092,6 +3160,38 @@ var SolCard = class extends HTMLElement {
   }
   constructor() {
     super();
+  }
+  show() {
+    if (!this.hasAttribute("hidden")) return;
+    const transition = this.getAttribute("transition");
+    if (transition !== null) {
+      const variant = transition || "fade";
+      this.classList.add(`sol-animate-${variant}`);
+      this.removeAttribute("hidden");
+      const onAnimationEnd = () => {
+        this.classList.remove(`sol-animate-${variant}`);
+        this.removeEventListener("animationend", onAnimationEnd);
+      };
+      this.addEventListener("animationend", onAnimationEnd);
+    } else {
+      this.removeAttribute("hidden");
+    }
+  }
+  hide() {
+    if (this.hasAttribute("hidden")) return;
+    const transition = this.getAttribute("transition");
+    if (transition !== null) {
+      const variant = transition || "fade";
+      this.classList.add(`sol-animate-${variant}`, "sol-animate-reverse");
+      const onAnimationEnd = () => {
+        this.classList.remove(`sol-animate-${variant}`, "sol-animate-reverse");
+        this.setAttribute("hidden", "");
+        this.removeEventListener("animationend", onAnimationEnd);
+      };
+      this.addEventListener("animationend", onAnimationEnd);
+    } else {
+      this.setAttribute("hidden", "");
+    }
   }
   connectedCallback() {
     this.render();
@@ -3973,6 +4073,50 @@ function initLayout() {
   }
 }
 
+// src/components/hr.js
+var SolHr = class extends HTMLElement {
+  static get observedAttributes() {
+    return ["color", "opacity", "weight", "vertical", "inset", "variant"];
+  }
+  constructor() {
+    super();
+  }
+  connectedCallback() {
+    this.render();
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
+    this.render();
+  }
+  render() {
+    const color = this.getAttribute("color");
+    const opacity = this.getAttribute("opacity");
+    if (color) {
+      this.style.setProperty("--sol-hr-color", color);
+    } else {
+      this.style.removeProperty("--sol-hr-color");
+    }
+    if (opacity) {
+      this.style.opacity = opacity;
+    } else {
+      this.style.opacity = "";
+    }
+    if (!this.getAttribute("role")) {
+      this.setAttribute("role", "separator");
+    }
+    if (this.hasAttribute("vertical")) {
+      this.setAttribute("aria-orientation", "vertical");
+    } else {
+      this.setAttribute("aria-orientation", "horizontal");
+    }
+  }
+};
+function initHr() {
+  if (!customElements.get("sol-hr")) {
+    customElements.define("sol-hr", SolHr);
+  }
+}
+
 // src/components/laravelSupport.js
 function initLaravelSupport() {
   const applyErrors = (errors) => {
@@ -4115,6 +4259,7 @@ function initAll(config = {}) {
   initNotification();
   initSidebar();
   initLayout();
+  initHr();
   initLaravelSupport();
 }
 export {

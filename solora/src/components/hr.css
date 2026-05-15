@@ -1,0 +1,76 @@
+sol-hr {
+    display: block;
+    border: none;
+    background-color: var(--sol-hr-color, rgba(0, 0, 0, 0.15));
+    height: var(--sol-hr-weight, 1px);
+    width: 100%;
+    margin: 1.5rem 0;
+    transition: opacity 0.2s ease;
+}
+
+:root.dark sol-hr {
+    background-color: var(--sol-hr-color, rgba(255, 255, 255, 0.15));
+}
+
+sol-hr[vertical] {
+    display: inline-block;
+    width: var(--sol-hr-weight, 1px);
+    height: 100%;
+    margin: 0 1.5rem;
+    vertical-align: middle;
+}
+
+sol-hr[inset] {
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    width: calc(100% - 3rem);
+}
+
+sol-hr[weight="thin"] {
+    --sol-hr-weight: 0.5px;
+}
+
+sol-hr[weight="regular"] {
+    --sol-hr-weight: 1px;
+}
+
+sol-hr[weight="thick"] {
+    --sol-hr-weight: 2px;
+}
+
+/* Glass effect variant */
+sol-hr[variant="glass"] {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--sol-hr-color, rgba(0, 0, 0, 0.15)) 50%,
+        transparent
+    );
+}
+
+:root.dark sol-hr[variant="glass"] {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--sol-hr-color, rgba(255, 255, 255, 0.15)) 50%,
+        transparent
+    );
+}
+
+sol-hr[vertical][variant="glass"] {
+    background: linear-gradient(
+        0deg,
+        transparent,
+        var(--sol-hr-color, rgba(0, 0, 0, 0.15)) 50%,
+        transparent
+    );
+}
+
+:root.dark sol-hr[vertical][variant="glass"] {
+    background: linear-gradient(
+        0deg,
+        transparent,
+        var(--sol-hr-color, rgba(255, 255, 255, 0.15)) 50%,
+        transparent
+    );
+}

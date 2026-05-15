@@ -56,6 +56,13 @@ class SolInput extends HTMLElement {
 
         this.updateAttributes();
         this.bindEvents();
+
+        // Handle autofocus manually for custom elements
+        if (this.hasAttribute('autofocus')) {
+            requestAnimationFrame(() => {
+                this.inputEl.focus();
+            });
+        }
     }
 
     togglePasswordVisibility() {

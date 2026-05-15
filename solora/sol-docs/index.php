@@ -11,8 +11,26 @@
 
     <h3>1. Installatie</h3>
     <div class="demo-card">
-        <p>Voeg Solora toe aan je project via NPM of download de <code>dist</code> bestanden rechtstreeks.</p>
-        <sol-code language="bash" label="Terminal">npm install kerkhoff-ict-solora</sol-code>
+        <p>Voeg Solora toe aan je project via NPM of gebruik de CDN voor een snelle start.</p>
+        
+        <div style="margin-top: 15px;">
+            <p><strong>Via NPM:</strong></p>
+            <sol-code language="bash" label="Terminal">npm install @kerkhoff-ict/solora</sol-code>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <p><strong>Via CDN (JSDelivr):</strong></p>
+            <sol-code language="html" label="HTML Header">
+&lt;!-- CSS inladen --&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@kerkhoff-ict/solora/dist/index.css"&gt;
+
+&lt;!-- JS inladen (als module) --&gt;
+&lt;script type="module"&gt;
+    import { initAll } from 'https://cdn.jsdelivr.net/npm/@kerkhoff-ict/solora/dist/index.js';
+    initAll();
+&lt;/script&gt;
+            </sol-code>
+        </div>
     </div>
 
     <h3>2. Integratie in HTML</h3>

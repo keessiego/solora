@@ -20,6 +20,7 @@
 @import './components/notification.css';
 @import './components/sidebar.css';
 @import './components/layout.css';
+@import './components/hr.css';
 
 :root {
     --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;

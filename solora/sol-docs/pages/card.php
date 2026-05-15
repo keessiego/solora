@@ -50,6 +50,49 @@
 &lt;/sol-card&gt;
     </sol-code>
 
+    <h3 style="margin-top: 60px; margin-bottom: 20px;">Visibility & Transitions</h3>
+    <p>
+        Cards kunnen verborgen worden met het <code>hidden</code> attribuut. Gebruik de Javascript <code>show()</code> methode om ze te tonen. 
+        Als het <code>transition</code> attribuut aanwezig is, wordt er een animatie afgespeeld bij het tonen.
+    </p>
+
+    <div class="demo-card" style="display: flex; flex-direction: column; gap: 20px; align-items: flex-start;">
+        <div style="display: flex; gap: 10px;">
+            <sol-button onclick="document.getElementById('demo-transition-card').show()" variant="primary">Toon Card</sol-button>
+            <sol-button onclick="document.getElementById('demo-transition-card').hide()" variant="secondary">Verberg Card</sol-button>
+            
+            <sol-dropdown label="Transition" onchange="document.getElementById('demo-transition-card').setAttribute('transition', this.value)">
+                <div class="dropdown-item" data-value="fade">Fade (Default)</div>
+                <div class="dropdown-item" data-value="up">Slide Up</div>
+                <div class="dropdown-item" data-value="down">Slide Down</div>
+                <div class="dropdown-item" data-value="left">Slide Left</div>
+                <div class="dropdown-item" data-value="right">Slide Right</div>
+                <div class="dropdown-item" data-value="zoom">Zoom</div>
+            </sol-dropdown>
+        </div>
+
+        <sol-card id="demo-transition-card" hidden transition="fade" variant="glass" style="width: 300px;">
+            <h4>Geanimeerde Card</h4>
+            <p>Deze card kwam tevoorschijn met een animatie!</p>
+        </sol-card>
+    </div>
+
+    <sol-code language="html" label="Transitie Voorbeeld">
+&lt;!-- HTML --&gt;
+&lt;sol-card id="my-card" hidden transition="up"&gt;
+    Inhoud...
+&lt;/sol-card&gt;
+
+&lt;!-- Javascript --&gt;
+&lt;script&gt;
+    // Toon de card
+    document.getElementById('my-card').show();
+
+    // Verberg de card weer
+    document.getElementById('my-card').hide();
+&lt;/script&gt;
+    </sol-code>
+
     <h3 style="margin-top: 60px; margin-bottom: 20px;">API Referentie</h3>
     
     <sol-table>
@@ -80,6 +123,43 @@
                     <td><code>boolean</code></td>
                     <td><code>false</code></td>
                     <td>Activeert een subtiel hover-effect (de card komt omhoog en wordt licht vergroot) en simuleert een vloeibaar glas-effect als je met de muis beweegt.</td>
+                </tr>
+                <tr>
+                    <td><code>hidden</code></td>
+                    <td><code>boolean</code></td>
+                    <td><code>false</code></td>
+                    <td>Verbergt de card initieel (CSS <code>display: none</code>).</td>
+                </tr>
+                <tr>
+                    <td><code>transition</code></td>
+                    <td><code>string</code></td>
+                    <td><code>"fade"</code></td>
+                    <td>Bepaalt de animatie wanneer <code>show()</code> of <code>hide()</code> wordt aangeroepen. Opties: <code>fade</code>, <code>up</code>, <code>down</code>, <code>left</code>, <code>right</code>, <code>zoom</code>.</td>
+                </tr>
+            </tbody>
+        </table>
+    </sol-table>
+
+    <h4 style="margin-top: 30px;">Methoden</h4>
+    <sol-table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Methode</th>
+                    <th>Parameters</th>
+                    <th>Beschrijving</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>show()</code></td>
+                    <td>-</td>
+                    <td>Toont de card en triggert de geconfigureerde transitie.</td>
+                </tr>
+                <tr>
+                    <td><code>hide()</code></td>
+                    <td>-</td>
+                    <td>Verbergt de card en triggert de geconfigureerde transitie in omgekeerde volgorde.</td>
                 </tr>
             </tbody>
         </table>
